@@ -26,3 +26,14 @@ build/
 # Logs
 *.log
 npm-debug.log*
+
+# Test / scratch output files
+server_out.txt
+tunnel_url.txt
+D:/test.png
+
+# Retired files
+db/database.js.bak
+
+# Claude internal
+.claude/

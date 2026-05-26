@@ -81,7 +81,7 @@ app.use(express.urlencoded({ extended: true, limit: '2mb' }));
 
 /* ── Session ─────────────────────────────────────────────────────────── */
 app.use(session({
-  secret:            process.env.SESSION_SECRET || 'buildlink-dev-secret-change-in-production',
+  secret:            process.env.SESSION_SECRET || 'bildfie-dev-secret-change-in-production',
   resave:            false,
   saveUninitialized: false,
   name:              'bl.sid',        // don't leak default "connect.sid" name
@@ -186,11 +186,11 @@ app.use((req, res) => {
 
 /* ── Start ───────────────────────────────────────────────────────────── */
 app.listen(PORT, () => {
-  console.log(`\nBuildLink [${process.env.NODE_ENV}] → http://localhost:${PORT}`);
+  console.log(`\nBildfie [${process.env.NODE_ENV}] → http://localhost:${PORT}`);
   if (!PROD) {
     console.log(`  Dashboard : http://localhost:${PORT}/dashboard`);
     console.log(`  Admin     : http://localhost:${PORT}/admin`);
   }
-  if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.includes('buildlink-dev-secret'))
+  if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.includes('bildfie-dev-secret'))
     console.warn('\n  ⚠  SESSION_SECRET is using the default dev value — set a strong secret before deploying!\n');
 });

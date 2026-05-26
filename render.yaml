@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: buildlink
+    name: bildfie
     runtime: node
     plan: free               # upgrade to starter ($7/mo) for always-on
     buildCommand: npm install
@@ -14,14 +14,14 @@ services:
         value: 10000          # Render's default internal port
       - key: DATABASE_URL
         fromDatabase:
-          name: buildlink-db
+          name: bildfie-db
           property: connectionString
       - key: SESSION_SECRET
         generateValue: true   # Render generates a random value automatically
       - key: APP_URL
-        sync: false           # fill in after first deploy (Render gives you the URL)
+        sync: false           # fill in after first deploy — use https://www.bildfie.com
       - key: ALLOWED_ORIGINS
-        sync: false           # same as APP_URL, comma-separated if multiple
+        sync: false           # same as APP_URL
 
       # M-Pesa (fill in Render dashboard — never commit real values)
       - key: MPESA_ENV
@@ -37,11 +37,11 @@ services:
       - key: MPESA_PASSKEY
         sync: false
       - key: MPESA_CALLBACK_URL
-        sync: false           # https://<your-render-subdomain>.onrender.com/api/mpesa/callback
+        sync: false           # https://www.bildfie.com/api/mpesa/callback
       - key: MPESA_HEAD_OFFICE_SHORTCODE
         sync: false
 
 databases:
-  - name: buildlink-db
-    databaseName: buildlink
+  - name: bildfie-db
+    databaseName: bildfie
     plan: free               # 1 GB, 256 MB RAM — plenty for launch
