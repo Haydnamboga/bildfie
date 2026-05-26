@@ -30,18 +30,19 @@ app.use((req, res, next) => {
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
-      defaultSrc:  ["'self'"],
-      scriptSrc:   ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net', 'https://unpkg.com'],
-      styleSrc:    ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://cdn.jsdelivr.net'],
-      fontSrc:     ["'self'", 'https://fonts.gstatic.com'],
-      imgSrc:      ["'self'", 'data:', 'https:', 'blob:'],
-      connectSrc:  ["'self'"],
-      frameSrc:    ["'none'"],
-      objectSrc:   ["'none'"],
+      defaultSrc:    ["'self'"],
+      scriptSrc:     ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net', 'https://unpkg.com'],
+      scriptSrcAttr: ["'unsafe-inline'"],   // allow onclick= / onsubmit= in HTML
+      styleSrc:      ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://cdn.jsdelivr.net'],
+      fontSrc:       ["'self'", 'https://fonts.gstatic.com', 'https://cdn.jsdelivr.net'],
+      imgSrc:        ["'self'", 'data:', 'https:', 'blob:'],
+      connectSrc:    ["'self'", 'https://cdn.jsdelivr.net'],
+      frameSrc:      ["'none'"],
+      objectSrc:     ["'none'"],
       upgradeInsecureRequests: PROD ? [] : null,
     },
   },
-  crossOriginEmbedderPolicy: false,   // allow embedding CDN resources
+  crossOriginEmbedderPolicy: false,
 }));
 
 /* ── Compression ─────────────────────────────────────────────────────── */
