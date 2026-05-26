@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Environment secrets — NEVER commit
+.env
+
+# Database (dev data — use migrations for schema)
+db/buildlink.db
+db/*.db
+
+# Uploads
+uploads/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Build artefacts (future)
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Professionals &mdash; BuildLink</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,800;1,700;1,800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="assets/css/buildlink.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="navbar navbar-expand-lg fixed-top bl-navbar">
+  <div class="container-xl">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+      <div class="bl-nav-mark"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <span class="fw-800 fs-5">BuildLink</span>
+    </a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav mx-auto gap-1">
+        <li class="nav-item"><a class="nav-link active" href="professionals.html">Professionals</a></li>
+        <li class="nav-item"><a class="nav-link" href="materials.html">Materials</a></li>
+        <li class="nav-item"><a class="nav-link" href="facilities.html">Facilities</a></li>
+        <li class="nav-item"><a class="nav-link" href="transport.html">Transport</a></li>
+        <li class="nav-item"><a class="nav-link" href="equipment.html">Machinery</a></li>
+        <li class="nav-item"><a class="nav-link" href="projects.html">Projects</a></li>
+      </ul>
+      <div class="d-flex align-items-center gap-2 ms-auto">
+        <button class="bl-region-btn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg> KES<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+        <a href="dashboard/index.html" class="btn btn-outline-light btn-sm">Dashboard</a>
+        <button class="btn btn-light btn-sm text-dark" onclick="window.location.href='login.html'">Sign In</button>
+        <button class="btn btn-primary btn-sm" onclick="window.location.href='login.html?next=/dashboard/'">Post a Project</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- INFO BAR -->
+<div class="bl-infobar">
+  <div class="container-xl d-flex align-items-center justify-content-between h-100">
+    <div class="d-flex align-items-center gap-4">
+      <div class="bl-ib-item"><div class="bl-ib-dot"></div>Nairobi, Kenya</div>
+      <div class="bl-ib-item">48,600+ Verified Professionals</div>
+      <div class="bl-ib-item d-none d-lg-flex">4.8&#9733; Average Rating</div>
+      <div class="bl-ib-item d-none d-xl-flex">12,400+ Projects Completed</div>
+    </div>
+    <div class="bl-ib-right d-none d-lg-flex">
+      <div class="bl-ib-price"><i class="bi bi-clock"></i>  <strong id="live-time">&mdash;</strong> EAT</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE HERO -->
+<section class="bl-page-hero">
+  <div class="bl-ph-texture"></div>
+  <div class="bl-ph-glow"></div>
+  <div class="container-xl position-relative">
+    <div class="d-flex align-items-center gap-2 flex-wrap mb-3">
+      <div class="bl-ph-pill"><span></span>48,600+ Verified Professionals</div>
+      <div class="bl-ph-etag"><i class="bi bi-check-circle-fill text-success"></i>  ID & Licence Verified</div>
+      <div class="bl-ph-etag"><i class="bi bi-lightning"></i>  Available Now filter</div>
+      <div class="bl-ph-etag d-none d-md-block"><i class="bi bi-shield-check"></i>  Escrow-protected payments</div>
+    </div>
+    <div class="bl-ph-search mb-3">
+      <div class="bl-ph-seg">
+        <div class="bl-ph-seg-label"><i class="bi bi-search"></i>  Search Professionals</div>
+        <input class="bl-ph-sinp" placeholder="Name, trade, skill, or licence number&hellip;" autocomplete="off">
+      </div>
+      <div class="bl-ph-div"></div>
+      <div class="bl-ph-sel-wrap">
+        <div class="bl-ph-seg-label"><i class="bi bi-briefcase"></i>  Trade</div>
+        <select class="bl-ph-sel">
+          <option>All Trades</option><option>Architecture</option><option>Civil Engineering</option>
+          <option>Structural Engineering</option><option>MEP Engineering</option>
+          <option>Quantity Surveying</option><option>Project Management</option>
+          <option>Interior Design</option><option>Landscape Architecture</option>
+        </select>
+      </div>
+      <div class="bl-ph-div"></div>
+      <div class="bl-ph-sel-wrap">
+        <div class="bl-ph-seg-label"><i class="bi bi-geo-alt-fill"></i>  Location</div>
+        <select class="bl-ph-sel">
+          <option>Any Location</option><option>Nairobi</option><option>Mombasa</option>
+          <option>Kisumu</option><option>Kampala</option><option>Dar es Salaam</option><option>Kigali</option>
+        </select>
+      </div>
+      <div class="bl-ph-div d-none d-lg-block"></div>
+      <div class="bl-ph-sel-wrap d-none d-lg-block">
+        <div class="bl-ph-seg-label"><i class="bi bi-cash-stack"></i>  Budget/hr</div>
+        <select class="bl-ph-sel">
+          <option>Any Rate</option><option>Under KES 2,000</option>
+          <option>KES 2,000&ndash;5,000</option><option>KES 5,000&ndash;10,000</option><option>KES 10,000+</option>
+        </select>
+      </div>
+      <button class="bl-ph-sbtn" onclick="showToast('Searching professionals&hellip;')">Search Professionals</button>
+    </div>
+    <div class="bl-ph-stats">
+      <div class="bl-ph-stat"><div class="bl-ph-stn">48,600<span>+</span></div><div class="bl-ph-stl">Listed Professionals</div></div>
+      <div class="bl-ph-stat"><div class="bl-ph-stn">4.8<span>&#9733;</span></div><div class="bl-ph-stl">Average Rating</div></div>
+      <div class="bl-ph-stat"><div class="bl-ph-stn">12,400<span>+</span></div><div class="bl-ph-stl">Projects This Year</div></div>
+      <div class="bl-ph-stat"><div class="bl-ph-stn">180<span>+</span></div><div class="bl-ph-stl">Countries</div></div>
+      <div class="bl-ph-stat"><div class="bl-ph-stn">98<span>%</span></div><div class="bl-ph-stl">On-time Delivery</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORY STRIP -->
+<div class="bl-cat-strip">
+  <div class="bl-cat-inner">
+    <div class="bl-cat-pill on" onclick="setCat(this,'all')"><div class="bl-cat-ico"><i class="bi bi-building-fill-gear"></i> </div><div class="bl-cat-lbl">All Trades</div><div class="bl-cat-count">48,600</div></div>
+    <div class="bl-cat-pill" onclick="setCat(this,'arch')"><div class="bl-cat-ico"><i class="bi bi-patch-check"></i> </div><div class="bl-cat-lbl">Architecture</div><div class="bl-cat-count">8,200</div></div>
+    <div class="bl-cat-pill" onclick="setCat(this,'civil')"><div class="bl-cat-ico"><i class="bi bi-bank"></i> </div><div class="bl-cat-lbl">Civil Engineering</div><div class="bl-cat-count">11,400</div></div>
+    <div class="bl-cat-pill" onclick="setCat(this,'struct')"><div class="bl-cat-ico"><i class="bi bi-tools"></i> </div><div class="bl-cat-lbl">Structural</div><div class="bl-cat-count">6,800</div></div>
+    <div class="bl-cat-pill" onclick="setCat(this,'mep')"><div class="bl-cat-ico"><i class="bi bi-lightning"></i> </div><div class="bl-cat-lbl">MEP Engineering</div><div class="bl-cat-count">9,100</div></div>
+    <div class="bl-cat-pill" onclick="setCat(this,'qs')"><div class="bl-cat-ico"><i class="bi bi-bar-chart"></i> </div><div class="bl-cat-lbl">Qty Surveying</div><div class="bl-cat-count">4,200</div></div>
+    <div class="bl-cat-pill" onclick="setCat(this,'pm')"><div class="bl-cat-ico"><i class="bi bi-clipboard"></i> </div><div class="bl-cat-lbl">Project Mgmt</div><div class="bl-cat-count">3,900</div></div>
+    <div class="bl-cat-pill" onclick="setCat(this,'id')"><div class="bl-cat-ico"><i class="bi bi-palette"></i> </div><div class="bl-cat-lbl">Interior Design</div><div class="bl-cat-count">5,400</div></div>
+    <div class="bl-cat-pill" onclick="setCat(this,'la')"><div class="bl-cat-ico"><i class="bi bi-tree"></i> </div><div class="bl-cat-lbl">Landscape</div><div class="bl-cat-count">1,800</div></div>
+    <div class="bl-cat-pill" onclick="setCat(this,'fore')"><div class="bl-cat-ico"><i class="bi bi-person-badge"></i> </div><div class="bl-cat-lbl">Site Foreman</div><div class="bl-cat-count">7,200</div></div>
+    <div class="bl-cat-pill" onclick="setCat(this,'geo')"><div class="bl-cat-ico"><i class="bi bi-gear"></i> </div><div class="bl-cat-lbl">Geotechnical</div><div class="bl-cat-count">890</div></div>
+    <div class="bl-cat-pill" onclick="setCat(this,'plan')"><div class="bl-cat-ico"><i class="bi bi-map"></i> </div><div class="bl-cat-lbl">Urban Planning</div><div class="bl-cat-count">1,200</div></div>
+  </div>
+</div>
+
+<!-- BREADCRUMB -->
+<div class="bg-white border-bottom py-2">
+  <div class="container-xl d-flex align-items-center gap-2 small text-muted">
+    <a href="index.html" class="text-decoration-none text-muted">Home</a>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    <span class="text-dark fw-500">Find Professionals</span>
+    <span class="ms-auto">Showing <strong id="result-count">12</strong> of <strong>48,600+</strong> professionals</span>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="container-xl py-4">
+  <div class="row g-4">
+
+    <!-- SIDEBAR -->
+    <div class="col-lg-3">
+      <div class="bl-sidebar">
+        <!-- Active filters -->
+        <div class="bl-sb-section border-bottom pb-3 mb-0">
+          <div class="bl-sb-title d-flex justify-content-between">Active Filters <span class="text-primary cursor-pointer" onclick="showToast('Filters cleared')" style="cursor:pointer;font-weight:400;font-size:10px">Clear All</span></div>
+          <div class="d-flex flex-wrap gap-1 mt-2">
+            <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25" onclick="this.remove()" style="cursor:pointer;font-size:10px">All Trades &times;</span>
+            <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25" onclick="this.remove()" style="cursor:pointer;font-size:10px"><i class="bi bi-check"></i>  Verified &times;</span>
+          </div>
+        </div>
+        <!-- Trade -->
+        <div class="bl-sb-section">
+          <div class="bl-sb-title">Trade / Specialisation</div>
+          <div class="d-flex flex-column gap-1">
+            <div class="bl-cat-node on" onclick="this.classList.toggle('on')"><span><i class="bi bi-building-fill-gear"></i> </span>All Trades<span class="ms-auto badge bg-light text-muted">48,600</span></div>
+            <div class="bl-cat-node" onclick="this.classList.toggle('on')"><span><i class="bi bi-patch-check"></i> </span>Architecture<span class="ms-auto badge bg-light text-muted">8,200</span></div>
+            <div class="bl-cat-node" onclick="this.classList.toggle('on')"><span><i class="bi bi-bank"></i> </span>Civil Engineering<span class="ms-auto badge bg-light text-muted">11,400</span></div>
+            <div class="bl-cat-node" onclick="this.classList.toggle('on')"><span><i class="bi bi-tools"></i> </span>Structural Engineering<span class="ms-auto badge bg-light text-muted">6,800</span></div>
+            <div class="bl-cat-node" onclick="this.classList.toggle('on')"><span><i class="bi bi-lightning"></i> </span>MEP Engineering<span class="ms-auto badge bg-light text-muted">9,100</span></div>
+            <div class="bl-cat-node" onclick="this.classList.toggle('on')"><span><i class="bi bi-bar-chart"></i> </span>Quantity Surveying<span class="ms-auto badge bg-light text-muted">4,200</span></div>
+            <div class="bl-cat-node" onclick="this.classList.toggle('on')"><span><i class="bi bi-clipboard"></i> </span>Project Management<span class="ms-auto badge bg-light text-muted">3,900</span></div>
+            <div class="bl-cat-node" onclick="this.classList.toggle('on')"><span><i class="bi bi-palette"></i> </span>Interior Design<span class="ms-auto badge bg-light text-muted">5,400</span></div>
+            <div class="bl-cat-node" onclick="this.classList.toggle('on')"><span><i class="bi bi-person-badge"></i> </span>Site Foreman<span class="ms-auto badge bg-light text-muted">7,200</span></div>
+          </div>
+        </div>
+        <!-- Verification -->
+        <div class="bl-sb-section">
+          <div class="bl-sb-title">Verification Status</div>
+          <div class="d-flex flex-column gap-2">
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box on"></div><span class="bl-cb-label"><i class="bi bi-check-circle-fill text-success"></i>  ID Verified</span><span class="ms-auto text-muted" style="font-size:10px">44,200</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label"><i class="bi bi-clipboard"></i>  NCA Licensed</span><span class="ms-auto text-muted" style="font-size:10px">38,800</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label"><i class="bi bi-star-fill text-warning"></i>  Top Rated (4.5+)</span><span class="ms-auto text-muted" style="font-size:10px">21,400</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label"><i class="bi bi-trophy"></i>  Elite Pro</span><span class="ms-auto text-muted" style="font-size:10px">2,800</span></div>
+          </div>
+        </div>
+        <!-- Availability -->
+        <div class="bl-sb-section">
+          <div class="bl-sb-title">Availability</div>
+          <div class="d-flex flex-column gap-2">
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box on"></div><span class="bl-cb-label"><i class="bi bi-lightning"></i>  Available Now</span><span class="ms-auto text-muted" style="font-size:10px">18,600</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label"><i class="bi bi-calendar"></i>  Within 1 Week</span><span class="ms-auto text-muted" style="font-size:10px">32,400</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label"><i class="bi bi-calendar-check"></i>  Within 1 Month</span><span class="ms-auto text-muted" style="font-size:10px">48,200</span></div>
+          </div>
+        </div>
+        <!-- Rate -->
+        <div class="bl-sb-section">
+          <div class="bl-sb-title">Hourly Rate (KES)</div>
+          <div class="small fw-bold mb-2" id="rate-val">Up to KES 15,000</div>
+          <input type="range" class="form-range" min="1000" max="50000" value="15000" oninput="document.getElementById('rate-val').textContent='Up to KES '+Number(this.value).toLocaleString()">
+          <div class="d-flex justify-content-between text-muted" style="font-size:10px"><span>KES 1,000</span><span>KES 50,000+</span></div>
+        </div>
+        <!-- Location -->
+        <div class="bl-sb-section">
+          <div class="bl-sb-title">Location</div>
+          <div class="d-flex flex-column gap-2">
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box on"></div><span class="bl-cb-label">Nairobi</span><span class="ms-auto text-muted" style="font-size:10px">28,400</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label">Mombasa</span><span class="ms-auto text-muted" style="font-size:10px">6,800</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label">Kisumu</span><span class="ms-auto text-muted" style="font-size:10px">3,200</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label">Kampala, Uganda</span><span class="ms-auto text-muted" style="font-size:10px">4,100</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label">Dar es Salaam, TZ</span><span class="ms-auto text-muted" style="font-size:10px">3,800</span></div>
+          </div>
+        </div>
+        <!-- Experience -->
+        <div class="bl-sb-section">
+          <div class="bl-sb-title">Experience Level</div>
+          <div class="d-flex flex-column gap-2">
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label">Graduate (0&ndash;2 yrs)</span><span class="ms-auto text-muted" style="font-size:10px">4,200</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label">Mid-Level (3&ndash;7 yrs)</span><span class="ms-auto text-muted" style="font-size:10px">18,400</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box on"></div><span class="bl-cb-label">Senior (8&ndash;15 yrs)</span><span class="ms-auto text-muted" style="font-size:10px">16,800</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label">Expert (15+ yrs)</span><span class="ms-auto text-muted" style="font-size:10px">9,200</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="col-lg-9">
+      <!-- Sort bar -->
+      <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
+        <span class="text-muted small">Sort by:</span>
+        <select class="form-select form-select-sm" style="width:auto">
+          <option>Best Match</option><option>Highest Rated</option><option>Most Reviews</option>
+          <option>Lowest Rate</option><option>Recently Joined</option>
+        </select>
+        <span class="text-muted small ms-auto"><strong>48,600+</strong> professionals found</span>
+        <div class="btn-group btn-group-sm">
+          <button class="btn btn-dark"><i class="bi bi-grid"></i></button>
+          <button class="btn btn-outline-secondary" onclick="showToast('List view coming soon')"><i class="bi bi-list-ul"></i></button>
+        </div>
+      </div>
+
+      <!-- FEATURED PROFESSIONAL -->
+      <div class="card border-0 shadow-sm mb-4 overflow-hidden" style="border-radius:14px;border:1px solid rgba(212,160,23,.35) !important;box-shadow:0 2px 0 #D4A017,0 6px 32px rgba(1,29,71,.12) !important;cursor:pointer" onclick="showToast('Opening James Kamau Elite profile&hellip;')">
+        <div class="text-white d-flex align-items-center justify-content-between px-4 py-2" style="background:linear-gradient(90deg,#011D47,#C43100);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.09em">
+          <span><i class="bi bi-star-fill text-warning"></i>  Featured Elite Professional</span>
+          <span class="badge" style="background:rgba(212,160,23,.2);color:#D4A017;border:1px solid rgba(212,160,23,.35)">#1 Ranked Civil Engineer &mdash; Kenya 2026</span>
+        </div>
+        <div class="row g-0">
+          <div class="col-md-3 p-4 text-center d-flex flex-column align-items-center" style="background:linear-gradient(160deg,#011D47,#0d2d5e)">
+            <img src="https://i.pravatar.cc/100?img=11" class="rounded-circle mb-3" style="width:72px;height:72px;object-fit:cover;border:3px solid rgba(212,160,23,.4)" alt="James Kamau">
+            <div class="text-white fw-bold" style="font-family:'Playfair Display',serif;font-size:15px">James Kamau</div>
+            <div class="text-white-50" style="font-size:9px">Civil & Structural Engineer</div>
+            <div class="mt-2" style="font-size:22px;font-weight:800;color:#D4A017;font-family:'Playfair Display',serif">4.9</div>
+            <div style="color:#D4A017;letter-spacing:1px;font-size:11px">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <div class="text-white-50" style="font-size:9px">(214 reviews)</div>
+            <div class="row g-1 mt-3 w-100">
+              <div class="col-6"><div class="text-center p-2 rounded" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)"><div class="text-white fw-bold">187</div><div class="text-white-50" style="font-size:8px">Jobs Done</div></div></div>
+              <div class="col-6"><div class="text-center p-2 rounded" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)"><div class="fw-bold" style="color:#81C784">98%</div><div class="text-white-50" style="font-size:8px">On Time</div></div></div>
+            </div>
+          </div>
+          <div class="col-md-6 p-4 border-end">
+            <div class="p-3 rounded-3 small text-muted mb-3" style="background:#F8F9FA;border-left:3px solid var(--bl-accent);line-height:1.8">
+              NCA Grade 5 Licensed Civil & Structural Engineer with 12 years delivering high-rise, residential, and infrastructure projects across Kenya, Uganda, and Tanzania. Specialist in complex foundation design and reinforced concrete structures.
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col"><div class="text-center p-2 rounded-3 bg-light border"><div class="fw-bold">12yr</div><div class="text-muted" style="font-size:8px;text-transform:uppercase">Experience</div></div></div>
+              <div class="col"><div class="text-center p-2 rounded-3 bg-light border"><div class="fw-bold text-primary">48hr</div><div class="text-muted" style="font-size:8px;text-transform:uppercase">Response</div></div></div>
+              <div class="col"><div class="text-center p-2 rounded-3 bg-light border"><div class="fw-bold">KES 2B+</div><div class="text-muted" style="font-size:8px;text-transform:uppercase">Proj Value</div></div></div>
+              <div class="col"><div class="text-center p-2 rounded-3 bg-light border"><div class="fw-bold text-success">G5</div><div class="text-muted" style="font-size:8px;text-transform:uppercase">NCA Grade</div></div></div>
+            </div>
+            <div class="d-flex flex-wrap gap-1">
+              <span class="bl-tag">Structural Design</span><span class="bl-tag">AutoCAD</span><span class="bl-tag">Foundation Engineering</span><span class="bl-tag">High-Rise</span><span class="bl-tag">Revit</span><span class="bl-tag">Site Supervision</span>
+            </div>
+          </div>
+          <div class="col-md-3 p-4 bg-light d-flex flex-column gap-2">
+            <div class="text-center" style="font-family:'Playfair Display',serif;font-size:26px;font-weight:800;color:var(--bl-navy)">KES 8,500<span class="text-muted fw-normal" style="font-family:'Sora',sans-serif;font-size:13px"> / hr</span></div>
+            <div class="text-muted text-center" style="font-size:9px;margin-top:-8px">Negotiable for projects</div>
+            <button class="btn btn-primary w-100" onclick="event.stopPropagation();showToast('Sending hire request to James&hellip;')">Hire Now</button>
+            <button class="btn btn-outline-secondary w-100" onclick="event.stopPropagation();showToast('Opening message thread&hellip;')"><i class="bi bi-chat"></i>  Message</button>
+            <a href="profile.html" class="text-center text-primary fw-bold text-decoration-none small" onclick="event.stopPropagation()">View Full Profile &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROFESSIONALS GRID -->
+      <div class="row g-3" id="profs-grid"></div>
+
+      <!-- PAGINATION -->
+      <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item disabled"><a class="page-link">&larr; Prev</a></li>
+          <li class="page-item active"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#" onclick="showToast('Page 2')">2</a></li>
+          <li class="page-item"><a class="page-link" href="#" onclick="showToast('Page 3')">3</a></li>
+          <li class="page-item"><a class="page-link" href="#" onclick="showToast('Page 4')">4</a></li>
+          <li class="page-item disabled"><a class="page-link">&hellip;</a></li>
+          <li class="page-item"><a class="page-link" href="#" onclick="showToast('Last page')">120</a></li>
+          <li class="page-item"><a class="page-link" href="#" onclick="showToast('Next page')">Next &rarr;</a></li>
+        </ul>
+      </nav>
+
+      <!-- OPEN BIDS -->
+      <div class="mt-5">
+        <div class="d-flex align-items-end justify-content-between mb-4 bl-rv">
+          <div>
+            <div class="bl-sec-label">Win Work</div>
+            <h2 class="bl-sec-h">Open Project Bids</h2>
+            <p class="bl-sec-sub">Live projects seeking construction professionals right now.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="showToast('Opening post project form&hellip;')">Post a Project</button>
+        </div>
+        <div class="row g-3" id="bids-grid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="bl-footer mt-5">
+  <div class="container-xl">
+    <div class="row g-4 py-5">
+      <div class="col-lg-3"><div class="bl-footer-logo">BuildLink</div><p class="text-white-50 small mt-2">Africa's leading construction marketplace.</p></div>
+      <div class="col-6 col-lg-2"><div class="text-white fw-600 small mb-3">Platform</div><div class="d-flex flex-column gap-2"><a href="professionals.html" class="text-white-50 small text-decoration-none">Find Professionals</a><a href="materials.html" class="text-white-50 small text-decoration-none">Materials</a><a href="equipment.html" class="text-white-50 small text-decoration-none">Equipment</a><a href="transport.html" class="text-white-50 small text-decoration-none">Transport</a></div></div>
+      <div class="col-6 col-lg-2"><div class="text-white fw-600 small mb-3">For Professionals</div><div class="d-flex flex-column gap-2"><a href="profile.html" class="text-white-50 small text-decoration-none">Create Profile</a><a href="#" class="text-white-50 small text-decoration-none">Get Verified</a><a href="dashboard/index.html" class="text-white-50 small text-decoration-none">Dashboard</a></div></div>
+      <div class="col-6 col-lg-2"><div class="text-white fw-600 small mb-3">Company</div><div class="d-flex flex-column gap-2"><a href="#" class="text-white-50 small text-decoration-none">About</a><a href="#" class="text-white-50 small text-decoration-none">Careers</a><a href="#" class="text-white-50 small text-decoration-none">Contact</a></div></div>
+    </div>
+    <div class="border-top border-white border-opacity-10 py-3 d-flex justify-content-between flex-wrap gap-2">
+      <div class="text-white-50 small">&copy; 2026 BuildLink Technologies Ltd.</div>
+      <div class="bl-flive"><span></span>Platform operating normally</div>
+    </div>
+  </div>
+</footer>
+
+<!-- PROFESSIONAL MODAL -->
+<div class="modal fade" id="profModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg" style="border-radius:16px">
+      <div class="modal-header border-0 pb-0">
+        <div><div class="text-muted" style="font-size:10px;text-transform:uppercase;letter-spacing:.08em">Professional Profile</div><div class="fw-bold" id="modal-name">&mdash;</div></div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <img id="modal-avatar" src="https://i.pravatar.cc/100?img=1" class="rounded-circle" style="width:56px;height:56px;object-fit:cover" alt="">
+          <div>
+            <div class="fw-bold" id="modal-fullname" style="font-family:'Playfair Display',serif;font-size:18px"></div>
+            <div class="text-muted small" id="modal-title"></div>
+            <div class="d-flex align-items-center gap-2 mt-1"><span class="text-warning small" id="modal-rating"></span><span class="text-muted" style="font-size:10px" id="modal-reviews"></span></div>
+          </div>
+        </div>
+        <div class="row g-2 mb-3" id="modal-stats"></div>
+        <div class="p-3 rounded-3 small mb-3" id="modal-bio" style="background:var(--bs-light);border-left:2px solid var(--bl-accent);line-height:1.75"></div>
+        <div class="d-flex flex-wrap gap-1 mb-3" id="modal-tags"></div>
+        <div class="p-2 rounded-3 d-flex justify-content-between small bg-light"><span class="text-muted">Availability</span><span id="modal-avail" class="fw-bold text-success"></span></div>
+      </div>
+      <div class="modal-footer border-0 pt-0 gap-2">
+        <button class="btn btn-outline-secondary flex-fill" onclick="showToast('Opening chat&hellip;')" data-bs-dismiss="modal"><i class="bi bi-chat"></i>  Message</button>
+        <button class="btn btn-primary flex-fill" onclick="showToast('Sending hire request&hellip;')" data-bs-dismiss="modal">Hire Now</button>
+        <button class="btn btn-outline-primary flex-fill" onclick="openInviteModal(window._currentProfId)" data-bs-dismiss="modal">Invite to Project</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INVITE MODAL -->
+<div class="modal fade" id="inviteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg" style="border-radius:16px">
+      <div class="modal-header border-0"><h5 class="modal-title fw-bold">Invite to Project</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <p class="text-muted small mb-3">Select a project and role for <strong id="invite-pro-name"></strong></p>
+        <div class="mb-3"><label class="form-label small fw-600">Select Project</label><select class="form-select" id="invite-project-select"><option value="">&mdash; Choose a project &mdash;</option></select></div>
+        <div class="mb-3"><label class="form-label small fw-600">Role / Capacity</label><select class="form-select" id="invite-role-select"><option value="contractor">Main Contractor</option><option value="architect">Architect</option><option value="engineer">Engineer</option><option value="qs">Quantity Surveyor</option><option value="mep">MEP Consultant</option><option value="pm">Project Manager</option></select></div>
+        <div class="mb-3"><label class="form-label small fw-600">Personal Message (optional)</label><textarea class="form-control" id="invite-message" rows="3" placeholder="Tell them about your project&hellip;"></textarea></div>
+      </div>
+      <div class="modal-footer border-0 pt-0"><button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button><button class="btn btn-primary" onclick="submitInvite()">Send Invitation</button></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/app.js"></script><script src="assets/js/auth.js"></script>
+</body>
+</html>
+
+

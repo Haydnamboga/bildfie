@@ -1,0 +1,97 @@
+<!-- SIDEBAR -->
+<aside class="bl-dash-sidebar">
+  <div class="bl-dsb-section">
+    <div class="bl-dsb-label">MAIN</div>
+    <a href="/dashboard" class="bl-dsb-link <%= activeSection==='overview'?'on':'' %>">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Overview
+    </a>
+    <a href="#projects" class="bl-dsb-link <%= activeSection==='projects'?'on':'' %>">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      My Projects
+      <span class="bl-dsb-badge">3</span>
+    </a>
+    <a href="/dashboard/messages" class="bl-dsb-link <%= activeSection==='messages'?'on':'' %>">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      Messages
+      <span class="bl-dsb-badge" id="dsb-msg-badge">2</span>
+    </a>
+    <a href="#bids" class="bl-dsb-link <%= activeSection==='bids'?'on':'' %>">
+      <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      Open Bids
+    </a>
+    <a href="/dashboard/invitations" class="bl-dsb-link <%= activeSection==='invitations'?'on':'' %>">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      Invitations
+      <span class="bl-dsb-badge" id="dsb-inv-badge" style="display:none">1</span>
+    </a>
+  </div>
+
+  <div class="bl-dsb-section">
+    <div class="bl-dsb-label">FINANCE</div>
+    <a href="/dashboard/invoices" class="bl-dsb-link <%= activeSection==='invoices'?'on':'' %>">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      Invoices &amp; Payments
+      <span class="bl-dsb-badge" id="dsb-inv-pay-badge" style="display:none">0</span>
+    </a>
+    <a href="#" class="bl-dsb-link" onclick="showToast('Analytics coming soon','warning')">
+      <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Analytics
+    </a>
+  </div>
+
+  <div class="bl-dsb-section">
+    <div class="bl-dsb-label">MARKETPLACE</div>
+    <a href="/professionals" class="bl-dsb-link">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      Find Professionals
+    </a>
+    <a href="/materials" class="bl-dsb-link">
+      <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      Materials
+    </a>
+    <a href="/equipment" class="bl-dsb-link">
+      <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      Equipment
+    </a>
+  </div>
+
+  <div class="bl-dsb-section">
+    <div class="bl-dsb-label">ACCOUNT</div>
+    <a href="/account" class="bl-dsb-link">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      My Account
+    </a>
+    <a href="/profile" class="bl-dsb-link">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      My Profile
+    </a>
+    <a href="/" class="bl-dsb-link">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      Back to Site
+    </a>
+    <a href="#" class="bl-dsb-link" onclick="event.preventDefault();signOut()" style="color:rgba(255,100,100,.7)">
+      <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sign Out
+    </a>
+  </div>
+
+  <div class="bl-dsb-section">
+    <div class="bl-dsb-label">ADMIN</div>
+    <a href="/admin" class="bl-dsb-link">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Admin Panel
+    </a>
+  </div>
+
+  <!-- Plan widget -->
+  <div class="bl-dsb-foot">
+    <div class="bl-dsb-plan">
+      <div class="bl-dsb-plan-label">Current Plan</div>
+      <div class="bl-dsb-plan-name">Professional</div>
+      <div class="bl-dsb-plan-bar"><div class="bl-dsb-plan-fill"></div></div>
+      <div class="bl-dsb-plan-sub">12 / 20 projects used this month</div>
+    </div>
+    <a href="/" class="btn btn-outline-light btn-sm w-100" style="font-size:10px">&larr; Back to Marketplace</a>
+  </div>
+</aside>

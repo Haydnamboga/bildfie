@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — BuildLink</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --sb-w: 248px;
+  --tb-h: 56px;
+  --sb-bg: #0c1428;
+  --sb-bg2: #111d38;
+  --sb-border: rgba(255,255,255,.06);
+  --sb-text: rgba(255,255,255,.78);
+  --sb-muted: rgba(255,255,255,.38);
+  --sb-hover: rgba(255,255,255,.05);
+  --sb-active-bg: rgba(196,49,0,.14);
+  --sb-active-border: #C43100;
+  --accent: #C43100;
+  --navy: #011D47;
+  --bg: #f2f4f8;
+  --card: #fff;
+  --rule: #e4e7ef;
+  --muted: #6b7280;
+  --text: #1e293b;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); font-size: 13px; }
+
+/* ── SIDEBAR ── */
+#sb {
+  position: fixed; top: 0; left: 0; width: var(--sb-w); height: 100vh;
+  background: var(--sb-bg); z-index: 400; display: flex; flex-direction: column;
+  overflow: hidden; transition: width .25s;
+}
+#sb.collapsed { width: 56px; }
+#sb.collapsed .sb-label, #sb.collapsed .sb-group-lbl,
+#sb.collapsed .sb-link-txt, #sb.collapsed .sb-arrow,
+#sb.collapsed .sb-badge, #sb.collapsed .sb-logo-txt,
+#sb.collapsed .sb-sub { display: none !important; }
+#sb.collapsed .sb-link { justify-content: center; padding: 9px 0; }
+
+/* Logo */
+.sb-logo {
+  display: flex; align-items: center; gap: 10px;
+  padding: 16px 18px 14px; border-bottom: 1px solid var(--sb-border);
+  text-decoration: none; flex-shrink: 0;
+}
+.sb-logo-mark {
+  width: 30px; height: 30px; border-radius: 7px; background: var(--accent);
+  display: grid; place-items: center; flex-shrink: 0;
+}
+.sb-logo-mark svg { width: 15px; height: 15px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; }
+.sb-logo-txt { display: flex; flex-direction: column; }
+.sb-logo-name { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 800; color: #fff; line-height: 1; }
+.sb-logo-badge { font-size: 8px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-top: 2px; }
+
+/* Search */
+.sb-search { padding: 10px 12px; border-bottom: 1px solid var(--sb-border); flex-shrink: 0; }
+.sb-search-wrap { position: relative; }
+.sb-search input {
+  width: 100%; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 7px; padding: 7px 10px 7px 30px; color: #fff; font-size: 11.5px;
+  outline: none; font-family: 'Sora', sans-serif; transition: border-color .15s;
+}
+.sb-search input:focus { border-color: rgba(255,255,255,.25); }
+.sb-search input::placeholder { color: rgba(255,255,255,.3); }
+.sb-search-ico { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,.3); }
+.sb-search-ico svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+
+/* Nav */
+.sb-nav { flex: 1; overflow-y: auto; padding: 6px 0 20px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.08) transparent; }
+.sb-nav::-webkit-scrollbar { width: 3px; }
+.sb-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 3px; }
+
+.sb-group-lbl {
+  font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--sb-muted); padding: 14px 18px 4px;
+}
+
+.sb-item { position: relative; }
+.sb-link {
+  display: flex; align-items: center; gap: 9px; padding: 8px 18px;
+  color: var(--sb-text); font-size: 12.5px; font-weight: 500; cursor: pointer;
+  border-left: 3px solid transparent; text-decoration: none;
+  transition: background .12s, border-color .12s, color .12s; user-select: none;
+}
+.sb-link:hover { background: var(--sb-hover); color: #fff; }
+.sb-link.active { background: var(--sb-active-bg); border-left-color: var(--sb-active-border); color: #fff; font-weight: 600; }
+.sb-link svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; flex-shrink: 0; opacity: .75; }
+.sb-link-txt { flex: 1; }
+.sb-arrow { margin-left: auto; opacity: .45; transition: transform .2s; }
+.sb-arrow svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.sb-item.open > .sb-link .sb-arrow { transform: rotate(90deg); }
+.sb-badge { margin-left: auto; background: var(--accent); color: #fff; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 100px; }
+
+.sb-sub { display: none; background: rgba(0,0,0,.12); }
+.sb-item.open > .sb-sub { display: block; }
+.sb-sub-link {
+  display: flex; align-items: center; gap: 7px; padding: 6.5px 18px 6.5px 40px;
+  font-size: 11.5px; color: var(--sb-muted); text-decoration: none;
+  transition: color .12s, background .12s;
+}
+.sb-sub-link::before { content: ''; width: 3px; height: 3px; border-radius: 50%; background: currentColor; flex-shrink: 0; opacity: .7; }
+.sb-sub-link:hover { color: rgba(255,255,255,.85); background: rgba(255,255,255,.04); }
+.sb-sub-link.active { color: var(--accent); font-weight: 600; }
+
+/* Footer */
+.sb-footer { padding: 12px 14px; border-top: 1px solid var(--sb-border); flex-shrink: 0; }
+.sb-user { display: flex; align-items: center; gap: 9px; }
+.sb-user-avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.sb-user-name { font-size: 11.5px; font-weight: 600; color: rgba(255,255,255,.85); }
+.sb-user-role { font-size: 9.5px; color: var(--sb-muted); }
+
+/* ── TOPBAR ── */
+#tb {
+  position: fixed; top: 0; left: var(--sb-w); right: 0; height: var(--tb-h);
+  background: var(--card); border-bottom: 1px solid var(--rule); z-index: 300;
+  display: flex; align-items: center; padding: 0 22px; gap: 14px;
+  transition: left .25s;
+}
+#sb.collapsed ~ #tb { left: 56px; }
+#sb.collapsed ~ #tb ~ #main { margin-left: 56px; }
+
+.tb-toggle {
+  width: 32px; height: 32px; border: 1px solid var(--rule); border-radius: 7px;
+  background: none; cursor: pointer; display: grid; place-items: center; flex-shrink: 0;
+  color: var(--muted); transition: background .12s;
+}
+.tb-toggle:hover { background: var(--bg); }
+.tb-toggle svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+
+.tb-bc { font-size: 11px; color: var(--muted); }
+.tb-bc strong { color: var(--navy); font-size: 13px; font-weight: 700; }
+
+.tb-icons { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.tb-icon-btn {
+  width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--rule);
+  background: none; cursor: pointer; display: grid; place-items: center; position: relative;
+  color: var(--muted); transition: background .12s;
+}
+.tb-icon-btn:hover { background: var(--bg); }
+.tb-icon-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.tb-notif-dot {
+  position: absolute; top: 5px; right: 5px; width: 7px; height: 7px;
+  background: var(--accent); border-radius: 50%; border: 2px solid var(--card);
+}
+.tb-sep { width: 1px; height: 22px; background: var(--rule); }
+.tb-user { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 6px; border-radius: 8px; }
+.tb-user:hover { background: var(--bg); }
+.tb-user img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
+.tb-user-info .name { font-size: 12px; font-weight: 600; color: var(--navy); }
+.tb-user-info .role { font-size: 10px; color: var(--muted); }
+
+/* ── MAIN ── */
+#main {
+  margin-left: var(--sb-w); padding-top: var(--tb-h); min-height: 100vh;
+  transition: margin-left .25s;
+}
+.adm-page { padding: 22px 24px; }
+
+/* PAGE HEADER */
+.pg-head { margin-bottom: 22px; }
+.pg-head h1 { font-size: 19px; font-weight: 700; color: var(--navy); line-height: 1.2; }
+.pg-head p { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+.pg-head-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+/* KPI CARDS */
+.kpi {
+  background: var(--card); border-radius: 12px; padding: 18px 20px;
+  border: 1px solid var(--rule); height: 100%;
+}
+.kpi-icon { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; margin-bottom: 12px; }
+.kpi-icon svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; }
+.kpi-val { font-family: 'Playfair Display', serif; font-size: 21px; font-weight: 800; color: var(--navy); line-height: 1; }
+.kpi-lbl { font-size: 10.5px; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: .07em; }
+.kpi-trend { font-size: 11px; font-weight: 600; margin-top: 10px; display: flex; align-items: center; gap: 5px; }
+.kpi-trend svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; }
+.trend-up { color: #16a34a; }
+.trend-dn { color: #dc2626; }
+.trend-nt { color: var(--muted); }
+.kpi-sub { font-size: 10.5px; color: var(--muted); font-weight: 400; }
+
+/* MINI STATS */
+.mini-stat {
+  background: var(--card); border: 1px solid var(--rule); border-radius: 10px;
+  padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+}
+.mini-stat-ico { width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center; flex-shrink: 0; }
+.mini-stat-ico svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.mini-stat-val { font-size: 17px; font-weight: 800; color: var(--navy); line-height: 1; }
+.mini-stat-lbl { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+/* CARDS */
+.card2 { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; }
+.card2-head {
+  padding: 14px 18px; border-bottom: 1px solid var(--rule);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.card2-title { font-size: 12.5px; font-weight: 700; color: var(--navy); }
+.card2-action { font-size: 11px; color: var(--accent); font-weight: 600; text-decoration: none; cursor: pointer; }
+.card2-action:hover { text-decoration: underline; }
+
+/* TABLE */
+.adm-tbl { width: 100%; border-collapse: collapse; }
+.adm-tbl th {
+  padding: 9px 14px; font-size: 9.5px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .09em; color: var(--muted); background: var(--bg); border-bottom: 1px solid var(--rule); text-align: left;
+}
+.adm-tbl td { padding: 10.5px 14px; border-bottom: 1px solid var(--rule); color: var(--text); vertical-align: middle; }
+.adm-tbl tr:last-child td { border-bottom: none; }
+.adm-tbl tbody tr:hover td { background: #fafbfd; }
+
+/* BADGES */
+.bdg { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 100px; font-size: 9.5px; font-weight: 600; white-space: nowrap; }
+.bdg-pending { background: #fff7ed; color: #9a3412; }
+.bdg-active  { background: #f0fdf4; color: #166534; }
+.bdg-done    { background: #eff6ff; color: #1e40af; }
+.bdg-overdue { background: #fef2f2; color: #991b1b; }
+.bdg-draft   { background: #f9fafb; color: #6b7280; border: 1px solid var(--rule); }
+.bdg-paid    { background: #f0fdf4; color: #166534; }
+.bdg-hold    { background: #fefce8; color: #854d0e; }
+
+/* PROGRESS */
+.prog { height: 5px; background: var(--rule); border-radius: 4px; overflow: hidden; width: 100%; }
+.prog-fill { height: 100%; border-radius: 4px; }
+
+/* ACTIVITY */
+.act-item { padding: 11px 18px; border-bottom: 1px solid var(--rule); display: flex; gap: 11px; align-items: flex-start; }
+.act-item:last-child { border-bottom: none; }
+.act-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.act-msg { font-size: 12px; color: var(--text); line-height: 1.4; }
+.act-time { font-size: 10px; color: var(--muted); margin-top: 3px; }
+
+/* PIPELINE STAGE */
+.pipe-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--rule); }
+.pipe-row:last-child { border-bottom: none; }
+.pipe-lbl { font-size: 11.5px; font-weight: 500; color: var(--text); width: 100px; flex-shrink: 0; }
+.pipe-bar-wrap { flex: 1; height: 6px; background: var(--rule); border-radius: 4px; overflow: hidden; }
+.pipe-bar-fill { height: 100%; border-radius: 4px; }
+.pipe-num { font-size: 11px; font-weight: 700; color: var(--navy); width: 30px; text-align: right; flex-shrink: 0; }
+
+/* CHART wrapper */
+.chart-wrap { position: relative; }
+
+/* CASHFLOW TABLE */
+.cf-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--rule); }
+.cf-row:last-child { border-bottom: none; }
+.cf-lbl { font-size: 12px; color: var(--text); }
+.cf-val { font-size: 13px; font-weight: 700; }
+
+/* TOP CLIENTS */
+.tc-row { display: flex; align-items: center; gap: 10px; padding: 10px 18px; border-bottom: 1px solid var(--rule); }
+.tc-row:last-child { border-bottom: none; }
+.tc-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.tc-name { font-size: 12px; font-weight: 600; color: var(--navy); }
+.tc-sub { font-size: 10px; color: var(--muted); }
+.tc-rev { font-size: 12px; font-weight: 700; color: var(--navy); text-align: right; }
+.tc-out { font-size: 10px; color: var(--muted); text-align: right; }
+
+/* SUMMARY METRICS */
+.sum-metric { text-align: center; padding: 14px 8px; }
+.sum-metric-val { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 800; color: var(--navy); }
+.sum-metric-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-top: 2px; }
+
+/* TASK ITEM */
+.task-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 18px; border-bottom: 1px solid var(--rule); }
+.task-item:last-child { border-bottom: none; }
+.task-check { width: 16px; height: 16px; border: 2px solid var(--rule); border-radius: 4px; flex-shrink: 0; margin-top: 1px; display: grid; place-items: center; }
+.task-title { font-size: 12px; font-weight: 500; color: var(--text); line-height: 1.3; }
+.task-meta { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+/* SECTION DIVIDER */
+.sec-div { height: 1px; background: var(--rule); margin: 20px 0; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+
+/* RESPONSIVE */
+@media (max-width: 991px) {
+  #sb { transform: translateX(-100%); transition: transform .25s; }
+  #sb.mob-open { transform: translateX(0); }
+  #tb, #main { left: 0 !important; margin-left: 0 !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ SIDEBAR ══════════════ -->
+<aside id="sb">
+
+  <a href="#" class="sb-logo">
+    <div class="sb-logo-mark">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <div class="sb-logo-txt">
+      <div class="sb-logo-name">BuildLink</div>
+      <div class="sb-logo-badge">Admin Panel</div>
+    </div>
+  </a>
+
+  <div class="sb-search">
+    <div class="sb-search-wrap">
+      <span class="sb-search-ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+      <input type="text" placeholder="Search menu…">
+    </div>
+  </div>
+
+  <nav class="sb-nav">
+
+    <!-- DASHBOARD -->
+    <div class="sb-group-lbl sb-label">Dashboard</div>
+    <div class="sb-item">
+      <a href="index.html" class="sb-link active">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span class="sb-link-txt">Overview</span>
+      </a>
+    </div>
+
+    <!-- CRM -->
+    <div class="sb-group-lbl sb-label">CRM</div>
+    <div class="sb-item" onclick="toggleNav(this)">
+      <div class="sb-link">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        <span class="sb-link-txt">CRM</span>
+        <span class="sb-badge">3</span>
+        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </div>
+      <div class="sb-sub">
+        <a href="#" class="sb-sub-link">Clients</a>
+        <a href="#" class="sb-sub-link">Contacts</a>
+        <a href="#" class="sb-sub-link">Customer Profiles</a>
+        <a href="#" class="sb-sub-link">Leads</a>
+        <a href="#" class="sb-sub-link">Lead Status</a>
+        <a href="#" class="sb-sub-link">Assignments</a>
+        <a href="#" class="sb-sub-link">Activities</a>
+        <a href="#" class="sb-sub-link">Follow-ups</a>
+        <a href="#" class="sb-sub-link">Conversion</a>
+      </div>
+    </div>
+
+    <!-- SALES -->
+    <div class="sb-group-lbl sb-label">Sales & Revenue</div>
+    <div class="sb-item" onclick="toggleNav(this)">
+      <div class="sb-link">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        <span class="sb-link-txt">Sales & Revenue</span>
+        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </div>
+      <div class="sb-sub">
+        <a href="#" class="sb-sub-link">Proposals</a>
+        <a href="#" class="sb-sub-link">Quotations</a>
+        <a href="#" class="sb-sub-link">Estimates</a>
+        <a href="#" class="sb-sub-link">Orders</a>
+        <a href="#" class="sb-sub-link">Invoices</a>
+        <a href="#" class="sb-sub-link">Payments</a>
+        <a href="#" class="sb-sub-link">Credit Notes</a>
+        <a href="#" class="sb-sub-link">Delivery Notes</a>
+        <a href="#" class="sb-sub-link">Subscriptions</a>
+      </div>
+    </div>
+
+    <!-- MARKETPLACE -->
+    <div class="sb-group-lbl sb-label">Marketplace & Procurement</div>
+    <div class="sb-item" onclick="toggleNav(this)">
+      <div class="sb-link">
+        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="sb-link-txt">Marketplace</span>
+        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </div>
+      <div class="sb-sub">
+        <a href="#" class="sb-sub-link">Materials</a>
+        <a href="#" class="sb-sub-link">Services</a>
+        <a href="#" class="sb-sub-link">Vendors</a>
+        <a href="#" class="sb-sub-link">Supplier Quotations</a>
+        <a href="#" class="sb-sub-link">Comparisons</a>
+        <a href="#" class="sb-sub-link">Orders</a>
+        <a href="#" class="sb-sub-link">Deliveries</a>
+        <a href="#" class="sb-sub-link">Supplier Performance</a>
+        <a href="#" class="sb-sub-link">Reviews</a>
+        <a href="#" class="sb-sub-link">Vendor Contracts</a>
+      </div>
+    </div>
+
+    <!-- PROJECTS -->
+    <div class="sb-group-lbl sb-label">Projects & Tasks</div>
+    <div class="sb-item" onclick="toggleNav(this)">
+      <div class="sb-link">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span class="sb-link-txt">Projects & Tasks</span>
+        <span class="sb-badge">7</span>
+        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </div>
+      <div class="sb-sub">
+        <a href="#" class="sb-sub-link">All Projects</a>
+        <a href="#" class="sb-sub-link">Milestones</a>
+        <a href="#" class="sb-sub-link">Resources</a>
+        <a href="#" class="sb-sub-link">Status Tracker</a>
+        <a href="#" class="sb-sub-link">Tasks</a>
+        <a href="#" class="sb-sub-link">Boards (Kanban)</a>
+        <a href="#" class="sb-sub-link">Lists</a>
+      </div>
+    </div>
+
+    <!-- FINANCIALS -->
+    <div class="sb-group-lbl sb-label">Financials</div>
+    <div class="sb-item" onclick="toggleNav(this)">
+      <div class="sb-link">
+        <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        <span class="sb-link-txt">Financials</span>
+        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </div>
+      <div class="sb-sub">
+        <a href="#" class="sb-sub-link">Expenses</a>
+        <a href="#" class="sb-sub-link">Disbursements</a>
+        <a href="#" class="sb-sub-link">Reimbursements</a>
+        <a href="#" class="sb-sub-link">Ledger</a>
+        <a href="#" class="sb-sub-link">Budgeting</a>
+        <a href="#" class="sb-sub-link">Taxes & VAT</a>
+        <a href="#" class="sb-sub-link">Currencies</a>
+        <a href="#" class="sb-sub-link">Payment Modes</a>
+      </div>
+    </div>
+
+    <!-- CATALOG -->
+    <div class="sb-group-lbl sb-label">Catalog & Resources</div>
+    <div class="sb-item" onclick="toggleNav(this)">
+      <div class="sb-link">
+        <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        <span class="sb-link-txt">Catalog & Resources</span>
+        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </div>
+      <div class="sb-sub">
+        <a href="#" class="sb-sub-link">Materials Catalog</a>
+        <a href="#" class="sb-sub-link">Services Catalog</a>
+        <a href="#" class="sb-sub-link">Categories</a>
+        <a href="#" class="sb-sub-link">Pricing</a>
+        <a href="#" class="sb-sub-link">Units of Measure</a>
+        <a href="#" class="sb-sub-link">Inventory</a>
+        <a href="#" class="sb-sub-link">SKU Management</a>
+        <a href="#" class="sb-sub-link">Media & Files</a>
+        <a href="#" class="sb-sub-link">Documents</a>
+        <a href="#" class="sb-sub-link">Notes</a>
+      </div>
+    </div>
+
+    <!-- REPORTS -->
+    <div class="sb-group-lbl sb-label">Reports & Analytics</div>
+    <div class="sb-item" onclick="toggleNav(this)">
+      <div class="sb-link">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <span class="sb-link-txt">Reports & Analytics</span>
+        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </div>
+      <div class="sb-sub">
+        <a href="#" class="sb-sub-link">Sales Reports</a>
+        <a href="#" class="sb-sub-link">Financial Reports</a>
+        <a href="#" class="sb-sub-link">Project Reports</a>
+        <a href="#" class="sb-sub-link">Task Productivity</a>
+        <a href="#" class="sb-sub-link">Customer Insights</a>
+        <a href="#" class="sb-sub-link">Lead Conversion</a>
+        <a href="#" class="sb-sub-link">Marketplace Analytics</a>
+        <a href="#" class="sb-sub-link">Forecasting</a>
+        <a href="#" class="sb-sub-link">Custom Reports</a>
+      </div>
+    </div>
+
+    <!-- SYSTEM -->
+    <div class="sb-group-lbl sb-label">System & Administration</div>
+    <div class="sb-item" onclick="toggleNav(this)">
+      <div class="sb-link">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span class="sb-link-txt">Team & Roles</span>
+        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </div>
+      <div class="sb-sub">
+        <a href="#" class="sb-sub-link">Members</a>
+        <a href="#" class="sb-sub-link">Roles & Permissions</a>
+        <a href="#" class="sb-sub-link">Departments</a>
+      </div>
+    </div>
+    <div class="sb-item" onclick="toggleNav(this)">
+      <div class="sb-link">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        <span class="sb-link-txt">Collaboration</span>
+        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </div>
+      <div class="sb-sub">
+        <a href="#" class="sb-sub-link">Team Chat</a>
+        <a href="#" class="sb-sub-link">Meetings</a>
+        <a href="#" class="sb-sub-link">Activity Logs</a>
+      </div>
+    </div>
+    <div class="sb-item" onclick="toggleNav(this)">
+      <div class="sb-link">
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.63A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        <span class="sb-link-txt">Support</span>
+        <span class="sb-badge">12</span>
+        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </div>
+      <div class="sb-sub">
+        <a href="#" class="sb-sub-link">Tickets</a>
+        <a href="#" class="sb-sub-link">Pipelines</a>
+        <a href="#" class="sb-sub-link">SLAs</a>
+      </div>
+    </div>
+    <div class="sb-item" onclick="toggleNav(this)">
+      <div class="sb-link">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+        <span class="sb-link-txt">Integrations</span>
+        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </div>
+      <div class="sb-sub">
+        <a href="#" class="sb-sub-link">Payment Gateways</a>
+        <a href="#" class="sb-sub-link">Email / SMTP</a>
+        <a href="#" class="sb-sub-link">SMS Providers</a>
+        <a href="#" class="sb-sub-link">API Keys</a>
+        <a href="#" class="sb-sub-link">Webhooks</a>
+      </div>
+    </div>
+    <div class="sb-item">
+      <a href="#" class="sb-link">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <span class="sb-link-txt">Settings</span>
+      </a>
+    </div>
+
+  </nav>
+
+  <div class="sb-footer">
+    <div class="sb-user">
+      <img src="https://i.pravatar.cc/100?img=22" class="sb-user-avatar" alt="">
+      <div>
+        <div class="sb-user-name">Admin User</div>
+        <div class="sb-user-role">Super Admin</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ══════════════ TOPBAR ══════════════ -->
+<header id="tb">
+  <button class="tb-toggle" onclick="toggleSidebar()">
+    <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+
+  <div>
+    <div class="tb-bc">Admin Panel / <span>Dashboard</span></div>
+    <div style="font-size:13px;font-weight:700;color:var(--navy)">Overview</div>
+  </div>
+
+  <div class="tb-icons">
+    <button class="tb-icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span class="tb-notif-dot"></span>
+    </button>
+    <button class="tb-icon-btn" title="Messages">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    </button>
+    <button class="tb-icon-btn" title="Settings">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+    </button>
+    <div class="tb-sep"></div>
+    <div class="tb-user">
+      <img src="https://i.pravatar.cc/100?img=22" alt="">
+      <div class="tb-user-info d-none d-md-block">
+        <div class="name">Admin</div>
+        <div class="role">Super Admin</div>
+      </div>
+    </div>
+    <a href="../index.html" class="btn btn-sm btn-outline-secondary ms-1" style="font-size:11px;border-radius:7px">View Site</a>
+  </div>
+</header>
+
+<!-- ══════════════ MAIN CONTENT ══════════════ -->
+<main id="main">
+<div class="adm-page">
+
+  <!-- PAGE HEADER -->
+  <div class="pg-head-row pg-head">
+    <div>
+      <h1>Dashboard Overview</h1>
+      <p id="pg-date">Monday, 26 May 2026 &mdash; Platform performing normally</p>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-sm btn-outline-secondary" style="border-radius:8px;font-size:12px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="margin-right:4px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        May 2026
+      </button>
+      <button class="btn btn-sm" style="background:var(--accent);color:#fff;border-radius:8px;font-size:12px;border:none">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="margin-right:4px"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        Export Report
+      </button>
+    </div>
+  </div>
+
+  <!-- ── KPI CARDS ── -->
+  <div class="row g-3 mb-3">
+    <div class="col-6 col-lg-3">
+      <div class="kpi">
+        <div class="kpi-icon" style="background:#fef3c7;color:#d97706">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="kpi-val">KES 14.2M</div>
+        <div class="kpi-lbl">Total Revenue (YTD)</div>
+        <div class="kpi-trend trend-up">
+          <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+          +18.4% vs last year
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="kpi">
+        <div class="kpi-icon" style="background:#eff6ff;color:#2563eb">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="kpi-val">29</div>
+        <div class="kpi-lbl">Active Projects</div>
+        <div class="kpi-trend trend-up">
+          <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+          5 new this month
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="kpi">
+        <div class="kpi-icon" style="background:#f0fdf4;color:#16a34a">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="kpi-val">214</div>
+        <div class="kpi-lbl">Registered Clients</div>
+        <div class="kpi-trend trend-up">
+          <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+          12 new this month
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="kpi">
+        <div class="kpi-icon" style="background:#fdf4ff;color:#9333ea">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="kpi-val">KES 5.8M</div>
+        <div class="kpi-lbl">Net Cashflow</div>
+        <div class="kpi-trend trend-up">
+          <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+          Positive balance
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECONDARY KPIs ── -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="mini-stat">
+        <div class="mini-stat-ico" style="background:#fff7ed;color:#ea580c">
+          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div>
+          <div class="mini-stat-val">47</div>
+          <div class="mini-stat-lbl">Open Leads</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="mini-stat">
+        <div class="mini-stat-ico" style="background:#fef2f2;color:#dc2626">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+        </div>
+        <div>
+          <div class="mini-stat-val">KES 4.1M</div>
+          <div class="mini-stat-lbl">Outstanding Invoices</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="mini-stat">
+        <div class="mini-stat-ico" style="background:#f0fdf4;color:#16a34a">
+          <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        </div>
+        <div>
+          <div class="mini-stat-val">83</div>
+          <div class="mini-stat-lbl">Active Tasks</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="mini-stat">
+        <div class="mini-stat-ico" style="background:#eff6ff;color:#2563eb">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.63A2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+        </div>
+        <div>
+          <div class="mini-stat-val">12</div>
+          <div class="mini-stat-lbl">Support Tickets</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CHARTS ROW ── -->
+  <div class="row g-3 mb-3">
+    <!-- Revenue vs Expenses Chart -->
+    <div class="col-lg-8">
+      <div class="card2" style="height:100%">
+        <div class="card2-head">
+          <div class="card2-title">Revenue vs Expenses &mdash; Last 7 Months</div>
+          <div class="d-flex gap-3 align-items-center" style="font-size:10.5px;color:var(--muted)">
+            <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#011D47;display:inline-block"></span>Revenue</span>
+            <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#C43100;display:inline-block"></span>Expenses</span>
+          </div>
+        </div>
+        <div class="card2-body" style="padding:16px 18px">
+          <div class="chart-wrap" style="height:230px">
+            <canvas id="revenueChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Project Status Donut -->
+    <div class="col-lg-4">
+      <div class="card2" style="height:100%">
+        <div class="card2-head">
+          <div class="card2-title">Projects by Status</div>
+          <span class="card2-action">View All</span>
+        </div>
+        <div class="card2-body" style="padding:16px 18px">
+          <div class="chart-wrap" style="height:160px">
+            <canvas id="projectDonut"></canvas>
+          </div>
+          <div class="mt-3">
+            <div class="pipe-row">
+              <div class="pipe-lbl">Active</div>
+              <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:48%;background:#011D47"></div></div>
+              <div class="pipe-num">14</div>
+            </div>
+            <div class="pipe-row">
+              <div class="pipe-lbl">Completed</div>
+              <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:28%;background:#16a34a"></div></div>
+              <div class="pipe-num">8</div>
+            </div>
+            <div class="pipe-row">
+              <div class="pipe-lbl">On Hold</div>
+              <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:14%;background:#d97706"></div></div>
+              <div class="pipe-num">4</div>
+            </div>
+            <div class="pipe-row">
+              <div class="pipe-lbl">Overdue</div>
+              <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:10%;background:#dc2626"></div></div>
+              <div class="pipe-num">3</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CASHFLOW + LEAD PIPELINE ── -->
+  <div class="row g-3 mb-3">
+    <!-- Cashflow Summary -->
+    <div class="col-lg-4">
+      <div class="card2">
+        <div class="card2-head">
+          <div class="card2-title">Cashflow Summary &mdash; May 2026</div>
+        </div>
+        <div style="padding:4px 18px 10px">
+          <div class="cf-row">
+            <span class="cf-lbl">Total Revenue</span>
+            <span class="cf-val" style="color:#16a34a">+ KES 3,140,000</span>
+          </div>
+          <div class="cf-row">
+            <span class="cf-lbl">Invoices Collected</span>
+            <span class="cf-val" style="color:#16a34a">+ KES 2,480,000</span>
+          </div>
+          <div class="cf-row">
+            <span class="cf-lbl">Total Expenses</span>
+            <span class="cf-val" style="color:#dc2626">- KES 1,920,000</span>
+          </div>
+          <div class="cf-row">
+            <span class="cf-lbl">Supplier Payments</span>
+            <span class="cf-val" style="color:#dc2626">- KES 640,000</span>
+          </div>
+          <div class="cf-row">
+            <span class="cf-lbl">Tax Remittance</span>
+            <span class="cf-val" style="color:#dc2626">- KES 188,000</span>
+          </div>
+          <div class="cf-row" style="border-top:2px solid var(--navy);margin-top:4px;padding-top:12px">
+            <span class="cf-lbl" style="font-weight:700;color:var(--navy)">Net Position</span>
+            <span class="cf-val" style="color:#16a34a;font-size:15px">+ KES 872,000</span>
+          </div>
+        </div>
+        <div style="padding:0 18px 14px">
+          <div style="background:var(--bg);border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;font-size:11px;color:var(--muted)">
+            <span>Overdue receivables</span>
+            <span style="font-weight:700;color:#dc2626">KES 2,420,000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lead Pipeline -->
+    <div class="col-lg-4">
+      <div class="card2">
+        <div class="card2-head">
+          <div class="card2-title">Lead Pipeline</div>
+          <span class="card2-action">Manage</span>
+        </div>
+        <div style="padding:14px 18px">
+          <div class="d-flex justify-content-between mb-3" style="font-size:11px;color:var(--muted)">
+            <span>47 total leads &mdash; <strong style="color:#16a34a">18 converted</strong> this month</span>
+          </div>
+          <div class="pipe-row">
+            <div class="pipe-lbl" style="font-size:11px">New</div>
+            <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:55%;background:#2563eb"></div></div>
+            <div class="pipe-num">26</div>
+          </div>
+          <div class="pipe-row">
+            <div class="pipe-lbl" style="font-size:11px">Contacted</div>
+            <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:34%;background:#7c3aed"></div></div>
+            <div class="pipe-num">16</div>
+          </div>
+          <div class="pipe-row">
+            <div class="pipe-lbl" style="font-size:11px">Qualified</div>
+            <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:21%;background:#d97706"></div></div>
+            <div class="pipe-num">10</div>
+          </div>
+          <div class="pipe-row">
+            <div class="pipe-lbl" style="font-size:11px">Proposal Sent</div>
+            <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:11%;background:#C43100"></div></div>
+            <div class="pipe-num">5</div>
+          </div>
+          <div class="pipe-row">
+            <div class="pipe-lbl" style="font-size:11px">Converted</div>
+            <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:38%;background:#16a34a"></div></div>
+            <div class="pipe-num">18</div>
+          </div>
+          <div style="margin-top:14px;background:var(--bg);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--muted);display:flex;justify-content:space-between">
+            <span>Conversion rate</span>
+            <strong style="color:var(--navy)">38.3%</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Platform Metrics -->
+    <div class="col-lg-4">
+      <div class="card2">
+        <div class="card2-head">
+          <div class="card2-title">Platform Metrics</div>
+        </div>
+        <div style="padding:10px 0">
+          <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--rule)">
+            <div class="sum-metric" style="border-right:1px solid var(--rule)">
+              <div class="sum-metric-val">1,847</div>
+              <div class="sum-metric-lbl">Professionals</div>
+            </div>
+            <div class="sum-metric">
+              <div class="sum-metric-val">312</div>
+              <div class="sum-metric-lbl">Vendors</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--rule)">
+            <div class="sum-metric" style="border-right:1px solid var(--rule)">
+              <div class="sum-metric-val">4,210</div>
+              <div class="sum-metric-lbl">Material SKUs</div>
+            </div>
+            <div class="sum-metric">
+              <div class="sum-metric-val">96</div>
+              <div class="sum-metric-lbl">Services Listed</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr">
+            <div class="sum-metric" style="border-right:1px solid var(--rule)">
+              <div class="sum-metric-val">3,928</div>
+              <div class="sum-metric-lbl">Total Users</div>
+            </div>
+            <div class="sum-metric">
+              <div class="sum-metric-val">98.7%</div>
+              <div class="sum-metric-lbl">Uptime (30d)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PROJECTS + INVOICES ── -->
+  <div class="row g-3 mb-3">
+    <!-- Recent Projects -->
+    <div class="col-lg-7">
+      <div class="card2">
+        <div class="card2-head">
+          <div class="card2-title">Recent Projects</div>
+          <a href="#" class="card2-action">View All</a>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="adm-tbl">
+            <thead>
+              <tr>
+                <th>Project</th>
+                <th>Client</th>
+                <th>Value</th>
+                <th>Progress</th>
+                <th>Status</th>
+                <th>Due</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div style="font-weight:600;font-size:12px;color:var(--navy)">Westlands Office Block</div><div style="font-size:10px;color:var(--muted)">Nairobi CBD</div></td>
+                <td style="font-size:12px">Patel Holdings</td>
+                <td style="font-size:12px;font-weight:700">KES 4.2M</td>
+                <td style="min-width:90px"><div class="prog"><div class="prog-fill" style="width:67%;background:#011D47"></div></div><div style="font-size:9px;color:var(--muted);margin-top:3px">67%</div></td>
+                <td><span class="bdg bdg-active">Active</span></td>
+                <td style="font-size:11px;color:var(--muted)">30 Jun 26</td>
+              </tr>
+              <tr>
+                <td><div style="font-weight:600;font-size:12px;color:var(--navy)">Karen Residence</div><div style="font-size:10px;color:var(--muted)">Karen, Nairobi</div></td>
+                <td style="font-size:12px">J. Mutua</td>
+                <td style="font-size:12px;font-weight:700">KES 1.8M</td>
+                <td style="min-width:90px"><div class="prog"><div class="prog-fill" style="width:45%;background:#011D47"></div></div><div style="font-size:9px;color:var(--muted);margin-top:3px">45%</div></td>
+                <td><span class="bdg bdg-active">Active</span></td>
+                <td style="font-size:11px;color:var(--muted)">15 Jul 26</td>
+              </tr>
+              <tr>
+                <td><div style="font-weight:600;font-size:12px;color:var(--navy)">Thika Road Mall</div><div style="font-size:10px;color:var(--muted)">Thika Road</div></td>
+                <td style="font-size:12px">TRM Ltd</td>
+                <td style="font-size:12px;font-weight:700">KES 12M</td>
+                <td style="min-width:90px"><div class="prog"><div class="prog-fill" style="width:28%;background:#d97706"></div></div><div style="font-size:9px;color:var(--muted);margin-top:3px">28%</div></td>
+                <td><span class="bdg bdg-hold">On Hold</span></td>
+                <td style="font-size:11px;color:var(--muted)">31 Aug 26</td>
+              </tr>
+              <tr>
+                <td><div style="font-weight:600;font-size:12px;color:var(--navy)">Gigiri Estate Ph.2</div><div style="font-size:10px;color:var(--muted)">Gigiri, Nairobi</div></td>
+                <td style="font-size:12px">Crown Developers</td>
+                <td style="font-size:12px;font-weight:700">KES 8.5M</td>
+                <td style="min-width:90px"><div class="prog"><div class="prog-fill" style="width:82%;background:#16a34a"></div></div><div style="font-size:9px;color:var(--muted);margin-top:3px">82%</div></td>
+                <td><span class="bdg bdg-active">Active</span></td>
+                <td style="font-size:11px;color:var(--muted)">20 Jul 26</td>
+              </tr>
+              <tr>
+                <td><div style="font-weight:600;font-size:12px;color:var(--navy)">Langata Bridge</div><div style="font-size:10px;color:var(--muted)">Langata Road</div></td>
+                <td style="font-size:12px">Kenya Highways</td>
+                <td style="font-size:12px;font-weight:700">KES 22M</td>
+                <td style="min-width:90px"><div class="prog"><div class="prog-fill" style="width:91%;background:#dc2626"></div></div><div style="font-size:9px;color:var(--muted);margin-top:3px">91%</div></td>
+                <td><span class="bdg bdg-overdue">Overdue</span></td>
+                <td style="font-size:11px;color:#dc2626;font-weight:600">01 May 26</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Invoices -->
+    <div class="col-lg-5">
+      <div class="card2">
+        <div class="card2-head">
+          <div class="card2-title">Recent Invoices</div>
+          <a href="#" class="card2-action">View All</a>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="adm-tbl">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Client</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-size:11px;color:var(--muted);font-weight:600">INV-0142</td>
+                <td style="font-size:12px">Patel Holdings</td>
+                <td style="font-size:12px;font-weight:700">KES 840K</td>
+                <td><span class="bdg bdg-pending">Pending</span></td>
+              </tr>
+              <tr>
+                <td style="font-size:11px;color:var(--muted);font-weight:600">INV-0141</td>
+                <td style="font-size:12px">J. Mutua</td>
+                <td style="font-size:12px;font-weight:700">KES 360K</td>
+                <td><span class="bdg bdg-paid">Paid</span></td>
+              </tr>
+              <tr>
+                <td style="font-size:11px;color:var(--muted);font-weight:600">INV-0140</td>
+                <td style="font-size:12px">Crown Developers</td>
+                <td style="font-size:12px;font-weight:700">KES 1.7M</td>
+                <td><span class="bdg bdg-pending">Pending</span></td>
+              </tr>
+              <tr>
+                <td style="font-size:11px;color:var(--muted);font-weight:600">INV-0139</td>
+                <td style="font-size:12px">TRM Ltd</td>
+                <td style="font-size:12px;font-weight:700">KES 2.4M</td>
+                <td><span class="bdg bdg-overdue">Overdue</span></td>
+              </tr>
+              <tr>
+                <td style="font-size:11px;color:var(--muted);font-weight:600">INV-0138</td>
+                <td style="font-size:12px">ABC Construction</td>
+                <td style="font-size:12px;font-weight:700">KES 520K</td>
+                <td><span class="bdg bdg-paid">Paid</span></td>
+              </tr>
+              <tr>
+                <td style="font-size:11px;color:var(--muted);font-weight:600">INV-0137</td>
+                <td style="font-size:12px">Kenya Highways</td>
+                <td style="font-size:12px;font-weight:700">KES 4.4M</td>
+                <td><span class="bdg bdg-paid">Paid</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="padding:10px 14px;background:var(--bg);border-top:1px solid var(--rule);display:flex;justify-content:space-between;font-size:11px;color:var(--muted)">
+          <span>Total Outstanding</span>
+          <strong style="color:var(--navy)">KES 4,960,000</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ACTIVITY + TOP CLIENTS + TASKS ── -->
+  <div class="row g-3 mb-3">
+
+    <!-- Activity Feed -->
+    <div class="col-lg-4">
+      <div class="card2">
+        <div class="card2-head">
+          <div class="card2-title">Recent Activity</div>
+          <a href="#" class="card2-action">View Log</a>
+        </div>
+        <div>
+          <div class="act-item">
+            <div class="act-dot" style="background:#2563eb"></div>
+            <div>
+              <div class="act-msg">Invoice <strong>INV-0142</strong> sent to Patel Holdings</div>
+              <div class="act-time">2 minutes ago &mdash; by Admin</div>
+            </div>
+          </div>
+          <div class="act-item">
+            <div class="act-dot" style="background:#16a34a"></div>
+            <div>
+              <div class="act-msg">Milestone <em>"Foundation Complete"</em> marked done on Karen Residence</div>
+              <div class="act-time">18 minutes ago &mdash; by M. Wangari</div>
+            </div>
+          </div>
+          <div class="act-item">
+            <div class="act-dot" style="background:#d97706"></div>
+            <div>
+              <div class="act-msg">New lead from <strong>Nairobi Business Park</strong> registered</div>
+              <div class="act-time">1 hour ago &mdash; via web form</div>
+            </div>
+          </div>
+          <div class="act-item">
+            <div class="act-dot" style="background:#16a34a"></div>
+            <div>
+              <div class="act-msg">Payment of <strong>KES 360,000</strong> received from J. Mutua</div>
+              <div class="act-time">2 hours ago &mdash; via M-Pesa</div>
+            </div>
+          </div>
+          <div class="act-item">
+            <div class="act-dot" style="background:#7c3aed"></div>
+            <div>
+              <div class="act-msg">Task <em>"Foundation inspection report"</em> completed by D. Odhiambo</div>
+              <div class="act-time">3 hours ago</div>
+            </div>
+          </div>
+          <div class="act-item">
+            <div class="act-dot" style="background:#dc2626"></div>
+            <div>
+              <div class="act-msg"><strong>3 contracts</strong> pending signature — follow-up required</div>
+              <div class="act-time">Yesterday, 4:32 PM</div>
+            </div>
+          </div>
+          <div class="act-item">
+            <div class="act-dot" style="background:#2563eb"></div>
+            <div>
+              <div class="act-msg">New professional <strong>Arch. Kamau Njoroge</strong> registered on platform</div>
+              <div class="act-time">Yesterday, 10:15 AM</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Clients -->
+    <div class="col-lg-4">
+      <div class="card2">
+        <div class="card2-head">
+          <div class="card2-title">Top Clients by Revenue</div>
+          <a href="#" class="card2-action">View All</a>
+        </div>
+        <div>
+          <div class="tc-row">
+            <img src="https://i.pravatar.cc/100?img=1" class="tc-avatar" alt="">
+            <div style="flex:1">
+              <div class="tc-name">Kenya Highways Authority</div>
+              <div class="tc-sub">1 project &mdash; Govt</div>
+            </div>
+            <div>
+              <div class="tc-rev">KES 22M</div>
+              <div class="tc-out">KES 0 due</div>
+            </div>
+          </div>
+          <div class="tc-row">
+            <img src="https://i.pravatar.cc/100?img=4" class="tc-avatar" alt="">
+            <div style="flex:1">
+              <div class="tc-name">TRM Ltd</div>
+              <div class="tc-sub">2 projects &mdash; Real Estate</div>
+            </div>
+            <div>
+              <div class="tc-rev">KES 14.4M</div>
+              <div class="tc-out" style="color:#dc2626">KES 2.4M due</div>
+            </div>
+          </div>
+          <div class="tc-row">
+            <img src="https://i.pravatar.cc/100?img=8" class="tc-avatar" alt="">
+            <div style="flex:1">
+              <div class="tc-name">Crown Developers</div>
+              <div class="tc-sub">3 projects &mdash; Developer</div>
+            </div>
+            <div>
+              <div class="tc-rev">KES 8.5M</div>
+              <div class="tc-out" style="color:#dc2626">KES 1.7M due</div>
+            </div>
+          </div>
+          <div class="tc-row">
+            <img src="https://i.pravatar.cc/100?img=12" class="tc-avatar" alt="">
+            <div style="flex:1">
+              <div class="tc-name">Patel Holdings</div>
+              <div class="tc-sub">2 projects &mdash; Commercial</div>
+            </div>
+            <div>
+              <div class="tc-rev">KES 5.0M</div>
+              <div class="tc-out" style="color:#dc2626">KES 840K due</div>
+            </div>
+          </div>
+          <div class="tc-row">
+            <img src="https://i.pravatar.cc/100?img=18" class="tc-avatar" alt="">
+            <div style="flex:1">
+              <div class="tc-name">J. Mutua</div>
+              <div class="tc-sub">1 project &mdash; Residential</div>
+            </div>
+            <div>
+              <div class="tc-rev">KES 1.8M</div>
+              <div class="tc-out">KES 0 due</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upcoming Tasks + Supplier Performance -->
+    <div class="col-lg-4">
+      <div class="card2 mb-3">
+        <div class="card2-head">
+          <div class="card2-title">Upcoming Tasks</div>
+          <a href="#" class="card2-action">Board View</a>
+        </div>
+        <div>
+          <div class="task-item">
+            <div class="task-check" style="border-color:#dc2626"></div>
+            <div>
+              <div class="task-title">Review Thika Road Mall structural drawings</div>
+              <div class="task-meta">Due: Today &mdash; Assigned to: Eng. Kariuki</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-check"></div>
+            <div>
+              <div class="task-title">Send revised proposal to Patel Holdings</div>
+              <div class="task-meta">Due: Tomorrow &mdash; Assigned to: Admin</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-check"></div>
+            <div>
+              <div class="task-title">Approve 3 pending supplier quotations</div>
+              <div class="task-meta">Due: 28 May &mdash; Procurement</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-check"></div>
+            <div>
+              <div class="task-title">Monthly VAT reconciliation report</div>
+              <div class="task-meta">Due: 31 May &mdash; Finance team</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Supplier Performance -->
+      <div class="card2">
+        <div class="card2-head">
+          <div class="card2-title">Supplier Performance</div>
+          <a href="#" class="card2-action">Details</a>
+        </div>
+        <div style="padding:10px 18px 14px">
+          <div class="pipe-row" style="padding:7px 0">
+            <div class="pipe-lbl" style="font-size:11px;width:110px">BuildMart Kenya</div>
+            <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:92%;background:#16a34a"></div></div>
+            <div class="pipe-num" style="color:#16a34a">92%</div>
+          </div>
+          <div class="pipe-row" style="padding:7px 0">
+            <div class="pipe-lbl" style="font-size:11px;width:110px">Bamburi Cement</div>
+            <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:88%;background:#16a34a"></div></div>
+            <div class="pipe-num" style="color:#16a34a">88%</div>
+          </div>
+          <div class="pipe-row" style="padding:7px 0">
+            <div class="pipe-lbl" style="font-size:11px;width:110px">East Africa Steel</div>
+            <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:74%;background:#d97706"></div></div>
+            <div class="pipe-num" style="color:#d97706">74%</div>
+          </div>
+          <div class="pipe-row" style="padding:7px 0">
+            <div class="pipe-lbl" style="font-size:11px;width:110px">Nakumatt Tiles</div>
+            <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:61%;background:#dc2626"></div></div>
+            <div class="pipe-num" style="color:#dc2626">61%</div>
+          </div>
+          <div style="margin-top:10px;font-size:10px;color:var(--muted)">Score based on delivery time, quality, and compliance</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ── Sidebar toggle
+function toggleSidebar() {
+  document.getElementById('sb').classList.toggle('collapsed');
+}
+function toggleNav(el) {
+  el.classList.toggle('open');
+}
+
+// ── Date
+const d = new Date();
+document.getElementById('pg-date').textContent =
+  d.toLocaleDateString('en-KE', { weekday:'long', year:'numeric', month:'long', day:'numeric' }) +
+  ' — Platform performing normally';
+
+// ── Revenue Chart
+(function() {
+  const ctx = document.getElementById('revenueChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'],
+      datasets: [
+        {
+          label: 'Revenue',
+          data: [1840, 2250, 1950, 2100, 2420, 2780, 3140],
+          backgroundColor: 'rgba(1,29,71,0.85)',
+          borderRadius: 5,
+          borderSkipped: false,
+        },
+        {
+          label: 'Expenses',
+          data: [1220, 1480, 1310, 1390, 1620, 1760, 1920],
+          backgroundColor: 'rgba(196,49,0,0.75)',
+          borderRadius: 5,
+          borderSkipped: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: {
+        callbacks: {
+          label: ctx => ' KES ' + (ctx.raw * 1000).toLocaleString()
+        }
+      }},
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { family: 'Sora', size: 10 }, color: '#9ca3af' } },
+        y: { grid: { color: '#f3f4f6' }, ticks: {
+          font: { family: 'Sora', size: 10 }, color: '#9ca3af',
+          callback: v => 'KES ' + v + 'K'
+        }, border: { display: false } }
+      }
+    }
+  });
+})();
+
+// ── Donut Chart
+(function() {
+  const ctx = document.getElementById('projectDonut').getContext('2d');
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Active', 'Completed', 'On Hold', 'Overdue'],
+      datasets: [{ data: [14, 8, 4, 3], backgroundColor: ['#011D47','#16a34a','#d97706','#dc2626'], borderWidth: 0, hoverOffset: 4 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '72%',
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ' ' + ctx.label + ': ' + ctx.raw + ' projects' } }
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>

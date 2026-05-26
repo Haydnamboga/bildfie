@@ -1,0 +1,328 @@
+<%- include('../partials/head', { title: "Facilities — BuildLink" }) %>
+<%- include('../partials/navbar', { activePage: "facilities", user: locals.user }) %>
+
+
+<!-- INFO BAR -->
+<div class="bl-infobar">
+  <div class="container-xl d-flex align-items-center justify-content-between h-100">
+    <div class="d-flex align-items-center gap-4">
+      <div class="bl-ib-item"><div class="bl-ib-dot" style="background:#9C27B0"></div>3,400+ Facilities Available</div>
+      <div class="bl-ib-item">Site Offices, Storage & Welfare</div>
+      <div class="bl-ib-item d-none d-lg-flex">Portable & Modular Units</div>
+      <div class="bl-ib-item d-none d-xl-flex">Short & Long-Term Hire</div>
+    </div>
+    <div class="bl-ib-right d-none d-lg-flex">
+      <div class="bl-ib-price"><i class="bi bi-clock"></i>  <strong id="live-time">&mdash;</strong> EAT</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE HERO -->
+<section class="bl-page-hero">
+  <div class="bl-ph-texture"></div>
+  <div class="bl-ph-glow"></div>
+  <div class="container-xl position-relative">
+    <div class="d-flex align-items-center gap-2 flex-wrap mb-3">
+      <div class="bl-ph-pill"><span style="background:#9C27B0"></span>3,400+ Facilities Available</div>
+      <div class="bl-ph-etag"><i class="bi bi-house-fill"></i>  Site Offices & Cabins</div>
+      <div class="bl-ph-etag"><i class="bi bi-droplet"></i>  Welfare & Sanitation</div>
+      <div class="bl-ph-etag d-none d-md-block"><i class="bi bi-box-seam"></i>  Storage & Warehousing</div>
+    </div>
+    <div class="bl-ph-search mb-4">
+      <div class="bl-ph-seg">
+        <div class="bl-ph-seg-label"><i class="bi bi-search"></i>  Search Facilities</div>
+        <input class="bl-ph-sinp" placeholder="Site office, container, welfare unit, storage&hellip;" autocomplete="off">
+      </div>
+      <div class="bl-ph-div"></div>
+      <div class="bl-ph-sel-wrap">
+        <div class="bl-ph-seg-label"><i class="bi bi-building-fill-gear"></i>  Type</div>
+        <select class="bl-ph-sel">
+          <option>All Types</option><option>Site Offices</option><option>Portable Cabins</option>
+          <option>Storage Containers</option><option>Welfare Units</option><option>Toilet Blocks</option>
+          <option>Canteen Units</option><option>Security Cabins</option>
+        </select>
+      </div>
+      <div class="bl-ph-div"></div>
+      <div class="bl-ph-sel-wrap">
+        <div class="bl-ph-seg-label"><i class="bi bi-geo-alt-fill"></i>  Location</div>
+        <select class="bl-ph-sel">
+          <option>Any Location</option><option>Nairobi</option><option>Mombasa</option>
+          <option>Kisumu</option><option>Kampala</option><option>Dar es Salaam</option>
+        </select>
+      </div>
+      <div class="bl-ph-div d-none d-lg-block"></div>
+      <div class="bl-ph-sel-wrap d-none d-lg-block">
+        <div class="bl-ph-seg-label"><i class="bi bi-calendar"></i>  Duration</div>
+        <select class="bl-ph-sel">
+          <option>Any Duration</option><option>Weekly</option><option>Monthly</option><option>3&ndash;6 Months</option><option>6&ndash;12 Months</option>
+        </select>
+      </div>
+      <button class="bl-ph-sbtn" style="background:#6A1B9A" onclick="showToast('Searching facilities&hellip;')">Search Facilities</button>
+    </div>
+    <div class="bl-ph-stats">
+      <div class="bl-ph-stat"><div class="bl-ph-stn">3,400<span>+</span></div><div class="bl-ph-stl">Facilities</div></div>
+      <div class="bl-ph-stat"><div class="bl-ph-stn">820<span>+</span></div><div class="bl-ph-stl">Providers</div></div>
+      <div class="bl-ph-stat"><div class="bl-ph-stn">4.7<span>&#9733;</span></div><div class="bl-ph-stl">Avg. Rating</div></div>
+      <div class="bl-ph-stat"><div class="bl-ph-stn">48<span>hr</span></div><div class="bl-ph-stl">Avg. Delivery</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORY STRIP -->
+<div class="bl-cat-strip">
+  <div class="bl-cat-inner">
+    <div class="bl-cat-pill on" onclick="setCat(this,'all')"><div class="bl-cat-ico"><i class="bi bi-building-fill-gear"></i> </div><div class="bl-cat-lbl">All Facilities</div><div class="bl-cat-count">3,400</div></div>
+    <div class="bl-cat-pill" onclick="setCat(this,'office')"><div class="bl-cat-ico"><i class="bi bi-house-fill"></i> </div><div class="bl-cat-lbl">Site Offices</div><div class="bl-cat-count">820</div></div>
+    <div class="bl-cat-pill" onclick="setCat(this,'cabin')"><div class="bl-cat-ico"><i class="bi bi-house-fill"></i> </div><div class="bl-cat-lbl">Portable Cabins</div><div class="bl-cat-count">640</div></div>
+    <div class="bl-cat-pill" onclick="setCat(this,'storage')"><div class="bl-cat-ico"><i class="bi bi-box-seam"></i> </div><div class="bl-cat-lbl">Storage Units</div><div class="bl-cat-count">960</div></div>
+    <div class="bl-cat-pill" onclick="setCat(this,'welfare')"><div class="bl-cat-ico"><i class="bi bi-droplet"></i> </div><div class="bl-cat-lbl">Welfare Units</div><div class="bl-cat-count">480</div></div>
+    <div class="bl-cat-pill" onclick="setCat(this,'toilet')"><div class="bl-cat-ico"><i class="bi bi-water"></i> </div><div class="bl-cat-lbl">Toilet Blocks</div><div class="bl-cat-count">280</div></div>
+    <div class="bl-cat-pill" onclick="setCat(this,'canteen')"><div class="bl-cat-ico"><i class="bi bi-box"></i> </div><div class="bl-cat-lbl">Canteen Units</div><div class="bl-cat-count">120</div></div>
+    <div class="bl-cat-pill" onclick="setCat(this,'security')"><div class="bl-cat-ico"><i class="bi bi-lock"></i> </div><div class="bl-cat-lbl">Security Cabins</div><div class="bl-cat-count">100</div></div>
+  </div>
+</div>
+
+<!-- BREADCRUMB -->
+<div class="bg-white border-bottom py-2">
+  <div class="container-xl d-flex align-items-center gap-2 small text-muted">
+    <a href="/" class="text-decoration-none text-muted">Home</a>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    <span class="text-dark fw-500">Site Facilities</span>
+    <span class="ms-auto">3,400+ facilities available</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="container-xl py-5">
+  <div class="row g-4">
+
+    <!-- SIDEBAR -->
+    <div class="col-lg-3">
+      <div class="bl-sidebar">
+        <div class="bl-sb-section">
+          <div class="bl-sb-title">Facility Type</div>
+          <div class="d-flex flex-column gap-1">
+            <div class="bl-cat-node on" onclick="this.classList.toggle('on')"><span><i class="bi bi-building-fill-gear"></i> </span>All Facilities<span class="ms-auto badge bg-light text-muted">3,400</span></div>
+            <div class="bl-cat-node" onclick="this.classList.toggle('on')"><span><i class="bi bi-house-fill"></i> </span>Site Offices<span class="ms-auto badge bg-light text-muted">820</span></div>
+            <div class="bl-cat-node" onclick="this.classList.toggle('on')"><span><i class="bi bi-house-fill"></i> </span>Portable Cabins<span class="ms-auto badge bg-light text-muted">640</span></div>
+            <div class="bl-cat-node" onclick="this.classList.toggle('on')"><span><i class="bi bi-box-seam"></i> </span>Storage Containers<span class="ms-auto badge bg-light text-muted">960</span></div>
+            <div class="bl-cat-node" onclick="this.classList.toggle('on')"><span><i class="bi bi-droplet"></i> </span>Welfare Units<span class="ms-auto badge bg-light text-muted">480</span></div>
+            <div class="bl-cat-node" onclick="this.classList.toggle('on')"><span><i class="bi bi-water"></i> </span>Toilet Blocks<span class="ms-auto badge bg-light text-muted">280</span></div>
+            <div class="bl-cat-node" onclick="this.classList.toggle('on')"><span><i class="bi bi-box"></i> </span>Canteen Units<span class="ms-auto badge bg-light text-muted">120</span></div>
+            <div class="bl-cat-node" onclick="this.classList.toggle('on')"><span><i class="bi bi-lock"></i> </span>Security Cabins<span class="ms-auto badge bg-light text-muted">100</span></div>
+          </div>
+        </div>
+        <div class="bl-sb-section">
+          <div class="bl-sb-title">Availability</div>
+          <div class="d-flex flex-column gap-2">
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box on"></div><span class="bl-cb-label"><i class="bi bi-lightning"></i>  Available Now</span><span class="ms-auto text-muted" style="font-size:10px">1,800</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label"><i class="bi bi-truck"></i>  Delivery Included</span><span class="ms-auto text-muted" style="font-size:10px">2,200</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label"><i class="bi bi-gear"></i>  Install Included</span><span class="ms-auto text-muted" style="font-size:10px">1,600</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label"><i class="bi bi-plug"></i>  Electrics Included</span><span class="ms-auto text-muted" style="font-size:10px">940</span></div>
+          </div>
+        </div>
+        <div class="bl-sb-section">
+          <div class="bl-sb-title">Hire Period</div>
+          <div class="d-flex flex-column gap-2">
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label"><i class="bi bi-calendar"></i>  Weekly</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box on"></div><span class="bl-cb-label"><i class="bi bi-calendar-check"></i>  Monthly</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label"><i class="bi bi-calendar3"></i>  3&ndash;6 Months</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label"><i class="bi bi-clipboard"></i>  Long-Term (6m+)</span></div>
+          </div>
+        </div>
+        <div class="bl-sb-section">
+          <div class="bl-sb-title">Monthly Rate (KES)</div>
+          <div class="small fw-bold mb-2" id="fac-rate-val">Up to KES 100,000</div>
+          <input type="range" class="form-range" min="5000" max="300000" value="100000" style="accent-color:#6A1B9A" oninput="document.getElementById('fac-rate-val').textContent='Up to KES '+Number(this.value).toLocaleString()">
+          <div class="d-flex justify-content-between text-muted" style="font-size:10px"><span>KES 5,000</span><span>KES 300K+</span></div>
+        </div>
+        <div class="bl-sb-section">
+          <div class="bl-sb-title">Location</div>
+          <div class="d-flex flex-column gap-2">
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box on"></div><span class="bl-cb-label">Nairobi</span><span class="ms-auto text-muted" style="font-size:10px">1,800</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label">Mombasa</span><span class="ms-auto text-muted" style="font-size:10px">480</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label">Kisumu</span><span class="ms-auto text-muted" style="font-size:10px">240</span></div>
+            <div class="bl-cb-item" onclick="toggleCheck(this)"><div class="bl-cb-box"></div><span class="bl-cb-label">Other</span><span class="ms-auto text-muted" style="font-size:10px">880</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="col-lg-9">
+      <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
+        <span class="text-muted small">Sort by:</span>
+        <select class="form-select form-select-sm" style="width:auto">
+          <option>Best Match</option><option>Lowest Rate</option><option>Highest Rated</option><option>Nearest</option>
+        </select>
+        <span class="text-muted small ms-auto"><strong>3,400+</strong> facilities available</span>
+      </div>
+
+      <!-- FACILITY CARDS GRID -->
+      <div class="row g-3 mb-4">
+        <!-- Card 1 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card border-0 shadow-sm h-100 bl-rv" style="border-radius:14px;overflow:hidden;cursor:pointer" onclick="showToast('Opening facility details&hellip;')">
+            <div class="position-relative" style="height:160px;background:linear-gradient(135deg,#4A148C,#7B1FA2);display:flex;align-items:center;justify-content:center;font-size:60px"><i class="bi bi-house-fill"></i> 
+              <div class="position-absolute top-2 start-2"><span class="badge bg-success" style="font-size:9px"><i class="bi bi-lightning"></i>  Available Now</span></div>
+              <div class="position-absolute top-2 end-2"><span class="badge bg-dark bg-opacity-75" style="font-size:9px"><i class="bi bi-star-fill text-warning"></i>  4.8</span></div>
+            </div>
+            <div class="card-body p-3">
+              <div class="fw-bold small mb-1" style="color:var(--bl-navy)">Executive Site Office &mdash; 20ft</div>
+              <div class="text-muted" style="font-size:10px"><i class="bi bi-geo-alt-fill"></i>  Nairobi Depot &middot; Air-conditioned &middot; Furnished</div>
+              <div class="d-flex flex-wrap gap-1 mt-2 mb-3">
+                <span class="bl-tag" style="font-size:9px">A/C</span>
+                <span class="bl-tag" style="font-size:9px">Electrics</span>
+                <span class="bl-tag" style="font-size:9px">Furnished</span>
+                <span class="bl-tag" style="font-size:9px">WiFi-ready</span>
+              </div>
+              <div class="d-flex align-items-end justify-content-between">
+                <div><div class="fw-bold" style="font-family:'Playfair Display',serif;font-size:18px;color:var(--bl-navy)">KES 45,000<span class="text-muted fw-normal" style="font-family:'Sora',sans-serif;font-size:10px">/mo</span></div></div>
+                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();showToast('Sending enquiry&hellip;')">Enquire</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card border-0 shadow-sm h-100 bl-rv bl-stagger-1" style="border-radius:14px;overflow:hidden;cursor:pointer" onclick="showToast('Opening facility details&hellip;')">
+            <div class="position-relative" style="height:160px;background:linear-gradient(135deg,#E65100,#BF360C);display:flex;align-items:center;justify-content:center;font-size:60px"><i class="bi bi-box-seam"></i> 
+              <div class="position-absolute top-2 start-2"><span class="badge bg-success" style="font-size:9px"><i class="bi bi-lightning"></i>  Available Now</span></div>
+              <div class="position-absolute top-2 end-2"><span class="badge bg-dark bg-opacity-75" style="font-size:9px"><i class="bi bi-star-fill text-warning"></i>  4.9</span></div>
+            </div>
+            <div class="card-body p-3">
+              <div class="fw-bold small mb-1" style="color:var(--bl-navy)">Shipping Container &mdash; 40ft</div>
+              <div class="text-muted" style="font-size:10px"><i class="bi bi-geo-alt-fill"></i>  Nairobi Depot &middot; Secure steel lockbox storage</div>
+              <div class="d-flex flex-wrap gap-1 mt-2 mb-3">
+                <span class="bl-tag" style="font-size:9px">Secure Lock</span>
+                <span class="bl-tag" style="font-size:9px">Weatherproof</span>
+                <span class="bl-tag" style="font-size:9px">Anti-Rust</span>
+              </div>
+              <div class="d-flex align-items-end justify-content-between">
+                <div><div class="fw-bold" style="font-family:'Playfair Display',serif;font-size:18px;color:var(--bl-navy)">KES 18,000<span class="text-muted fw-normal" style="font-family:'Sora',sans-serif;font-size:10px">/mo</span></div></div>
+                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();showToast('Sending enquiry&hellip;')">Enquire</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card border-0 shadow-sm h-100 bl-rv bl-stagger-2" style="border-radius:14px;overflow:hidden;cursor:pointer" onclick="showToast('Opening facility details&hellip;')">
+            <div class="position-relative" style="height:160px;background:linear-gradient(135deg,#1565C0,#0D47A1);display:flex;align-items:center;justify-content:center;font-size:60px"><i class="bi bi-droplet"></i> 
+              <div class="position-absolute top-2 start-2"><span class="badge bg-warning text-dark" style="font-size:9px"><i class="bi bi-calendar"></i>  48hr delivery</span></div>
+              <div class="position-absolute top-2 end-2"><span class="badge bg-dark bg-opacity-75" style="font-size:9px"><i class="bi bi-star-fill text-warning"></i>  4.6</span></div>
+            </div>
+            <div class="card-body p-3">
+              <div class="fw-bold small mb-1" style="color:var(--bl-navy)">Welfare & Toilet Block &mdash; 6-person</div>
+              <div class="text-muted" style="font-size:10px"><i class="bi bi-geo-alt-fill"></i>  Nairobi Depot &middot; Hot water &middot; Canteen area</div>
+              <div class="d-flex flex-wrap gap-1 mt-2 mb-3">
+                <span class="bl-tag" style="font-size:9px">Hot Water</span>
+                <span class="bl-tag" style="font-size:9px">Canteen</span>
+                <span class="bl-tag" style="font-size:9px">Changing Room</span>
+              </div>
+              <div class="d-flex align-items-end justify-content-between">
+                <div><div class="fw-bold" style="font-family:'Playfair Display',serif;font-size:18px;color:var(--bl-navy)">KES 28,000<span class="text-muted fw-normal" style="font-family:'Sora',sans-serif;font-size:10px">/mo</span></div></div>
+                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();showToast('Sending enquiry&hellip;')">Enquire</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card border-0 shadow-sm h-100 bl-rv bl-stagger-3" style="border-radius:14px;overflow:hidden;cursor:pointer" onclick="showToast('Opening facility details&hellip;')">
+            <div class="position-relative" style="height:160px;background:linear-gradient(135deg,#1B5E20,#2E7D32);display:flex;align-items:center;justify-content:center;font-size:60px"><i class="bi bi-lock"></i> 
+              <div class="position-absolute top-2 start-2"><span class="badge bg-success" style="font-size:9px"><i class="bi bi-lightning"></i>  Available Now</span></div>
+              <div class="position-absolute top-2 end-2"><span class="badge bg-dark bg-opacity-75" style="font-size:9px"><i class="bi bi-star-fill text-warning"></i>  4.7</span></div>
+            </div>
+            <div class="card-body p-3">
+              <div class="fw-bold small mb-1" style="color:var(--bl-navy)">Security Guard Cabin &mdash; Turnstile</div>
+              <div class="text-muted" style="font-size:10px"><i class="bi bi-geo-alt-fill"></i>  Nairobi Depot &middot; Entry control</div>
+              <div class="d-flex flex-wrap gap-1 mt-2 mb-3">
+                <span class="bl-tag" style="font-size:9px">CCTV-ready</span>
+                <span class="bl-tag" style="font-size:9px">Intercom</span>
+                <span class="bl-tag" style="font-size:9px">A/C</span>
+              </div>
+              <div class="d-flex align-items-end justify-content-between">
+                <div><div class="fw-bold" style="font-family:'Playfair Display',serif;font-size:18px;color:var(--bl-navy)">KES 12,000<span class="text-muted fw-normal" style="font-family:'Sora',sans-serif;font-size:10px">/mo</span></div></div>
+                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();showToast('Sending enquiry&hellip;')">Enquire</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 5 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card border-0 shadow-sm h-100 bl-rv bl-stagger-4" style="border-radius:14px;overflow:hidden;cursor:pointer" onclick="showToast('Opening facility details&hellip;')">
+            <div class="position-relative" style="height:160px;background:linear-gradient(135deg,#BF360C,#E64A19);display:flex;align-items:center;justify-content:center;font-size:60px"><i class="bi bi-box"></i> 
+              <div class="position-absolute top-2 start-2"><span class="badge bg-warning text-dark" style="font-size:9px"><i class="bi bi-calendar"></i>  48hr delivery</span></div>
+              <div class="position-absolute top-2 end-2"><span class="badge bg-dark bg-opacity-75" style="font-size:9px"><i class="bi bi-star-fill text-warning"></i>  4.8</span></div>
+            </div>
+            <div class="card-body p-3">
+              <div class="fw-bold small mb-1" style="color:var(--bl-navy)">Site Canteen Unit &mdash; 20-seat</div>
+              <div class="text-muted" style="font-size:10px"><i class="bi bi-geo-alt-fill"></i>  Nairobi Depot &middot; Kitchen & seating area</div>
+              <div class="d-flex flex-wrap gap-1 mt-2 mb-3">
+                <span class="bl-tag" style="font-size:9px">Kitchen</span>
+                <span class="bl-tag" style="font-size:9px">Electrics</span>
+                <span class="bl-tag" style="font-size:9px">20 Seats</span>
+              </div>
+              <div class="d-flex align-items-end justify-content-between">
+                <div><div class="fw-bold" style="font-family:'Playfair Display',serif;font-size:18px;color:var(--bl-navy)">KES 38,000<span class="text-muted fw-normal" style="font-family:'Sora',sans-serif;font-size:10px">/mo</span></div></div>
+                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();showToast('Sending enquiry&hellip;')">Enquire</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 6 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card border-0 shadow-sm h-100 bl-rv" style="border-radius:14px;overflow:hidden;cursor:pointer" onclick="showToast('Opening facility details&hellip;')">
+            <div class="position-relative" style="height:160px;background:linear-gradient(135deg,#37474F,#546E7A);display:flex;align-items:center;justify-content:center;font-size:60px"><i class="bi bi-house-fill"></i> 
+              <div class="position-absolute top-2 start-2"><span class="badge bg-success" style="font-size:9px"><i class="bi bi-lightning"></i>  Available Now</span></div>
+              <div class="position-absolute top-2 end-2"><span class="badge bg-dark bg-opacity-75" style="font-size:9px"><i class="bi bi-star-fill text-warning"></i>  4.9</span></div>
+            </div>
+            <div class="card-body p-3">
+              <div class="fw-bold small mb-1" style="color:var(--bl-navy)">Modular Portable Cabin &mdash; Anti-vandal</div>
+              <div class="text-muted" style="font-size:10px"><i class="bi bi-geo-alt-fill"></i>  Nairobi Depot &middot; Multi-purpose</div>
+              <div class="d-flex flex-wrap gap-1 mt-2 mb-3">
+                <span class="bl-tag" style="font-size:9px">Anti-vandal Steel</span>
+                <span class="bl-tag" style="font-size:9px">Insulated</span>
+                <span class="bl-tag" style="font-size:9px">Stackable</span>
+              </div>
+              <div class="d-flex align-items-end justify-content-between">
+                <div><div class="fw-bold" style="font-family:'Playfair Display',serif;font-size:18px;color:var(--bl-navy)">KES 22,000<span class="text-muted fw-normal" style="font-family:'Sora',sans-serif;font-size:10px">/mo</span></div></div>
+                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();showToast('Sending enquiry&hellip;')">Enquire</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REQUEST QUOTE CARD -->
+      <div class="card border-0 shadow-sm bl-rv" style="border-radius:14px;border:2px dashed rgba(106,27,154,.25) !important">
+        <div class="card-body p-4">
+          <div class="row g-4 align-items-center">
+            <div class="col-md-7">
+              <div class="bl-sec-label mb-2">Site Setup Made Easy</div>
+              <h5 class="fw-bold mb-2" style="color:var(--bl-navy)">Need a complete site setup package?</h5>
+              <p class="text-muted small mb-0">Tell us your site size, crew number, and project duration. We'll bundle a site office, welfare unit, storage, and sanitation into one quoted package &mdash; delivered and installed in 48 hours.</p>
+            </div>
+            <div class="col-md-5">
+              <div class="d-flex flex-column gap-2">
+                <div class="row g-2">
+                  <div class="col-6"><input type="number" class="form-control form-control-sm" placeholder="Crew size"></div>
+                  <div class="col-6"><select class="form-select form-select-sm"><option>Duration</option><option>1 Month</option><option>3 Months</option><option>6 Months</option><option>12 Months</option></select></div>
+                </div>
+                <input type="text" class="form-control form-control-sm" placeholder="Site location">
+                <button class="btn btn-primary w-100" onclick="showToast('Sending package enquiry&hellip;')">Get Package Quote</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+</body>
+</html>
