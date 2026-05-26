@@ -140,6 +140,23 @@ app.get('/api/health',        (req, res) => res.json({
   time:   new Date(),
 }));
 
+/* ── One-time admin bootstrap (disabled after first use) ─────────────── */
+// Visit /api/setup-admin?secret=ADMIN_BOOTSTRAP_SECRET to promote the
+// ADMIN_BOOTSTRAP_EMAIL account to admin. Env var is deleted after use.
+app.get('/api/setup-admin', async (req, res) => {
+  const secret = process.env.ADMIN_BOOTSTRAP_SECRET;
+  const email  = process.env.ADMIN_BOOTSTRAP_EMAIL;
+  if (!secret || !email) return res.status(410).json({ error: 'Setup endpoint not configured or already used' });
+  if (req.query.secret !== secret) return res.status(403).json({ error: 'Invalid secret' });
+  const db = require('./db/knex');
+  const n  = await db('users').where({ email }).update({ role: 'admin' });
+  if (!n) return res.status(404).json({ error: `No user found with email ${email}` });
+  // Clear the env vars so this can never be used again
+  delete process.env.ADMIN_BOOTSTRAP_SECRET;
+  delete process.env.ADMIN_BOOTSTRAP_EMAIL;
+  res.json({ message: `✅ ${email} is now an admin. This endpoint is now disabled.` });
+});
+
 /* ── Public pages ────────────────────────────────────────────────────── */
 app.get('/',              (req, res) => res.render('pages/index'));
 app.get('/professionals', (req, res) => res.render('pages/professionals'));
