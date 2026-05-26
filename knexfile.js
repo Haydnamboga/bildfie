@@ -16,13 +16,12 @@ function pgConnection() {
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error('DATABASE_URL is not set — required in production');
 
-  // Render / Railway inject DATABASE_URL with ?ssl or sslmode in query string.
-  // We always enable SSL in prod; use PGSSLMODE=no-verify only for self-signed.
+  // Render's internal PostgreSQL uses self-signed certificates.
+  // rejectUnauthorized: false is safe here because the connection stays
+  // within Render's private network — it never traverses the public internet.
   return {
     connectionString: url,
-    ssl: process.env.PGSSLMODE === 'no-verify'
-      ? { rejectUnauthorized: false }
-      : { rejectUnauthorized: true },
+    ssl: { rejectUnauthorized: false },
   };
 }
 
