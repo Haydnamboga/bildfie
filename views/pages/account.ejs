@@ -774,33 +774,43 @@ async function becomeProfessional(e) {
   const trade = document.getElementById('bp-trade').value;
   if (!trade) { showMsg('become-pro-err', 'Please select your trade.'); return; }
 
-  const nca_grade       = document.getElementById('bp-nca').value || undefined;
+  const nca_grade        = document.getElementById('bp-nca').value || undefined;
   const experience_years = parseInt(document.getElementById('bp-exp').value) || 0;
   const hourly_rate      = parseInt(document.getElementById('bp-rate').value) || 0;
 
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Activating…';
 
-  const result = await BLApi.becomeProfessional({ trade, nca_grade, experience_years, hourly_rate });
-
-  if (!result || result.error) {
-    showMsg('become-pro-err', result?.error || 'Failed — please try again.');
+  try {
+    const r = await fetch('/api/auth/become-professional', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ trade, nca_grade, experience_years, hourly_rate }),
+    });
+    const d = await r.json();
+    if (!r.ok) {
+      showMsg('become-pro-err', d.error || 'Failed — please try again.');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-patch-check-fill me-2"></i>Activate Professional Profile';
+      return;
+    }
+    document.getElementById('become-pro-card').style.display = 'none';
+    document.getElementById('pro-profile-card').style.display = 'block';
+    document.getElementById('tab-btn-documents').style.display = '';
+    document.getElementById('pf-trade').value = d.trade || '';
+    document.getElementById('pf-nca').value   = d.nca_grade || '';
+    document.getElementById('pf-exp').value   = d.experience_years ? `${d.experience_years} years` : '';
+    document.getElementById('pf-rate').value  = d.hourly_rate || '';
+    document.getElementById('pf-avail').value = d.available ? '1' : '0';
+    document.getElementById('acc-meta').textContent =
+      `${d.email} · ${d.trade || 'Professional'} · ${d.location || 'Kenya'}`;
+    showMsg('profile-ok', '✓ You are now listed as a professional and visible in the marketplace!');
+  } catch {
+    showMsg('become-pro-err', 'Network error — please try again.');
     btn.disabled = false;
     btn.innerHTML = '<i class="bi bi-patch-check-fill me-2"></i>Activate Professional Profile';
-    return;
   }
-
-  document.getElementById('become-pro-card').style.display = 'none';
-  document.getElementById('pro-profile-card').style.display = 'block';
-  document.getElementById('tab-btn-documents').style.display = '';
-  document.getElementById('pf-trade').value = result.trade || '';
-  document.getElementById('pf-nca').value   = result.nca_grade || '';
-  document.getElementById('pf-exp').value   = result.experience_years ? `${result.experience_years} years` : '';
-  document.getElementById('pf-rate').value  = result.hourly_rate || '';
-  document.getElementById('pf-avail').value = result.available ? '1' : '0';
-  document.getElementById('acc-meta').textContent =
-    `${result.email} · ${result.trade || 'Professional'} · ${result.location || 'Kenya'}`;
-  showMsg('profile-ok', '✓ You are now listed as a professional and visible in the marketplace!');
 }
 
 /* ── Load user on page ready ── */
