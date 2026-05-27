@@ -1,4 +1,4 @@
-<%- include('../partials/head', { title: "My Account — BuildLink" }) %>
+<%- include('../partials/head', { title: "My Account — Bildfie" }) %>
 <%- include('../partials/navbar', { activePage: "", user: locals.user }) %>
 
 
@@ -10,10 +10,11 @@
       <div style="height:100px;background:var(--bl-navy)"></div>
       <div class="card-body pb-4 px-4">
         <div class="d-flex align-items-end gap-4" style="margin-top:-50px">
-          <div class="bl-acc-avatar-wrap flex-shrink-0">
+          <div class="bl-acc-avatar-wrap flex-shrink-0" onclick="document.getElementById('avatar-file').click()" style="cursor:pointer" title="Click to change photo">
             <img id="acc-avatar" src="https://i.pravatar.cc/100?img=22" alt="Avatar">
-            <div class="bl-acc-avatar-overlay">Edit</div>
+            <div class="bl-acc-avatar-overlay">📷 Edit</div>
           </div>
+          <input type="file" id="avatar-file" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none" onchange="uploadAvatar(this)">
           <div class="pb-2">
             <h4 class="fw-bold mb-1" id="acc-name" style="font-family:'Playfair Display',serif;color:var(--bl-navy)">Loading…</h4>
             <div class="text-muted" id="acc-meta" style="font-size:13px"></div>
@@ -34,6 +35,7 @@
           <button class="bl-acc-tab active" onclick="showTab('profile',this)">Profile Settings</button>
           <button class="bl-acc-tab" onclick="showTab('security',this)">Security</button>
           <button class="bl-acc-tab" onclick="showTab('subscription',this)">Subscription</button>
+          <button class="bl-acc-tab" id="tab-btn-documents" onclick="showTab('documents',this)" style="display:none">Documents &amp; Portfolio</button>
           <button class="bl-acc-tab" onclick="showTab('saved',this)">Saved Professionals</button>
           <button class="bl-acc-tab" onclick="showTab('notifications',this)">Notifications</button>
           <hr class="my-2">
@@ -269,6 +271,60 @@
           </div>
         </div>
 
+        <!-- DOCUMENTS & PORTFOLIO (professionals only) -->
+        <div id="tab-documents" class="bl-acc-section">
+          <div class="card border-0 shadow-sm mb-4" style="border-radius:14px">
+            <div class="card-body p-4">
+              <h5 class="fw-bold mb-1" style="color:var(--bl-navy)">Documents &amp; Portfolio</h5>
+              <p class="text-muted small mb-4">Upload your NCA license, ID, portfolio samples, or other verification documents. Max 10 MB per file, up to 5 files at a time.</p>
+
+              <!-- Upload area -->
+              <div id="doc-upload-area" style="border:2px dashed var(--bl-rule);border-radius:12px;padding:28px;text-align:center;cursor:pointer;transition:border-color .2s"
+                   onclick="document.getElementById('doc-file-input').click()"
+                   ondragover="event.preventDefault();this.style.borderColor='var(--bl-accent)'"
+                   ondragleave="this.style.borderColor='var(--bl-rule)'"
+                   ondrop="event.preventDefault();this.style.borderColor='var(--bl-rule)';handleDocDrop(event.dataTransfer.files)">
+                <div style="font-size:2rem;margin-bottom:8px">📁</div>
+                <div class="fw-600 mb-1" style="font-size:14px;color:var(--bl-navy)">Click or drag files here</div>
+                <div class="text-muted" style="font-size:12px">PDF, JPG, PNG, WebP — up to 10 MB each</div>
+              </div>
+              <input type="file" id="doc-file-input" multiple accept=".pdf,image/jpeg,image/png,image/webp"
+                     style="display:none" onchange="handleDocFiles(this.files)">
+
+              <div class="row g-2 mt-3 mb-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-500 small">Document Type</label>
+                  <select id="doc-type" class="form-select" style="border-radius:10px;font-size:13px">
+                    <option value="nca_license">NCA License</option>
+                    <option value="portfolio">Portfolio / Work Sample</option>
+                    <option value="id_document">ID Document</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div class="col-md-6 d-flex align-items-end">
+                  <button id="doc-upload-btn" class="btn btn-primary w-100" onclick="uploadDocuments()" disabled
+                          style="border-radius:10px;font-size:13px">
+                    Upload Selected Files
+                  </button>
+                </div>
+              </div>
+
+              <div id="doc-file-list" style="font-size:12px;color:var(--bl-muted)"></div>
+              <div id="doc-ok" class="bl-auth-ok"></div>
+              <div id="doc-err" class="bl-auth-err"></div>
+            </div>
+          </div>
+
+          <div class="card border-0 shadow-sm" style="border-radius:14px">
+            <div class="card-body p-4">
+              <h5 class="fw-bold mb-2" style="color:var(--bl-navy)">Uploaded Documents</h5>
+              <div id="doc-list-body">
+                <div class="text-muted small text-center py-4">Loading…</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- SAVED PROFESSIONALS -->
         <div id="tab-saved" class="bl-acc-section">
           <div class="card border-0 shadow-sm" style="border-radius:14px">
@@ -368,6 +424,7 @@ function showTab(name, el) {
   document.getElementById('tab-' + name).classList.add('active');
   if (el) el.classList.add('active');
   if (name === 'saved') loadSaved();
+  if (name === 'documents') loadDocuments();
 }
 
 /* ── Populate from user data ── */
@@ -453,7 +510,7 @@ async function loadSaved() {
   grid.innerHTML = '<div class="col-12 text-center py-4"><div class="spinner-border text-primary" style="width:24px;height:24px"></div></div>';
   const data = await BLApi.getSavedProfessionals();
   if (!data || data.length === 0) {
-    grid.innerHTML = `<div class="col-12 text-center text-muted py-5"><div style="font-size:13px">No saved professionals yet.</div><a href="/professionals.html" class="btn btn-outline-primary btn-sm mt-3">Browse Professionals</a></div>`;
+    grid.innerHTML = `<div class="col-12 text-center text-muted py-5"><div style="font-size:13px">No saved professionals yet.</div><a href="/professionals" class="btn btn-outline-primary btn-sm mt-3">Browse Professionals</a></div>`;
     return;
   }
   grid.innerHTML = data.map(p => `
@@ -489,7 +546,7 @@ async function unsave(id, btn) {
 }
 
 /* ── Helpers ── */
-function showMsg(id, msg) { const el = document.getElementById(id); el.textContent = msg; el.classList.add('show'); }
+function showMsg(id, msg) { const el = document.getElementById(id); el.innerHTML = msg; el.classList.add('show'); }
 function hideMsg(id) { document.getElementById(id).classList.remove('show'); }
 function togglePwd(id, btn) {
   const inp = document.getElementById(id);
@@ -497,8 +554,165 @@ function togglePwd(id, btn) {
   else { inp.type = 'password'; btn.textContent = 'Show'; }
 }
 
+/* ─────────────────────────────────────────────────────────
+   AVATAR UPLOAD
+───────────────────────────────────────────────────────── */
+async function uploadAvatar(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('Image must be under 5 MB', 'error'); return; }
+
+  const form = new FormData();
+  form.append('avatar', file);
+
+  showToast('Uploading photo…');
+  try {
+    const r = await fetch('/api/auth/avatar', {
+      method: 'PUT',
+      credentials: 'include',
+      body: form,
+    });
+    const d = await r.json();
+    if (!r.ok) { showToast(d.error || 'Upload failed', 'error'); return; }
+    document.getElementById('acc-avatar').src = d.avatar + '?v=' + Date.now();
+    showToast('Profile photo updated ✓');
+  } catch {
+    showToast('Network error — please try again', 'error');
+  }
+  input.value = ''; // reset so same file can be re-selected
+}
+
+/* ─────────────────────────────────────────────────────────
+   DOCUMENT / PORTFOLIO UPLOAD
+───────────────────────────────────────────────────────── */
+let _pendingDocFiles = [];
+
+function handleDocFiles(files) {
+  _pendingDocFiles = Array.from(files).slice(0, 5);
+  renderDocFileList();
+}
+function handleDocDrop(files) {
+  handleDocFiles(files);
+}
+function renderDocFileList() {
+  const el = document.getElementById('doc-file-list');
+  const btn = document.getElementById('doc-upload-btn');
+  if (!_pendingDocFiles.length) {
+    el.textContent = '';
+    btn.disabled = true;
+    return;
+  }
+  el.innerHTML = _pendingDocFiles.map(f =>
+    `<div class="d-flex align-items-center gap-2 py-1">
+      <span style="font-size:16px">${f.type.includes('pdf') ? '📄' : '🖼️'}</span>
+      <span class="text-truncate" style="max-width:260px">${esc(f.name)}</span>
+      <span class="text-muted ms-auto">${(f.size/1024/1024).toFixed(1)} MB</span>
+    </div>`
+  ).join('');
+  btn.disabled = false;
+}
+function esc(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+async function uploadDocuments() {
+  hideMsg('doc-ok'); hideMsg('doc-err');
+  if (!_pendingDocFiles.length) return;
+  const type = document.getElementById('doc-type').value;
+
+  const form = new FormData();
+  _pendingDocFiles.forEach(f => form.append('files', f));
+  form.append('document_type', type);
+
+  const btn = document.getElementById('doc-upload-btn');
+  btn.disabled = true;
+  btn.textContent = 'Uploading…';
+  try {
+    const r = await fetch('/api/auth/professional/documents', {
+      method: 'POST',
+      credentials: 'include',
+      body: form,
+    });
+    const d = await r.json();
+    if (!r.ok) { showMsg('doc-err', d.error || 'Upload failed'); return; }
+    showMsg('doc-ok', `✓ ${d.message}`);
+    _pendingDocFiles = [];
+    renderDocFileList();
+    document.getElementById('doc-file-input').value = '';
+    loadDocuments();
+  } catch {
+    showMsg('doc-err', 'Network error — please try again');
+  } finally {
+    btn.textContent = 'Upload Selected Files';
+    btn.disabled = !_pendingDocFiles.length;
+  }
+}
+
+async function loadDocuments() {
+  const el = document.getElementById('doc-list-body');
+  el.innerHTML = '<div class="text-muted small text-center py-3">Loading…</div>';
+  try {
+    const r = await fetch('/api/auth/professional/documents', { credentials: 'include' });
+    const docs = await r.json();
+    if (!docs.length) {
+      el.innerHTML = '<div class="text-muted small text-center py-4">No documents uploaded yet.</div>';
+      return;
+    }
+    const statusColor = { pending: '#9a3412', approved: '#166534', rejected: '#991b1b' };
+    const statusBg    = { pending: '#fff7ed', approved: '#f0fdf4', rejected: '#fef2f2' };
+    el.innerHTML = `<div class="table-responsive">
+      <table class="table table-sm align-middle mb-0" style="font-size:12px">
+        <thead><tr>
+          <th>File</th><th>Type</th><th>Uploaded</th><th>Status</th><th></th>
+        </tr></thead>
+        <tbody>
+          ${docs.map(d => `<tr>
+            <td class="text-truncate" style="max-width:200px">${esc(d.original_name)}</td>
+            <td>${esc(d.document_type.replace(/_/g,' '))}</td>
+            <td class="text-muted">${new Date(d.created_at).toLocaleDateString('en-KE')}</td>
+            <td>
+              <span style="background:${statusBg[d.status]||'#f9fafb'};color:${statusColor[d.status]||'#6b7280'};
+                           padding:2px 8px;border-radius:100px;font-size:10px;font-weight:600">
+                ${d.status}
+              </span>
+              ${d.rejection_reason ? `<div class="text-danger mt-1" style="font-size:10px">${esc(d.rejection_reason)}</div>` : ''}
+            </td>
+            <td>
+              ${d.status === 'pending' ? `<button class="btn btn-sm btn-outline-danger" style="padding:2px 8px;font-size:10px;border-radius:5px"
+                onclick="deleteDoc(${d.id}, this)">Remove</button>` : ''}
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  } catch {
+    el.innerHTML = '<div class="text-muted small text-center py-4">Could not load documents.</div>';
+  }
+}
+
+async function deleteDoc(id, btn) {
+  if (!confirm('Remove this document?')) return;
+  btn.disabled = true;
+  try {
+    const r = await fetch(`/api/auth/professional/documents/${id}`, {
+      method: 'DELETE', credentials: 'include',
+    });
+    const d = await r.json();
+    if (!r.ok) { showToast(d.error || 'Delete failed', 'error'); btn.disabled = false; return; }
+    showToast('Document removed');
+    loadDocuments();
+  } catch {
+    showToast('Network error', 'error');
+    btn.disabled = false;
+  }
+}
+
 /* ── Load user on page ready ── */
-document.addEventListener('bl:user', e => populateAccount(e.detail));
+document.addEventListener('bl:user', e => {
+  populateAccount(e.detail);
+  // Show Documents tab only for professionals
+  if (e.detail.role === 'professional') {
+    document.getElementById('tab-btn-documents').style.display = '';
+  }
+});
 </script>
 </body>
 </html>

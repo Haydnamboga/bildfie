@@ -1188,7 +1188,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);font-s
   <div class="modal-box">
     <div class="modal-head">
       <div id="m-avi" style="width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;
-                             display:grid;place-items:center;font-size:16px;font-weight:700;flex-shrink:0"></div>
+                             display:grid;place-items:center;font-size:16px;font-weight:700;flex-shrink:0;overflow:hidden"></div>
       <div class="modal-head-info">
         <div class="modal-head-name" id="m-name">—</div>
         <div class="modal-head-email" id="m-email">—</div>
@@ -1518,8 +1518,13 @@ async function openUserModal(id) {
     const u = await apiFetch('/api/admin/users/' + id);
     currentUserData = u;
 
-    // Header
-    document.getElementById('m-avi').textContent = u.name.charAt(0).toUpperCase();
+    // Header — show avatar image if available, otherwise initials
+    const aviEl = document.getElementById('m-avi');
+    if (u.avatar) {
+      aviEl.innerHTML = `<img src="${esc(u.avatar)}" alt="${esc(u.name)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    } else {
+      aviEl.textContent = u.name.charAt(0).toUpperCase();
+    }
     document.getElementById('m-name').textContent  = u.name;
     document.getElementById('m-email').textContent = u.email;
     const rb = document.getElementById('m-role-badge');
