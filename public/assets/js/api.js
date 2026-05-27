@@ -74,6 +74,17 @@ window.BLApi = {
   async saveProfessional(id) { return apiFetch(`/auth/saved/${id}`, { method: 'POST' }); },
   async unsaveProfessional(id) { return apiFetch(`/auth/saved/${id}`, { method: 'DELETE' }); },
 
+  async becomeProfessional(data) {
+    const online = await checkApi();
+    if (!online) return null;
+    try {
+      const r = await fetch(`${API_BASE}/auth/become-professional`, { method:'POST', credentials:'include', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) });
+      const d = await r.json();
+      if (!r.ok) return { error: d.error || 'Failed' };
+      return d;
+    } catch { return { error: 'Network error' }; }
+  },
+
   /* ── Professionals ── */
   async getProfessionals(params = {}) {
     const qs = new URLSearchParams(params).toString();

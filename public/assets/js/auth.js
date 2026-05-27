@@ -82,27 +82,13 @@ window.submitForgot = async function () {
    REGISTER FORM
 ══════════════════════════════════════════════════════════════════ */
 
-window._selectedRole = 'client';
-
-window.selectRole = function (role) {
-  window._selectedRole = role;
-  document.querySelectorAll('.bl-role-btn').forEach(b => b.classList.remove('selected'));
-  document.getElementById(`role-${role}`)?.classList.add('selected');
-  const proFields = document.getElementById('pro-fields');
-  if (proFields) proFields.style.display = role === 'professional' ? 'block' : 'none';
-};
-
 window.submitReg = async function () {
   const name     = document.getElementById('reg-name')?.value.trim();
   const email    = document.getElementById('reg-email')?.value.trim();
   const password = document.getElementById('reg-password')?.value;
   const password2= document.getElementById('reg-password2')?.value;
-  const role     = window._selectedRole || 'client';
   const phone    = document.getElementById('reg-phone')?.value.trim();
   const location = document.getElementById('reg-location')?.value || 'Nairobi, Kenya';
-  const trade    = document.getElementById('reg-trade')?.value;
-  const nca      = document.getElementById('reg-nca')?.value;
-  const exp      = document.getElementById('reg-exp')?.value;
   const terms    = document.getElementById('terms-check')?.checked;
 
   const errEl = document.getElementById('reg-err');
@@ -114,24 +100,18 @@ window.submitReg = async function () {
     errEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   };
 
-  if (!name)                      return showErr('Full name is required');
-  if (!email)                     return showErr('Email address is required');
-  if (!password)                  return showErr('Password is required');
-  if (password.length < 6)        return showErr('Password must be at least 6 characters');
-  if (password !== password2)     return showErr('Passwords do not match');
-  if (!terms)                     return showErr('Please accept the Terms of Service');
-  if (role === 'professional' && !trade) return showErr('Please select your trade');
+  if (!name)               return showErr('Full name is required');
+  if (!email)              return showErr('Email address is required');
+  if (!password)           return showErr('Password is required');
+  if (password.length < 6) return showErr('Password must be at least 6 characters');
+  if (password !== password2) return showErr('Passwords do not match');
+  if (!terms)              return showErr('Please accept the Terms of Service');
 
   btn.disabled    = true;
   btn.textContent = 'Creating account…';
   errEl.style.display = 'none';
 
-  const payload = { name, email, password, role, phone: phone || undefined, location };
-  if (role === 'professional') {
-    payload.trade            = trade;
-    if (nca) payload.nca_grade         = nca;
-    if (exp) payload.experience_years  = parseInt(exp) || 0;
-  }
+  const payload = { name, email, password, role: 'client', phone: phone || undefined, location };
 
   const result = await BLApi.register(payload);
 

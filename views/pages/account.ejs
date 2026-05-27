@@ -88,6 +88,65 @@
             </div>
           </div>
 
+          <!-- Become a Professional (shown only for non-professionals) -->
+          <div id="become-pro-card" class="card border-0 shadow-sm mb-4" style="border-radius:14px;display:none">
+            <div class="card-body p-4">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div style="width:44px;height:44px;background:linear-gradient(135deg,var(--bl-accent),#E05A20);border-radius:12px;display:grid;place-items:center;flex-shrink:0">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/><polyline points="16 11 17.5 13 21 9"/></svg>
+                </div>
+                <div>
+                  <h5 class="fw-bold mb-0" style="color:var(--bl-navy)">Become a Professional</h5>
+                  <p class="text-muted small mb-0">Get listed in the marketplace and start receiving hire requests.</p>
+                </div>
+              </div>
+              <div id="become-pro-ok" class="bl-auth-ok"></div>
+              <div id="become-pro-err" class="bl-auth-err"></div>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-500 small">Trade / Profession *</label>
+                  <select id="bp-trade" class="form-select" style="border-radius:10px">
+                    <option value="">— Select your trade —</option>
+                    <option>Architect &amp; Interior Designer</option>
+                    <option>Civil &amp; Structural Engineer</option>
+                    <option>MEP Engineer</option>
+                    <option>Quantity Surveyor</option>
+                    <option>Project Manager</option>
+                    <option>Electrical Engineer</option>
+                    <option>Water &amp; Sanitation Engineer</option>
+                    <option>Geotechnical Engineer</option>
+                    <option>Urban Planner</option>
+                    <option>Landscape Architect</option>
+                    <option>Interior Designer</option>
+                    <option>Construction Foreman</option>
+                    <option>General Contractor</option>
+                    <option>Site Supervisor</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-500 small">NCA Grade (optional)</label>
+                  <select id="bp-nca" class="form-select" style="border-radius:10px">
+                    <option value="">Not applicable</option>
+                    <option>G1</option><option>G2</option><option>G3</option><option>G4</option>
+                    <option>G5</option><option>G6</option><option>G7</option><option>G8</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-500 small">Years of Experience</label>
+                  <input type="number" id="bp-exp" class="form-control" min="0" max="50" placeholder="e.g. 5" style="border-radius:10px">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-500 small">Hourly Rate (KES, optional)</label>
+                  <input type="number" id="bp-rate" class="form-control" min="0" placeholder="e.g. 5000" style="border-radius:10px">
+                </div>
+              </div>
+              <button class="btn btn-primary mt-4" onclick="becomeProfessional(event)">
+                <i class="bi bi-patch-check-fill me-2"></i>Activate Professional Profile
+              </button>
+            </div>
+          </div>
+
           <!-- Professional Profile Card (shown only if role=professional) -->
           <div id="pro-profile-card" class="card border-0 shadow-sm" style="border-radius:14px;display:none">
             <div class="card-body p-4">
@@ -455,6 +514,8 @@ function populateAccount(user) {
     document.getElementById('pf-exp').value   = user.experience_years ? `${user.experience_years} years` : '';
     document.getElementById('pf-rate').value  = user.hourly_rate || '';
     document.getElementById('pf-avail').value = user.available ? '1' : '0';
+  } else {
+    document.getElementById('become-pro-card').style.display = 'block';
   }
   // Subscription
   const plan = (user.subscription_plan || 'starter').charAt(0).toUpperCase() + (user.subscription_plan || 'starter').slice(1);
@@ -703,6 +764,43 @@ async function deleteDoc(id, btn) {
     showToast('Network error', 'error');
     btn.disabled = false;
   }
+}
+
+/* ── Become a Professional ── */
+async function becomeProfessional(e) {
+  const btn = e.currentTarget;
+  hideMsg('become-pro-ok'); hideMsg('become-pro-err');
+
+  const trade = document.getElementById('bp-trade').value;
+  if (!trade) { showMsg('become-pro-err', 'Please select your trade.'); return; }
+
+  const nca_grade       = document.getElementById('bp-nca').value || undefined;
+  const experience_years = parseInt(document.getElementById('bp-exp').value) || 0;
+  const hourly_rate      = parseInt(document.getElementById('bp-rate').value) || 0;
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Activating…';
+
+  const result = await BLApi.becomeProfessional({ trade, nca_grade, experience_years, hourly_rate });
+
+  if (!result || result.error) {
+    showMsg('become-pro-err', result?.error || 'Failed — please try again.');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="bi bi-patch-check-fill me-2"></i>Activate Professional Profile';
+    return;
+  }
+
+  document.getElementById('become-pro-card').style.display = 'none';
+  document.getElementById('pro-profile-card').style.display = 'block';
+  document.getElementById('tab-btn-documents').style.display = '';
+  document.getElementById('pf-trade').value = result.trade || '';
+  document.getElementById('pf-nca').value   = result.nca_grade || '';
+  document.getElementById('pf-exp').value   = result.experience_years ? `${result.experience_years} years` : '';
+  document.getElementById('pf-rate').value  = result.hourly_rate || '';
+  document.getElementById('pf-avail').value = result.available ? '1' : '0';
+  document.getElementById('acc-meta').textContent =
+    `${result.email} · ${result.trade || 'Professional'} · ${result.location || 'Kenya'}`;
+  showMsg('profile-ok', '✓ You are now listed as a professional and visible in the marketplace!');
 }
 
 /* ── Load user on page ready ── */

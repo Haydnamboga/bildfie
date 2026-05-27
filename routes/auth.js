@@ -325,6 +325,55 @@ router.put('/professional', proProfileRules, wrap(async (req, res) => {
   res.json({ ...prof, tags: tagRows.map(r => r.tag) });
 }));
 
+// POST /api/auth/become-professional — upgrade a client account to professional
+router.post('/become-professional', validate([
+  body('trade').trim().notEmpty().withMessage('Trade is required'),
+  body('experience_years').optional().isInt({ min: 0, max: 60 }),
+  body('hourly_rate').optional().isInt({ min: 0 }),
+  body('nca_grade').optional().trim(),
+  body('tags').optional().isArray(),
+]), wrap(async (req, res) => {
+  if (!req.session.userId) return res.status(401).json({ error: 'Not authenticated' });
+
+  const { trade, experience_years = 0, hourly_rate = 0, nca_grade, tags = [] } = req.body;
+
+  await db.transaction(async trx => {
+    await trx('users').where({ id: req.session.userId }).update({
+      role: 'professional',
+      updated_at: db.fn.now(),
+    });
+
+    const exists = await trx('professional_profiles').where({ user_id: req.session.userId }).first('id');
+    const profileData = {
+      trade,
+      experience_years: Number(experience_years) || 0,
+      hourly_rate:      Number(hourly_rate) || 0,
+      ...(nca_grade ? { nca_grade } : {}),
+    };
+    if (exists) {
+      await trx('professional_profiles').where({ user_id: req.session.userId }).update(profileData);
+    } else {
+      await trx('professional_profiles').insert({ user_id: req.session.userId, ...profileData });
+    }
+
+    if (Array.isArray(tags) && tags.length) {
+      await trx('professional_tags').where({ user_id: req.session.userId }).delete();
+      await trx('professional_tags').insert(
+        tags.slice(0, 15).map(tag => ({ user_id: req.session.userId, tag: String(tag).trim() }))
+      );
+    }
+  });
+
+  req.session.userRole = 'professional';
+
+  const user = await db('users').where({ id: req.session.userId })
+    .select('id','name','email','role','phone','location','avatar','bio','verified','verification_badge').first();
+  const prof    = await db('professional_profiles').where({ user_id: req.session.userId }).first();
+  const tagRows = await db('professional_tags').where({ user_id: req.session.userId }).select('tag');
+
+  res.json({ ...user, ...(prof || {}), tags: tagRows.map(r => r.tag) });
+}));
+
 /* ── Avatar upload ──────────────────────────────────────────────────── */
 
 // PUT /api/auth/avatar — upload or replace profile picture
