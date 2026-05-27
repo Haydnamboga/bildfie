@@ -100,7 +100,16 @@ router.put('/users/:id/role', roleRules, wrap(async (req, res) => {
   if (user.id === req.session.userId)
     return res.status(400).json({ error: 'You cannot change your own role' });
 
-  await db('users').where({ id: req.params.id }).update({ role, updated_at: db.fn.now() });
+  await db.transaction(async trx => {
+    await trx('users').where({ id: req.params.id }).update({ role, updated_at: db.fn.now() });
+    if (role === 'professional') {
+      const exists = await trx('professional_profiles').where({ user_id: req.params.id }).first('id');
+      if (!exists) {
+        await trx('professional_profiles').insert({ user_id: req.params.id, trade: 'General' });
+      }
+    }
+  });
+
   res.json({ message: `${user.name}'s role updated to ${role}` });
 }));
 
