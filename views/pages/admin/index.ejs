@@ -1,1021 +1,1240 @@
-<%- include('../../partials/head', { title: "Admin Dashboard — BuildLink", extraHead: "<script src=\"https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js\"></script>\n<style>\n:root {\n  --sb-w: 248px;\n  --tb-h: 56px;\n  --sb-bg: #0c1428;\n  --sb-bg2: #111d38;\n  --sb-border: rgba(255,255,255,.06);\n  --sb-text: rgba(255,255,255,.78);\n  --sb-muted: rgba(255,255,255,.38);\n  --sb-hover: rgba(255,255,255,.05);\n  --sb-active-bg: rgba(196,49,0,.14);\n  --sb-active-border: #C43100;\n  --accent: #C43100;\n  --navy: #011D47;\n  --bg: #f2f4f8;\n  --card: #fff;\n  --rule: #e4e7ef;\n  --muted: #6b7280;\n  --text: #1e293b;\n}\n*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }\nbody { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); font-size: 13px; }\n\n/* ── SIDEBAR ── */\n#sb {\n  position: fixed; top: 0; left: 0; width: var(--sb-w); height: 100vh;\n  background: var(--sb-bg); z-index: 400; display: flex; flex-direction: column;\n  overflow: hidden; transition: width .25s;\n}\n#sb.collapsed { width: 56px; }\n#sb.collapsed .sb-label, #sb.collapsed .sb-group-lbl,\n#sb.collapsed .sb-link-txt, #sb.collapsed .sb-arrow,\n#sb.collapsed .sb-badge, #sb.collapsed .sb-logo-txt,\n#sb.collapsed .sb-sub { display: none !important; }\n#sb.collapsed .sb-link { justify-content: center; padding: 9px 0; }\n\n/* Logo */\n.sb-logo {\n  display: flex; align-items: center; gap: 10px;\n  padding: 16px 18px 14px; border-bottom: 1px solid var(--sb-border);\n  text-decoration: none; flex-shrink: 0;\n}\n.sb-logo-mark {\n  width: 30px; height: 30px; border-radius: 7px; background: var(--accent);\n  display: grid; place-items: center; flex-shrink: 0;\n}\n.sb-logo-mark svg { width: 15px; height: 15px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; }\n.sb-logo-txt { display: flex; flex-direction: column; }\n.sb-logo-name { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 800; color: #fff; line-height: 1; }\n.sb-logo-badge { font-size: 8px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-top: 2px; }\n\n/* Search */\n.sb-search { padding: 10px 12px; border-bottom: 1px solid var(--sb-border); flex-shrink: 0; }\n.sb-search-wrap { position: relative; }\n.sb-search input {\n  width: 100%; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);\n  border-radius: 7px; padding: 7px 10px 7px 30px; color: #fff; font-size: 11.5px;\n  outline: none; font-family: 'Sora', sans-serif; transition: border-color .15s;\n}\n.sb-search input:focus { border-color: rgba(255,255,255,.25); }\n.sb-search input::placeholder { color: rgba(255,255,255,.3); }\n.sb-search-ico { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,.3); }\n.sb-search-ico svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }\n\n/* Nav */\n.sb-nav { flex: 1; overflow-y: auto; padding: 6px 0 20px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.08) transparent; }\n.sb-nav::-webkit-scrollbar { width: 3px; }\n.sb-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 3px; }\n\n.sb-group-lbl {\n  font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;\n  color: var(--sb-muted); padding: 14px 18px 4px;\n}\n\n.sb-item { position: relative; }\n.sb-link {\n  display: flex; align-items: center; gap: 9px; padding: 8px 18px;\n  color: var(--sb-text); font-size: 12.5px; font-weight: 500; cursor: pointer;\n  border-left: 3px solid transparent; text-decoration: none;\n  transition: background .12s, border-color .12s, color .12s; user-select: none;\n}\n.sb-link:hover { background: var(--sb-hover); color: #fff; }\n.sb-link.active { background: var(--sb-active-bg); border-left-color: var(--sb-active-border); color: #fff; font-weight: 600; }\n.sb-link svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; flex-shrink: 0; opacity: .75; }\n.sb-link-txt { flex: 1; }\n.sb-arrow { margin-left: auto; opacity: .45; transition: transform .2s; }\n.sb-arrow svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }\n.sb-item.open > .sb-link .sb-arrow { transform: rotate(90deg); }\n.sb-badge { margin-left: auto; background: var(--accent); color: #fff; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 100px; }\n\n.sb-sub { display: none; background: rgba(0,0,0,.12); }\n.sb-item.open > .sb-sub { display: block; }\n.sb-sub-link {\n  display: flex; align-items: center; gap: 7px; padding: 6.5px 18px 6.5px 40px;\n  font-size: 11.5px; color: var(--sb-muted); text-decoration: none;\n  transition: color .12s, background .12s;\n}\n.sb-sub-link::before { content: ''; width: 3px; height: 3px; border-radius: 50%; background: currentColor; flex-shrink: 0; opacity: .7; }\n.sb-sub-link:hover { color: rgba(255,255,255,.85); background: rgba(255,255,255,.04); }\n.sb-sub-link.active { color: var(--accent); font-weight: 600; }\n\n/* Footer */\n.sb-footer { padding: 12px 14px; border-top: 1px solid var(--sb-border); flex-shrink: 0; }\n.sb-user { display: flex; align-items: center; gap: 9px; }\n.sb-user-avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }\n.sb-user-name { font-size: 11.5px; font-weight: 600; color: rgba(255,255,255,.85); }\n.sb-user-role { font-size: 9.5px; color: var(--sb-muted); }\n\n/* ── TOPBAR ── */\n#tb {\n  position: fixed; top: 0; left: var(--sb-w); right: 0; height: var(--tb-h);\n  background: var(--card); border-bottom: 1px solid var(--rule); z-index: 300;\n  display: flex; align-items: center; padding: 0 22px; gap: 14px;\n  transition: left .25s;\n}\n#sb.collapsed ~ #tb { left: 56px; }\n#sb.collapsed ~ #tb ~ #main { margin-left: 56px; }\n\n.tb-toggle {\n  width: 32px; height: 32px; border: 1px solid var(--rule); border-radius: 7px;\n  background: none; cursor: pointer; display: grid; place-items: center; flex-shrink: 0;\n  color: var(--muted); transition: background .12s;\n}\n.tb-toggle:hover { background: var(--bg); }\n.tb-toggle svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }\n\n.tb-bc { font-size: 11px; color: var(--muted); }\n.tb-bc strong { color: var(--navy); font-size: 13px; font-weight: 700; }\n\n.tb-icons { display: flex; align-items: center; gap: 6px; margin-left: auto; }\n.tb-icon-btn {\n  width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--rule);\n  background: none; cursor: pointer; display: grid; place-items: center; position: relative;\n  color: var(--muted); transition: background .12s;\n}\n.tb-icon-btn:hover { background: var(--bg); }\n.tb-icon-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }\n.tb-notif-dot {\n  position: absolute; top: 5px; right: 5px; width: 7px; height: 7px;\n  background: var(--accent); border-radius: 50%; border: 2px solid var(--card);\n}\n.tb-sep { width: 1px; height: 22px; background: var(--rule); }\n.tb-user { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 6px; border-radius: 8px; }\n.tb-user:hover { background: var(--bg); }\n.tb-user img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }\n.tb-user-info .name { font-size: 12px; font-weight: 600; color: var(--navy); }\n.tb-user-info .role { font-size: 10px; color: var(--muted); }\n\n/* ── MAIN ── */\n#main {\n  margin-left: var(--sb-w); padding-top: var(--tb-h); min-height: 100vh;\n  transition: margin-left .25s;\n}\n.adm-page { padding: 22px 24px; }\n\n/* PAGE HEADER */\n.pg-head { margin-bottom: 22px; }\n.pg-head h1 { font-size: 19px; font-weight: 700; color: var(--navy); line-height: 1.2; }\n.pg-head p { font-size: 11.5px; color: var(--muted); margin-top: 3px; }\n.pg-head-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }\n\n/* KPI CARDS */\n.kpi {\n  background: var(--card); border-radius: 12px; padding: 18px 20px;\n  border: 1px solid var(--rule); height: 100%;\n}\n.kpi-icon { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; margin-bottom: 12px; }\n.kpi-icon svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; }\n.kpi-val { font-family: 'Playfair Display', serif; font-size: 21px; font-weight: 800; color: var(--navy); line-height: 1; }\n.kpi-lbl { font-size: 10.5px; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: .07em; }\n.kpi-trend { font-size: 11px; font-weight: 600; margin-top: 10px; display: flex; align-items: center; gap: 5px; }\n.kpi-trend svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; }\n.trend-up { color: #16a34a; }\n.trend-dn { color: #dc2626; }\n.trend-nt { color: var(--muted); }\n.kpi-sub { font-size: 10.5px; color: var(--muted); font-weight: 400; }\n\n/* MINI STATS */\n.mini-stat {\n  background: var(--card); border: 1px solid var(--rule); border-radius: 10px;\n  padding: 14px 16px; display: flex; align-items: center; gap: 12px;\n}\n.mini-stat-ico { width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center; flex-shrink: 0; }\n.mini-stat-ico svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }\n.mini-stat-val { font-size: 17px; font-weight: 800; color: var(--navy); line-height: 1; }\n.mini-stat-lbl { font-size: 10px; color: var(--muted); margin-top: 2px; }\n\n/* CARDS */\n.card2 { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; }\n.card2-head {\n  padding: 14px 18px; border-bottom: 1px solid var(--rule);\n  display: flex; align-items: center; justify-content: space-between;\n}\n.card2-title { font-size: 12.5px; font-weight: 700; color: var(--navy); }\n.card2-action { font-size: 11px; color: var(--accent); font-weight: 600; text-decoration: none; cursor: pointer; }\n.card2-action:hover { text-decoration: underline; }\n\n/* TABLE */\n.adm-tbl { width: 100%; border-collapse: collapse; }\n.adm-tbl th {\n  padding: 9px 14px; font-size: 9.5px; font-weight: 700; text-transform: uppercase;\n  letter-spacing: .09em; color: var(--muted); background: var(--bg); border-bottom: 1px solid var(--rule); text-align: left;\n}\n.adm-tbl td { padding: 10.5px 14px; border-bottom: 1px solid var(--rule); color: var(--text); vertical-align: middle; }\n.adm-tbl tr:last-child td { border-bottom: none; }\n.adm-tbl tbody tr:hover td { background: #fafbfd; }\n\n/* BADGES */\n.bdg { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 100px; font-size: 9.5px; font-weight: 600; white-space: nowrap; }\n.bdg-pending { background: #fff7ed; color: #9a3412; }\n.bdg-active  { background: #f0fdf4; color: #166534; }\n.bdg-done    { background: #eff6ff; color: #1e40af; }\n.bdg-overdue { background: #fef2f2; color: #991b1b; }\n.bdg-draft   { background: #f9fafb; color: #6b7280; border: 1px solid var(--rule); }\n.bdg-paid    { background: #f0fdf4; color: #166534; }\n.bdg-hold    { background: #fefce8; color: #854d0e; }\n\n/* PROGRESS */\n.prog { height: 5px; background: var(--rule); border-radius: 4px; overflow: hidden; width: 100%; }\n.prog-fill { height: 100%; border-radius: 4px; }\n\n/* ACTIVITY */\n.act-item { padding: 11px 18px; border-bottom: 1px solid var(--rule); display: flex; gap: 11px; align-items: flex-start; }\n.act-item:last-child { border-bottom: none; }\n.act-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }\n.act-msg { font-size: 12px; color: var(--text); line-height: 1.4; }\n.act-time { font-size: 10px; color: var(--muted); margin-top: 3px; }\n\n/* PIPELINE STAGE */\n.pipe-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--rule); }\n.pipe-row:last-child { border-bottom: none; }\n.pipe-lbl { font-size: 11.5px; font-weight: 500; color: var(--text); width: 100px; flex-shrink: 0; }\n.pipe-bar-wrap { flex: 1; height: 6px; background: var(--rule); border-radius: 4px; overflow: hidden; }\n.pipe-bar-fill { height: 100%; border-radius: 4px; }\n.pipe-num { font-size: 11px; font-weight: 700; color: var(--navy); width: 30px; text-align: right; flex-shrink: 0; }\n\n/* CHART wrapper */\n.chart-wrap { position: relative; }\n\n/* CASHFLOW TABLE */\n.cf-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--rule); }\n.cf-row:last-child { border-bottom: none; }\n.cf-lbl { font-size: 12px; color: var(--text); }\n.cf-val { font-size: 13px; font-weight: 700; }\n\n/* TOP CLIENTS */\n.tc-row { display: flex; align-items: center; gap: 10px; padding: 10px 18px; border-bottom: 1px solid var(--rule); }\n.tc-row:last-child { border-bottom: none; }\n.tc-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }\n.tc-name { font-size: 12px; font-weight: 600; color: var(--navy); }\n.tc-sub { font-size: 10px; color: var(--muted); }\n.tc-rev { font-size: 12px; font-weight: 700; color: var(--navy); text-align: right; }\n.tc-out { font-size: 10px; color: var(--muted); text-align: right; }\n\n/* SUMMARY METRICS */\n.sum-metric { text-align: center; padding: 14px 8px; }\n.sum-metric-val { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 800; color: var(--navy); }\n.sum-metric-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-top: 2px; }\n\n/* TASK ITEM */\n.task-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 18px; border-bottom: 1px solid var(--rule); }\n.task-item:last-child { border-bottom: none; }\n.task-check { width: 16px; height: 16px; border: 2px solid var(--rule); border-radius: 4px; flex-shrink: 0; margin-top: 1px; display: grid; place-items: center; }\n.task-title { font-size: 12px; font-weight: 500; color: var(--text); line-height: 1.3; }\n.task-meta { font-size: 10px; color: var(--muted); margin-top: 2px; }\n\n/* SECTION DIVIDER */\n.sec-div { height: 1px; background: var(--rule); margin: 20px 0; }\n\n/* SCROLLBAR */\n::-webkit-scrollbar { width: 5px; height: 5px; }\n::-webkit-scrollbar-track { background: transparent; }\n::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }\n\n/* RESPONSIVE */\n@media (max-width: 991px) {\n  #sb { transform: translateX(-100%); transition: transform .25s; }\n  #sb.mob-open { transform: translateX(0); }\n  #tb, #main { left: 0 !important; margin-left: 0 !important; }\n}\n</style>" }) %>
+<%- include('../../partials/head', { title: 'Admin — Bildfie', extraHead: `
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --sb-w: 220px; --tb-h: 54px;
+  --sb-bg: #0c1428; --sb-bg2: #111d38; --sb-border: rgba(255,255,255,.06);
+  --sb-text: rgba(255,255,255,.78); --sb-muted: rgba(255,255,255,.38);
+  --sb-hover: rgba(255,255,255,.05); --sb-active-bg: rgba(196,49,0,.14);
+  --sb-active-border: #C43100; --accent: #C43100; --navy: #011D47;
+  --bg: #f2f4f8; --card: #fff; --rule: #e4e7ef; --muted: #6b7280; --text: #1e293b;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);font-size:13px}
+
+/* SIDEBAR */
+#sb{position:fixed;top:0;left:0;width:var(--sb-w);height:100vh;background:var(--sb-bg);z-index:400;
+    display:flex;flex-direction:column;overflow:hidden;transition:width .25s}
+#sb.collapsed{width:54px}
+#sb.collapsed .sb-lbl,#sb.collapsed .sb-logo-txt,#sb.collapsed .sb-badge{display:none!important}
+#sb.collapsed .sb-link{justify-content:center;padding:9px 0}
+
+.sb-logo{display:flex;align-items:center;gap:10px;padding:15px 16px 13px;
+         border-bottom:1px solid var(--sb-border);text-decoration:none;flex-shrink:0}
+.sb-logo-mark{width:28px;height:28px;border-radius:7px;background:var(--accent);
+              display:grid;place-items:center;flex-shrink:0}
+.sb-logo-mark svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2.3;stroke-linecap:round}
+.sb-logo-name{font-family:'Playfair Display',serif;font-size:14px;font-weight:800;color:#fff;line-height:1}
+.sb-logo-sub{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-top:2px}
+
+.sb-nav{flex:1;overflow-y:auto;padding:8px 0 16px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent}
+.sb-nav::-webkit-scrollbar{width:3px}
+.sb-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
+.sb-grp{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+        color:var(--sb-muted);padding:13px 16px 3px}
+.sb-link{display:flex;align-items:center;gap:9px;padding:8px 16px;color:var(--sb-text);
+         font-size:12px;font-weight:500;cursor:pointer;border-left:3px solid transparent;
+         text-decoration:none;transition:background .12s,border-color .12s,color .12s;user-select:none}
+.sb-link:hover{background:var(--sb-hover);color:#fff}
+.sb-link.active{background:var(--sb-active-bg);border-left-color:var(--sb-active-border);color:#fff;font-weight:600}
+.sb-link svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;flex-shrink:0;opacity:.75}
+.sb-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:9px;font-weight:700;
+          padding:2px 6px;border-radius:100px;min-width:18px;text-align:center}
+.sb-div{height:1px;background:var(--sb-border);margin:8px 16px}
+.sb-footer{padding:10px 14px;border-top:1px solid var(--sb-border);flex-shrink:0}
+.sb-user{display:flex;align-items:center;gap:9px}
+.sb-avatar{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;
+           display:grid;place-items:center;font-size:11px;font-weight:700;flex-shrink:0}
+
+/* TOPBAR */
+#tb{position:fixed;top:0;left:var(--sb-w);right:0;height:var(--tb-h);background:var(--card);
+    border-bottom:1px solid var(--rule);z-index:300;display:flex;align-items:center;
+    padding:0 20px;gap:12px;transition:left .25s}
+#sb.collapsed~#tb{left:54px}
+#sb.collapsed~#tb~#main{margin-left:54px}
+.tb-toggle{width:30px;height:30px;border:1px solid var(--rule);border-radius:7px;background:none;
+           cursor:pointer;display:grid;place-items:center;flex-shrink:0;color:var(--muted);transition:background .12s}
+.tb-toggle:hover{background:var(--bg)}
+.tb-toggle svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.tb-bc{font-size:10.5px;color:var(--muted)}
+.tb-bc strong{font-size:13px;font-weight:700;color:var(--navy)}
+.tb-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.tb-user{display:flex;align-items:center;gap:7px;padding:4px 8px;border-radius:8px;cursor:default}
+.tb-user-name{font-size:12px;font-weight:600;color:var(--navy)}
+.tb-user-role{font-size:9.5px;color:var(--muted)}
+.tb-avatar{width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;
+           display:grid;place-items:center;font-size:11px;font-weight:700;flex-shrink:0}
+
+/* MAIN */
+#main{margin-left:var(--sb-w);padding-top:var(--tb-h);min-height:100vh;transition:margin-left .25s}
+.adm-page{padding:20px 22px}
+.pg-head{margin-bottom:18px}
+.pg-head h1{font-size:18px;font-weight:700;color:var(--navy);line-height:1.2}
+.pg-head p{font-size:11.5px;color:var(--muted);margin-top:3px}
+.pg-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+
+/* KPI */
+.kpi{background:var(--card);border-radius:12px;padding:16px 18px;border:1px solid var(--rule);height:100%}
+.kpi-icon{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;margin-bottom:10px}
+.kpi-icon svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round}
+.kpi-val{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:var(--navy);line-height:1}
+.kpi-lbl{font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.07em}
+
+/* CARD */
+.card2{background:var(--card);border:1px solid var(--rule);border-radius:12px;overflow:hidden}
+.card2-head{padding:13px 16px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between}
+.card2-title{font-size:12.5px;font-weight:700;color:var(--navy)}
+.card2-action{font-size:11px;color:var(--accent);font-weight:600;cursor:pointer}
+.card2-action:hover{text-decoration:underline}
+
+/* TABLE */
+.adm-tbl{width:100%;border-collapse:collapse}
+.adm-tbl th{padding:8px 13px;font-size:9.5px;font-weight:700;text-transform:uppercase;
+            letter-spacing:.09em;color:var(--muted);background:var(--bg);
+            border-bottom:1px solid var(--rule);text-align:left}
+.adm-tbl td{padding:10px 13px;border-bottom:1px solid var(--rule);color:var(--text);vertical-align:middle}
+.adm-tbl tr:last-child td{border-bottom:none}
+.adm-tbl tbody tr:hover td{background:#fafbfd}
+
+/* BADGES */
+.bdg{display:inline-flex;align-items:center;padding:2px 7px;border-radius:100px;font-size:9.5px;font-weight:600;white-space:nowrap}
+.bdg-admin{background:#eff6ff;color:#1e40af}
+.bdg-professional{background:#f0fdf4;color:#166534}
+.bdg-client{background:#f9fafb;color:#6b7280;border:1px solid var(--rule)}
+.bdg-supplier{background:#fefce8;color:#854d0e}
+.bdg-banned{background:#fef2f2;color:#991b1b}
+.bdg-ok{background:#f0fdf4;color:#166534}
+.bdg-pending{background:#fff7ed;color:#9a3412}
+.bdg-done{background:#eff6ff;color:#1e40af}
+.bdg-neutral{background:#f9fafb;color:#6b7280;border:1px solid var(--rule)}
+.bdg-err{background:#fef2f2;color:#991b1b}
+
+/* VTABS */
+.vtab{padding:5px 14px;border:1px solid var(--rule);border-radius:7px;background:#fff;
+      color:var(--muted);font-size:11.5px;font-weight:600;cursor:pointer;transition:background .12s}
+.vtab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:900;
+               overflow-y:auto;padding:32px 16px}
+.modal-box{background:#fff;border-radius:14px;max-width:680px;margin:0 auto;overflow:hidden;
+           box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal-head{background:var(--navy);padding:18px 22px;display:flex;align-items:center;gap:13px}
+.modal-head-info{flex:1}
+.modal-head-name{font-size:15px;font-weight:700;color:#fff}
+.modal-head-email{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px}
+.modal-close{background:none;border:none;color:rgba(255,255,255,.5);cursor:pointer;
+             font-size:20px;line-height:1;padding:2px 6px}
+.modal-close:hover{color:#fff}
+.modal-body{padding:18px 22px;max-height:65vh;overflow-y:auto}
+.modal-foot{padding:14px 22px;border-top:1px solid var(--rule);background:var(--bg);
+            display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:18px}
+.info-item label{display:block;font-size:9.5px;color:var(--muted);text-transform:uppercase;
+                 letter-spacing:.06em;margin-bottom:2px}
+.info-item span{font-size:12.5px;font-weight:500}
+.sec-hd{font-size:11.5px;font-weight:700;color:var(--navy);border-bottom:1px solid var(--rule);
+         padding-bottom:6px;margin-bottom:10px}
+.pw-box{background:var(--bg);border-radius:9px;padding:12px 14px;margin-bottom:18px}
+
+/* ALERT */
+.adm-alert{background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;padding:10px 14px;
+           font-size:12px;color:#9a3412;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.adm-alert a{color:var(--accent);font-weight:600;cursor:pointer;text-decoration:underline}
+
+/* TOAST */
+#toast{position:fixed;bottom:20px;right:20px;padding:10px 18px;border-radius:9px;color:#fff;
+       font-size:12.5px;font-weight:600;z-index:9999;display:none;max-width:320px;
+       box-shadow:0 4px 20px rgba(0,0,0,.25)}
+
+/* MINI STAT */
+.mini-stat{background:var(--card);border:1px solid var(--rule);border-radius:10px;
+           padding:13px 15px;display:flex;align-items:center;gap:11px}
+.mini-ico{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;flex-shrink:0}
+.mini-ico svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.mini-val{font-size:17px;font-weight:800;color:var(--navy);line-height:1}
+.mini-lbl{font-size:10px;color:var(--muted);margin-top:2px}
+
+/* INPUT */
+.adm-input{padding:7px 10px;border:1px solid var(--rule);border-radius:7px;font-size:12px;
+           font-family:'Sora',sans-serif;background:#fff;color:var(--text);outline:none}
+.adm-input:focus{border-color:#94a3b8}
+.adm-select{padding:7px 10px;border:1px solid var(--rule);border-radius:7px;font-size:12px;
+            font-family:'Sora',sans-serif;background:#fff;color:var(--text);outline:none;cursor:pointer}
+
+/* PAGER */
+.pager{padding:11px 16px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;
+       align-items:center;font-size:11px;color:var(--muted)}
+
+/* PROG */
+.prog{height:4px;background:var(--rule);border-radius:4px;overflow:hidden;margin-top:4px}
+.prog-fill{height:100%;border-radius:4px}
+
+/* RESPONSIVE */
+@media(max-width:991px){
+  #sb{transform:translateX(-100%);transition:transform .25s}
+  #sb.mob-open{transform:translateX(0)}
+  #tb,#main{left:0!important;margin-left:0!important}
+}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:4px}
+</style>
+` }) %>
 
 <body>
 
-<!-- ══════════════ SIDEBAR ══════════════ -->
+<!-- ════════════════════════════════════════════════════════════════
+     SIDEBAR
+════════════════════════════════════════════════════════════════ -->
 <aside id="sb">
-
-  <a href="#" class="sb-logo">
+  <a href="/" class="sb-logo">
     <div class="sb-logo-mark">
       <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
     </div>
     <div class="sb-logo-txt">
-      <div class="sb-logo-name">BuildLink</div>
-      <div class="sb-logo-badge">Admin Panel</div>
+      <div class="sb-logo-name">Bildfie</div>
+      <div class="sb-logo-sub">Admin Panel</div>
     </div>
   </a>
 
-  <div class="sb-search">
-    <div class="sb-search-wrap">
-      <span class="sb-search-ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
-      <input type="text" placeholder="Search menu…">
-    </div>
-  </div>
-
   <nav class="sb-nav">
+    <div class="sb-grp sb-lbl">Platform</div>
 
-    <!-- DASHBOARD -->
-    <div class="sb-group-lbl sb-label">Dashboard</div>
-    <div class="sb-item">
-      <a href="/" class="sb-link active">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        <span class="sb-link-txt">Overview</span>
-      </a>
-    </div>
+    <a id="nav-overview" class="sb-link active" onclick="showSection('overview')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span class="sb-lbl">Overview</span>
+    </a>
 
-    <!-- CRM -->
-    <div class="sb-group-lbl sb-label">CRM</div>
-    <div class="sb-item" onclick="toggleNav(this)">
-      <div class="sb-link">
-        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-        <span class="sb-link-txt">CRM</span>
-        <span class="sb-badge">3</span>
-        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-      </div>
-      <div class="sb-sub">
-        <a href="#" class="sb-sub-link">Clients</a>
-        <a href="#" class="sb-sub-link">Contacts</a>
-        <a href="#" class="sb-sub-link">Customer Profiles</a>
-        <a href="#" class="sb-sub-link">Leads</a>
-        <a href="#" class="sb-sub-link">Lead Status</a>
-        <a href="#" class="sb-sub-link">Assignments</a>
-        <a href="#" class="sb-sub-link">Activities</a>
-        <a href="#" class="sb-sub-link">Follow-ups</a>
-        <a href="#" class="sb-sub-link">Conversion</a>
-      </div>
-    </div>
+    <a id="nav-users" class="sb-link" onclick="showSection('users')">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      <span class="sb-lbl">Users</span>
+    </a>
 
-    <!-- SALES -->
-    <div class="sb-group-lbl sb-label">Sales & Revenue</div>
-    <div class="sb-item" onclick="toggleNav(this)">
-      <div class="sb-link">
-        <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-        <span class="sb-link-txt">Sales & Revenue</span>
-        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-      </div>
-      <div class="sb-sub">
-        <a href="#" class="sb-sub-link">Proposals</a>
-        <a href="#" class="sb-sub-link">Quotations</a>
-        <a href="#" class="sb-sub-link">Estimates</a>
-        <a href="#" class="sb-sub-link">Orders</a>
-        <a href="#" class="sb-sub-link">Invoices</a>
-        <a href="#" class="sb-sub-link">Payments</a>
-        <a href="#" class="sb-sub-link">Credit Notes</a>
-        <a href="#" class="sb-sub-link">Delivery Notes</a>
-        <a href="#" class="sb-sub-link">Subscriptions</a>
-      </div>
-    </div>
+    <a id="nav-finance" class="sb-link" onclick="showSection('finance')">
+      <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      <span class="sb-lbl">Finance</span>
+    </a>
 
-    <!-- MARKETPLACE -->
-    <div class="sb-group-lbl sb-label">Marketplace & Procurement</div>
-    <div class="sb-item" onclick="toggleNav(this)">
-      <div class="sb-link">
-        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-        <span class="sb-link-txt">Marketplace</span>
-        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-      </div>
-      <div class="sb-sub">
-        <a href="#" class="sb-sub-link">Materials</a>
-        <a href="#" class="sb-sub-link">Services</a>
-        <a href="#" class="sb-sub-link">Vendors</a>
-        <a href="#" class="sb-sub-link">Supplier Quotations</a>
-        <a href="#" class="sb-sub-link">Comparisons</a>
-        <a href="#" class="sb-sub-link">Orders</a>
-        <a href="#" class="sb-sub-link">Deliveries</a>
-        <a href="#" class="sb-sub-link">Supplier Performance</a>
-        <a href="#" class="sb-sub-link">Reviews</a>
-        <a href="#" class="sb-sub-link">Vendor Contracts</a>
-      </div>
-    </div>
+    <a id="nav-verifications" class="sb-link" onclick="showSection('verifications')">
+      <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <span class="sb-lbl">Verifications</span>
+      <span class="sb-badge" id="sb-verif-badge" style="display:none">0</span>
+    </a>
 
-    <!-- PROJECTS -->
-    <div class="sb-group-lbl sb-label">Projects & Tasks</div>
-    <div class="sb-item" onclick="toggleNav(this)">
-      <div class="sb-link">
-        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        <span class="sb-link-txt">Projects & Tasks</span>
-        <span class="sb-badge">7</span>
-        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-      </div>
-      <div class="sb-sub">
-        <a href="#" class="sb-sub-link">All Projects</a>
-        <a href="#" class="sb-sub-link">Milestones</a>
-        <a href="#" class="sb-sub-link">Resources</a>
-        <a href="#" class="sb-sub-link">Status Tracker</a>
-        <a href="#" class="sb-sub-link">Tasks</a>
-        <a href="#" class="sb-sub-link">Boards (Kanban)</a>
-        <a href="#" class="sb-sub-link">Lists</a>
-      </div>
-    </div>
+    <a id="nav-bids" class="sb-link" onclick="showSection('bids')">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <span class="sb-lbl">Bids</span>
+    </a>
 
-    <!-- FINANCIALS -->
-    <div class="sb-group-lbl sb-label">Financials</div>
-    <div class="sb-item" onclick="toggleNav(this)">
-      <div class="sb-link">
-        <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-        <span class="sb-link-txt">Financials</span>
-        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-      </div>
-      <div class="sb-sub">
-        <a href="#" class="sb-sub-link">Expenses</a>
-        <a href="#" class="sb-sub-link">Disbursements</a>
-        <a href="#" class="sb-sub-link">Reimbursements</a>
-        <a href="#" class="sb-sub-link">Ledger</a>
-        <a href="#" class="sb-sub-link">Budgeting</a>
-        <a href="#" class="sb-sub-link">Taxes & VAT</a>
-        <a href="#" class="sb-sub-link">Currencies</a>
-        <a href="#" class="sb-sub-link">Payment Modes</a>
-      </div>
-    </div>
+    <a id="nav-analytics" class="sb-link" onclick="showSection('analytics')">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span class="sb-lbl">Analytics</span>
+    </a>
 
-    <!-- CATALOG -->
-    <div class="sb-group-lbl sb-label">Catalog & Resources</div>
-    <div class="sb-item" onclick="toggleNav(this)">
-      <div class="sb-link">
-        <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-        <span class="sb-link-txt">Catalog & Resources</span>
-        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-      </div>
-      <div class="sb-sub">
-        <a href="#" class="sb-sub-link">Materials Catalog</a>
-        <a href="#" class="sb-sub-link">Services Catalog</a>
-        <a href="#" class="sb-sub-link">Categories</a>
-        <a href="#" class="sb-sub-link">Pricing</a>
-        <a href="#" class="sb-sub-link">Units of Measure</a>
-        <a href="#" class="sb-sub-link">Inventory</a>
-        <a href="#" class="sb-sub-link">SKU Management</a>
-        <a href="#" class="sb-sub-link">Media & Files</a>
-        <a href="#" class="sb-sub-link">Documents</a>
-        <a href="#" class="sb-sub-link">Notes</a>
-      </div>
-    </div>
+    <div class="sb-div"></div>
 
-    <!-- REPORTS -->
-    <div class="sb-group-lbl sb-label">Reports & Analytics</div>
-    <div class="sb-item" onclick="toggleNav(this)">
-      <div class="sb-link">
-        <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-        <span class="sb-link-txt">Reports & Analytics</span>
-        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-      </div>
-      <div class="sb-sub">
-        <a href="#" class="sb-sub-link">Sales Reports</a>
-        <a href="#" class="sb-sub-link">Financial Reports</a>
-        <a href="#" class="sb-sub-link">Project Reports</a>
-        <a href="#" class="sb-sub-link">Task Productivity</a>
-        <a href="#" class="sb-sub-link">Customer Insights</a>
-        <a href="#" class="sb-sub-link">Lead Conversion</a>
-        <a href="#" class="sb-sub-link">Marketplace Analytics</a>
-        <a href="#" class="sb-sub-link">Forecasting</a>
-        <a href="#" class="sb-sub-link">Custom Reports</a>
-      </div>
-    </div>
-
-    <!-- SYSTEM -->
-    <div class="sb-group-lbl sb-label">System & Administration</div>
-    <div class="sb-item" onclick="toggleNav(this)">
-      <div class="sb-link">
-        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        <span class="sb-link-txt">Team & Roles</span>
-        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-      </div>
-      <div class="sb-sub">
-        <a href="#" class="sb-sub-link">Members</a>
-        <a href="#" class="sb-sub-link">Roles & Permissions</a>
-        <a href="#" class="sb-sub-link">Departments</a>
-      </div>
-    </div>
-    <div class="sb-item" onclick="toggleNav(this)">
-      <div class="sb-link">
-        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-        <span class="sb-link-txt">Collaboration</span>
-        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-      </div>
-      <div class="sb-sub">
-        <a href="#" class="sb-sub-link">Team Chat</a>
-        <a href="#" class="sb-sub-link">Meetings</a>
-        <a href="#" class="sb-sub-link">Activity Logs</a>
-      </div>
-    </div>
-    <div class="sb-item" onclick="toggleNav(this)">
-      <div class="sb-link">
-        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.63A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-        <span class="sb-link-txt">Support</span>
-        <span class="sb-badge">12</span>
-        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-      </div>
-      <div class="sb-sub">
-        <a href="#" class="sb-sub-link">Tickets</a>
-        <a href="#" class="sb-sub-link">Pipelines</a>
-        <a href="#" class="sb-sub-link">SLAs</a>
-      </div>
-    </div>
-    <div class="sb-item" onclick="toggleNav(this)">
-      <div class="sb-link">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
-        <span class="sb-link-txt">Integrations</span>
-        <span class="sb-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-      </div>
-      <div class="sb-sub">
-        <a href="#" class="sb-sub-link">Payment Gateways</a>
-        <a href="#" class="sb-sub-link">Email / SMTP</a>
-        <a href="#" class="sb-sub-link">SMS Providers</a>
-        <a href="#" class="sb-sub-link">API Keys</a>
-        <a href="#" class="sb-sub-link">Webhooks</a>
-      </div>
-    </div>
-    <div class="sb-item">
-      <a href="#" class="sb-link">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-        <span class="sb-link-txt">Settings</span>
-      </a>
-    </div>
-
+    <a href="/" class="sb-link" style="opacity:.65">
+      <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      <span class="sb-lbl">View Site</span>
+    </a>
+    <a href="/api/auth/logout" class="sb-link" style="opacity:.65">
+      <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      <span class="sb-lbl">Logout</span>
+    </a>
   </nav>
 
   <div class="sb-footer">
     <div class="sb-user">
-      <img src="https://i.pravatar.cc/100?img=22" class="sb-user-avatar" alt="">
-      <div>
-        <div class="sb-user-name">Admin User</div>
-        <div class="sb-user-role">Super Admin</div>
+      <div class="sb-avatar"><%= user ? user.name.charAt(0).toUpperCase() : 'A' %></div>
+      <div class="sb-lbl">
+        <div style="font-size:11.5px;font-weight:600;color:rgba(255,255,255,.85)"><%= user ? user.name : 'Admin' %></div>
+        <div style="font-size:9.5px;color:var(--sb-muted)">Super Admin</div>
       </div>
     </div>
   </div>
 </aside>
 
-<!-- ══════════════ TOPBAR ══════════════ -->
+<!-- ════════════════════════════════════════════════════════════════
+     TOPBAR
+════════════════════════════════════════════════════════════════ -->
 <header id="tb">
   <button class="tb-toggle" onclick="toggleSidebar()">
     <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
   </button>
-
   <div>
-    <div class="tb-bc">Admin Panel / <span>Dashboard</span></div>
-    <div style="font-size:13px;font-weight:700;color:var(--navy)">Overview</div>
+    <div class="tb-bc">Admin / <strong id="bc-section">Overview</strong></div>
   </div>
-
-  <div class="tb-icons">
-    <button class="tb-icon-btn" title="Notifications">
-      <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
-      <span class="tb-notif-dot"></span>
-    </button>
-    <button class="tb-icon-btn" title="Messages">
-      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-    </button>
-    <button class="tb-icon-btn" title="Settings">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
-    </button>
-    <div class="tb-sep"></div>
+  <div class="tb-right">
+    <div style="font-size:11px;color:var(--muted)" id="tb-date"></div>
+    <div style="width:1px;height:20px;background:var(--rule)"></div>
     <div class="tb-user">
-      <img src="https://i.pravatar.cc/100?img=22" alt="">
-      <div class="tb-user-info d-none d-md-block">
-        <div class="name">Admin</div>
-        <div class="role">Super Admin</div>
+      <div class="tb-avatar"><%= user ? user.name.charAt(0).toUpperCase() : 'A' %></div>
+      <div>
+        <div class="tb-user-name"><%= user ? user.name : 'Admin' %></div>
+        <div class="tb-user-role">Super Admin</div>
       </div>
     </div>
-    <a href="/" class="btn btn-sm btn-outline-secondary ms-1" style="font-size:11px;border-radius:7px">View Site</a>
   </div>
 </header>
 
-<!-- ══════════════ MAIN CONTENT ══════════════ -->
+<!-- ════════════════════════════════════════════════════════════════
+     MAIN
+════════════════════════════════════════════════════════════════ -->
 <main id="main">
-<div class="adm-page">
 
-  <!-- PAGE HEADER -->
-  <div class="pg-head-row pg-head">
-    <div>
-      <h1>Dashboard Overview</h1>
-      <p id="pg-date">Monday, 26 May 2026 &mdash; Platform performing normally</p>
-    </div>
-    <div class="d-flex gap-2">
-      <button class="btn btn-sm btn-outline-secondary" style="border-radius:8px;font-size:12px">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="margin-right:4px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        May 2026
-      </button>
-      <button class="btn btn-sm" style="background:var(--accent);color:#fff;border-radius:8px;font-size:12px;border:none">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="margin-right:4px"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-        Export Report
-      </button>
-    </div>
+<!-- ─── OVERVIEW ─── -->
+<div id="sec-overview" class="adm-page">
+  <div class="pg-head">
+    <h1>Dashboard Overview</h1>
+    <p id="pg-date">Loading…</p>
   </div>
 
-  <!-- ── KPI CARDS ── -->
+  <div id="verif-alert" class="adm-alert" style="display:none">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span><strong id="verif-alert-count">0</strong> verification document(s) are waiting for your review.</span>
+    <a onclick="showSection('verifications')">Review now →</a>
+  </div>
+
   <div class="row g-3 mb-3">
     <div class="col-6 col-lg-3">
       <div class="kpi">
-        <div class="kpi-icon" style="background:#fef3c7;color:#d97706">
-          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-        </div>
-        <div class="kpi-val">KES 14.2M</div>
-        <div class="kpi-lbl">Total Revenue (YTD)</div>
-        <div class="kpi-trend trend-up">
-          <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
-          +18.4% vs last year
-        </div>
-      </div>
-    </div>
-    <div class="col-6 col-lg-3">
-      <div class="kpi">
         <div class="kpi-icon" style="background:#eff6ff;color:#2563eb">
-          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
         </div>
-        <div class="kpi-val">29</div>
-        <div class="kpi-lbl">Active Projects</div>
-        <div class="kpi-trend trend-up">
-          <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
-          5 new this month
-        </div>
+        <div class="kpi-val" id="kpi-users">—</div>
+        <div class="kpi-lbl">Total Users</div>
       </div>
     </div>
     <div class="col-6 col-lg-3">
       <div class="kpi">
         <div class="kpi-icon" style="background:#f0fdf4;color:#16a34a">
-          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
         </div>
-        <div class="kpi-val">214</div>
-        <div class="kpi-lbl">Registered Clients</div>
-        <div class="kpi-trend trend-up">
-          <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
-          12 new this month
+        <div class="kpi-val" id="kpi-profs">—</div>
+        <div class="kpi-lbl">Professionals</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="kpi">
+        <div class="kpi-icon" style="background:#fef3c7;color:#d97706">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
         </div>
+        <div class="kpi-val" id="kpi-revenue">—</div>
+        <div class="kpi-lbl">Total Revenue</div>
       </div>
     </div>
     <div class="col-6 col-lg-3">
       <div class="kpi">
         <div class="kpi-icon" style="background:#fdf4ff;color:#9333ea">
-          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
         </div>
-        <div class="kpi-val">KES 5.8M</div>
-        <div class="kpi-lbl">Net Cashflow</div>
-        <div class="kpi-trend trend-up">
-          <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
-          Positive balance
-        </div>
+        <div class="kpi-val" id="kpi-bids">—</div>
+        <div class="kpi-lbl">Total Bids</div>
       </div>
     </div>
   </div>
 
-  <!-- ── SECONDARY KPIs ── -->
-  <div class="row g-3 mb-4">
+  <div class="row g-3 mb-3">
     <div class="col-6 col-lg-3">
       <div class="mini-stat">
-        <div class="mini-stat-ico" style="background:#fff7ed;color:#ea580c">
+        <div class="mini-ico" style="background:#fff7ed;color:#ea580c">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div><div class="mini-val" id="kpi-projects">—</div><div class="mini-lbl">Projects</div></div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#eff6ff;color:#2563eb">
+          <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <div><div class="mini-val" id="kpi-txns">—</div><div class="mini-lbl">Transactions</div></div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#fef2f2;color:#dc2626">
           <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         </div>
-        <div>
-          <div class="mini-stat-val">47</div>
-          <div class="mini-stat-lbl">Open Leads</div>
-        </div>
+        <div><div class="mini-val" id="kpi-pending-verifs">—</div><div class="mini-lbl">Pending Verifs</div></div>
       </div>
     </div>
     <div class="col-6 col-lg-3">
       <div class="mini-stat">
-        <div class="mini-stat-ico" style="background:#fef2f2;color:#dc2626">
-          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+        <div class="mini-ico" style="background:#f0fdf4;color:#16a34a">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         </div>
-        <div>
-          <div class="mini-stat-val">KES 4.1M</div>
-          <div class="mini-stat-lbl">Outstanding Invoices</div>
-        </div>
-      </div>
-    </div>
-    <div class="col-6 col-lg-3">
-      <div class="mini-stat">
-        <div class="mini-stat-ico" style="background:#f0fdf4;color:#16a34a">
-          <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-        </div>
-        <div>
-          <div class="mini-stat-val">83</div>
-          <div class="mini-stat-lbl">Active Tasks</div>
-        </div>
-      </div>
-    </div>
-    <div class="col-6 col-lg-3">
-      <div class="mini-stat">
-        <div class="mini-stat-ico" style="background:#eff6ff;color:#2563eb">
-          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.63A2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-        </div>
-        <div>
-          <div class="mini-stat-val">12</div>
-          <div class="mini-stat-lbl">Support Tickets</div>
-        </div>
+        <div><div class="mini-val" style="font-size:13px" id="kpi-revenue2">—</div><div class="mini-lbl">KES Revenue</div></div>
       </div>
     </div>
   </div>
 
-  <!-- ── CHARTS ROW ── -->
-  <div class="row g-3 mb-3">
-    <!-- Revenue vs Expenses Chart -->
-    <div class="col-lg-8">
-      <div class="card2" style="height:100%">
-        <div class="card2-head">
-          <div class="card2-title">Revenue vs Expenses &mdash; Last 7 Months</div>
-          <div class="d-flex gap-3 align-items-center" style="font-size:10.5px;color:var(--muted)">
-            <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#011D47;display:inline-block"></span>Revenue</span>
-            <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#C43100;display:inline-block"></span>Expenses</span>
-          </div>
-        </div>
-        <div class="card2-body" style="padding:16px 18px">
-          <div class="chart-wrap" style="height:230px">
-            <canvas id="revenueChart"></canvas>
-          </div>
-        </div>
-      </div>
+  <div class="card2">
+    <div class="card2-head">
+      <span class="card2-title">Recent Payments</span>
+      <span class="card2-action" onclick="showSection('finance')">View all transactions →</span>
     </div>
-    <!-- Project Status Donut -->
-    <div class="col-lg-4">
-      <div class="card2" style="height:100%">
-        <div class="card2-head">
-          <div class="card2-title">Projects by Status</div>
-          <span class="card2-action">View All</span>
-        </div>
-        <div class="card2-body" style="padding:16px 18px">
-          <div class="chart-wrap" style="height:160px">
-            <canvas id="projectDonut"></canvas>
-          </div>
-          <div class="mt-3">
-            <div class="pipe-row">
-              <div class="pipe-lbl">Active</div>
-              <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:48%;background:#011D47"></div></div>
-              <div class="pipe-num">14</div>
-            </div>
-            <div class="pipe-row">
-              <div class="pipe-lbl">Completed</div>
-              <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:28%;background:#16a34a"></div></div>
-              <div class="pipe-num">8</div>
-            </div>
-            <div class="pipe-row">
-              <div class="pipe-lbl">On Hold</div>
-              <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:14%;background:#d97706"></div></div>
-              <div class="pipe-num">4</div>
-            </div>
-            <div class="pipe-row">
-              <div class="pipe-lbl">Overdue</div>
-              <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:10%;background:#dc2626"></div></div>
-              <div class="pipe-num">3</div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div style="overflow-x:auto">
+      <table class="adm-tbl">
+        <thead><tr><th>User</th><th>Amount (KES)</th><th>M-Pesa Receipt</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody id="recent-pay-body">
+          <tr><td colspan="5" style="padding:20px;text-align:center;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
-
-  <!-- ── CASHFLOW + LEAD PIPELINE ── -->
-  <div class="row g-3 mb-3">
-    <!-- Cashflow Summary -->
-    <div class="col-lg-4">
-      <div class="card2">
-        <div class="card2-head">
-          <div class="card2-title">Cashflow Summary &mdash; May 2026</div>
-        </div>
-        <div style="padding:4px 18px 10px">
-          <div class="cf-row">
-            <span class="cf-lbl">Total Revenue</span>
-            <span class="cf-val" style="color:#16a34a">+ KES 3,140,000</span>
-          </div>
-          <div class="cf-row">
-            <span class="cf-lbl">Invoices Collected</span>
-            <span class="cf-val" style="color:#16a34a">+ KES 2,480,000</span>
-          </div>
-          <div class="cf-row">
-            <span class="cf-lbl">Total Expenses</span>
-            <span class="cf-val" style="color:#dc2626">- KES 1,920,000</span>
-          </div>
-          <div class="cf-row">
-            <span class="cf-lbl">Supplier Payments</span>
-            <span class="cf-val" style="color:#dc2626">- KES 640,000</span>
-          </div>
-          <div class="cf-row">
-            <span class="cf-lbl">Tax Remittance</span>
-            <span class="cf-val" style="color:#dc2626">- KES 188,000</span>
-          </div>
-          <div class="cf-row" style="border-top:2px solid var(--navy);margin-top:4px;padding-top:12px">
-            <span class="cf-lbl" style="font-weight:700;color:var(--navy)">Net Position</span>
-            <span class="cf-val" style="color:#16a34a;font-size:15px">+ KES 872,000</span>
-          </div>
-        </div>
-        <div style="padding:0 18px 14px">
-          <div style="background:var(--bg);border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;font-size:11px;color:var(--muted)">
-            <span>Overdue receivables</span>
-            <span style="font-weight:700;color:#dc2626">KES 2,420,000</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Lead Pipeline -->
-    <div class="col-lg-4">
-      <div class="card2">
-        <div class="card2-head">
-          <div class="card2-title">Lead Pipeline</div>
-          <span class="card2-action">Manage</span>
-        </div>
-        <div style="padding:14px 18px">
-          <div class="d-flex justify-content-between mb-3" style="font-size:11px;color:var(--muted)">
-            <span>47 total leads &mdash; <strong style="color:#16a34a">18 converted</strong> this month</span>
-          </div>
-          <div class="pipe-row">
-            <div class="pipe-lbl" style="font-size:11px">New</div>
-            <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:55%;background:#2563eb"></div></div>
-            <div class="pipe-num">26</div>
-          </div>
-          <div class="pipe-row">
-            <div class="pipe-lbl" style="font-size:11px">Contacted</div>
-            <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:34%;background:#7c3aed"></div></div>
-            <div class="pipe-num">16</div>
-          </div>
-          <div class="pipe-row">
-            <div class="pipe-lbl" style="font-size:11px">Qualified</div>
-            <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:21%;background:#d97706"></div></div>
-            <div class="pipe-num">10</div>
-          </div>
-          <div class="pipe-row">
-            <div class="pipe-lbl" style="font-size:11px">Proposal Sent</div>
-            <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:11%;background:#C43100"></div></div>
-            <div class="pipe-num">5</div>
-          </div>
-          <div class="pipe-row">
-            <div class="pipe-lbl" style="font-size:11px">Converted</div>
-            <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:38%;background:#16a34a"></div></div>
-            <div class="pipe-num">18</div>
-          </div>
-          <div style="margin-top:14px;background:var(--bg);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--muted);display:flex;justify-content:space-between">
-            <span>Conversion rate</span>
-            <strong style="color:var(--navy)">38.3%</strong>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Platform Metrics -->
-    <div class="col-lg-4">
-      <div class="card2">
-        <div class="card2-head">
-          <div class="card2-title">Platform Metrics</div>
-        </div>
-        <div style="padding:10px 0">
-          <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--rule)">
-            <div class="sum-metric" style="border-right:1px solid var(--rule)">
-              <div class="sum-metric-val">1,847</div>
-              <div class="sum-metric-lbl">Professionals</div>
-            </div>
-            <div class="sum-metric">
-              <div class="sum-metric-val">312</div>
-              <div class="sum-metric-lbl">Vendors</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--rule)">
-            <div class="sum-metric" style="border-right:1px solid var(--rule)">
-              <div class="sum-metric-val">4,210</div>
-              <div class="sum-metric-lbl">Material SKUs</div>
-            </div>
-            <div class="sum-metric">
-              <div class="sum-metric-val">96</div>
-              <div class="sum-metric-lbl">Services Listed</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr">
-            <div class="sum-metric" style="border-right:1px solid var(--rule)">
-              <div class="sum-metric-val">3,928</div>
-              <div class="sum-metric-lbl">Total Users</div>
-            </div>
-            <div class="sum-metric">
-              <div class="sum-metric-val">98.7%</div>
-              <div class="sum-metric-lbl">Uptime (30d)</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── PROJECTS + INVOICES ── -->
-  <div class="row g-3 mb-3">
-    <!-- Recent Projects -->
-    <div class="col-lg-7">
-      <div class="card2">
-        <div class="card2-head">
-          <div class="card2-title">Recent Projects</div>
-          <a href="#" class="card2-action">View All</a>
-        </div>
-        <div style="overflow-x:auto">
-          <table class="adm-tbl">
-            <thead>
-              <tr>
-                <th>Project</th>
-                <th>Client</th>
-                <th>Value</th>
-                <th>Progress</th>
-                <th>Status</th>
-                <th>Due</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><div style="font-weight:600;font-size:12px;color:var(--navy)">Westlands Office Block</div><div style="font-size:10px;color:var(--muted)">Nairobi CBD</div></td>
-                <td style="font-size:12px">Patel Holdings</td>
-                <td style="font-size:12px;font-weight:700">KES 4.2M</td>
-                <td style="min-width:90px"><div class="prog"><div class="prog-fill" style="width:67%;background:#011D47"></div></div><div style="font-size:9px;color:var(--muted);margin-top:3px">67%</div></td>
-                <td><span class="bdg bdg-active">Active</span></td>
-                <td style="font-size:11px;color:var(--muted)">30 Jun 26</td>
-              </tr>
-              <tr>
-                <td><div style="font-weight:600;font-size:12px;color:var(--navy)">Karen Residence</div><div style="font-size:10px;color:var(--muted)">Karen, Nairobi</div></td>
-                <td style="font-size:12px">J. Mutua</td>
-                <td style="font-size:12px;font-weight:700">KES 1.8M</td>
-                <td style="min-width:90px"><div class="prog"><div class="prog-fill" style="width:45%;background:#011D47"></div></div><div style="font-size:9px;color:var(--muted);margin-top:3px">45%</div></td>
-                <td><span class="bdg bdg-active">Active</span></td>
-                <td style="font-size:11px;color:var(--muted)">15 Jul 26</td>
-              </tr>
-              <tr>
-                <td><div style="font-weight:600;font-size:12px;color:var(--navy)">Thika Road Mall</div><div style="font-size:10px;color:var(--muted)">Thika Road</div></td>
-                <td style="font-size:12px">TRM Ltd</td>
-                <td style="font-size:12px;font-weight:700">KES 12M</td>
-                <td style="min-width:90px"><div class="prog"><div class="prog-fill" style="width:28%;background:#d97706"></div></div><div style="font-size:9px;color:var(--muted);margin-top:3px">28%</div></td>
-                <td><span class="bdg bdg-hold">On Hold</span></td>
-                <td style="font-size:11px;color:var(--muted)">31 Aug 26</td>
-              </tr>
-              <tr>
-                <td><div style="font-weight:600;font-size:12px;color:var(--navy)">Gigiri Estate Ph.2</div><div style="font-size:10px;color:var(--muted)">Gigiri, Nairobi</div></td>
-                <td style="font-size:12px">Crown Developers</td>
-                <td style="font-size:12px;font-weight:700">KES 8.5M</td>
-                <td style="min-width:90px"><div class="prog"><div class="prog-fill" style="width:82%;background:#16a34a"></div></div><div style="font-size:9px;color:var(--muted);margin-top:3px">82%</div></td>
-                <td><span class="bdg bdg-active">Active</span></td>
-                <td style="font-size:11px;color:var(--muted)">20 Jul 26</td>
-              </tr>
-              <tr>
-                <td><div style="font-weight:600;font-size:12px;color:var(--navy)">Langata Bridge</div><div style="font-size:10px;color:var(--muted)">Langata Road</div></td>
-                <td style="font-size:12px">Kenya Highways</td>
-                <td style="font-size:12px;font-weight:700">KES 22M</td>
-                <td style="min-width:90px"><div class="prog"><div class="prog-fill" style="width:91%;background:#dc2626"></div></div><div style="font-size:9px;color:var(--muted);margin-top:3px">91%</div></td>
-                <td><span class="bdg bdg-overdue">Overdue</span></td>
-                <td style="font-size:11px;color:#dc2626;font-weight:600">01 May 26</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- Recent Invoices -->
-    <div class="col-lg-5">
-      <div class="card2">
-        <div class="card2-head">
-          <div class="card2-title">Recent Invoices</div>
-          <a href="#" class="card2-action">View All</a>
-        </div>
-        <div style="overflow-x:auto">
-          <table class="adm-tbl">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Client</th>
-                <th>Amount</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="font-size:11px;color:var(--muted);font-weight:600">INV-0142</td>
-                <td style="font-size:12px">Patel Holdings</td>
-                <td style="font-size:12px;font-weight:700">KES 840K</td>
-                <td><span class="bdg bdg-pending">Pending</span></td>
-              </tr>
-              <tr>
-                <td style="font-size:11px;color:var(--muted);font-weight:600">INV-0141</td>
-                <td style="font-size:12px">J. Mutua</td>
-                <td style="font-size:12px;font-weight:700">KES 360K</td>
-                <td><span class="bdg bdg-paid">Paid</span></td>
-              </tr>
-              <tr>
-                <td style="font-size:11px;color:var(--muted);font-weight:600">INV-0140</td>
-                <td style="font-size:12px">Crown Developers</td>
-                <td style="font-size:12px;font-weight:700">KES 1.7M</td>
-                <td><span class="bdg bdg-pending">Pending</span></td>
-              </tr>
-              <tr>
-                <td style="font-size:11px;color:var(--muted);font-weight:600">INV-0139</td>
-                <td style="font-size:12px">TRM Ltd</td>
-                <td style="font-size:12px;font-weight:700">KES 2.4M</td>
-                <td><span class="bdg bdg-overdue">Overdue</span></td>
-              </tr>
-              <tr>
-                <td style="font-size:11px;color:var(--muted);font-weight:600">INV-0138</td>
-                <td style="font-size:12px">ABC Construction</td>
-                <td style="font-size:12px;font-weight:700">KES 520K</td>
-                <td><span class="bdg bdg-paid">Paid</span></td>
-              </tr>
-              <tr>
-                <td style="font-size:11px;color:var(--muted);font-weight:600">INV-0137</td>
-                <td style="font-size:12px">Kenya Highways</td>
-                <td style="font-size:12px;font-weight:700">KES 4.4M</td>
-                <td><span class="bdg bdg-paid">Paid</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div style="padding:10px 14px;background:var(--bg);border-top:1px solid var(--rule);display:flex;justify-content:space-between;font-size:11px;color:var(--muted)">
-          <span>Total Outstanding</span>
-          <strong style="color:var(--navy)">KES 4,960,000</strong>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── ACTIVITY + TOP CLIENTS + TASKS ── -->
-  <div class="row g-3 mb-3">
-
-    <!-- Activity Feed -->
-    <div class="col-lg-4">
-      <div class="card2">
-        <div class="card2-head">
-          <div class="card2-title">Recent Activity</div>
-          <a href="#" class="card2-action">View Log</a>
-        </div>
-        <div>
-          <div class="act-item">
-            <div class="act-dot" style="background:#2563eb"></div>
-            <div>
-              <div class="act-msg">Invoice <strong>INV-0142</strong> sent to Patel Holdings</div>
-              <div class="act-time">2 minutes ago &mdash; by Admin</div>
-            </div>
-          </div>
-          <div class="act-item">
-            <div class="act-dot" style="background:#16a34a"></div>
-            <div>
-              <div class="act-msg">Milestone <em>"Foundation Complete"</em> marked done on Karen Residence</div>
-              <div class="act-time">18 minutes ago &mdash; by M. Wangari</div>
-            </div>
-          </div>
-          <div class="act-item">
-            <div class="act-dot" style="background:#d97706"></div>
-            <div>
-              <div class="act-msg">New lead from <strong>Nairobi Business Park</strong> registered</div>
-              <div class="act-time">1 hour ago &mdash; via web form</div>
-            </div>
-          </div>
-          <div class="act-item">
-            <div class="act-dot" style="background:#16a34a"></div>
-            <div>
-              <div class="act-msg">Payment of <strong>KES 360,000</strong> received from J. Mutua</div>
-              <div class="act-time">2 hours ago &mdash; via M-Pesa</div>
-            </div>
-          </div>
-          <div class="act-item">
-            <div class="act-dot" style="background:#7c3aed"></div>
-            <div>
-              <div class="act-msg">Task <em>"Foundation inspection report"</em> completed by D. Odhiambo</div>
-              <div class="act-time">3 hours ago</div>
-            </div>
-          </div>
-          <div class="act-item">
-            <div class="act-dot" style="background:#dc2626"></div>
-            <div>
-              <div class="act-msg"><strong>3 contracts</strong> pending signature — follow-up required</div>
-              <div class="act-time">Yesterday, 4:32 PM</div>
-            </div>
-          </div>
-          <div class="act-item">
-            <div class="act-dot" style="background:#2563eb"></div>
-            <div>
-              <div class="act-msg">New professional <strong>Arch. Kamau Njoroge</strong> registered on platform</div>
-              <div class="act-time">Yesterday, 10:15 AM</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Top Clients -->
-    <div class="col-lg-4">
-      <div class="card2">
-        <div class="card2-head">
-          <div class="card2-title">Top Clients by Revenue</div>
-          <a href="#" class="card2-action">View All</a>
-        </div>
-        <div>
-          <div class="tc-row">
-            <img src="https://i.pravatar.cc/100?img=1" class="tc-avatar" alt="">
-            <div style="flex:1">
-              <div class="tc-name">Kenya Highways Authority</div>
-              <div class="tc-sub">1 project &mdash; Govt</div>
-            </div>
-            <div>
-              <div class="tc-rev">KES 22M</div>
-              <div class="tc-out">KES 0 due</div>
-            </div>
-          </div>
-          <div class="tc-row">
-            <img src="https://i.pravatar.cc/100?img=4" class="tc-avatar" alt="">
-            <div style="flex:1">
-              <div class="tc-name">TRM Ltd</div>
-              <div class="tc-sub">2 projects &mdash; Real Estate</div>
-            </div>
-            <div>
-              <div class="tc-rev">KES 14.4M</div>
-              <div class="tc-out" style="color:#dc2626">KES 2.4M due</div>
-            </div>
-          </div>
-          <div class="tc-row">
-            <img src="https://i.pravatar.cc/100?img=8" class="tc-avatar" alt="">
-            <div style="flex:1">
-              <div class="tc-name">Crown Developers</div>
-              <div class="tc-sub">3 projects &mdash; Developer</div>
-            </div>
-            <div>
-              <div class="tc-rev">KES 8.5M</div>
-              <div class="tc-out" style="color:#dc2626">KES 1.7M due</div>
-            </div>
-          </div>
-          <div class="tc-row">
-            <img src="https://i.pravatar.cc/100?img=12" class="tc-avatar" alt="">
-            <div style="flex:1">
-              <div class="tc-name">Patel Holdings</div>
-              <div class="tc-sub">2 projects &mdash; Commercial</div>
-            </div>
-            <div>
-              <div class="tc-rev">KES 5.0M</div>
-              <div class="tc-out" style="color:#dc2626">KES 840K due</div>
-            </div>
-          </div>
-          <div class="tc-row">
-            <img src="https://i.pravatar.cc/100?img=18" class="tc-avatar" alt="">
-            <div style="flex:1">
-              <div class="tc-name">J. Mutua</div>
-              <div class="tc-sub">1 project &mdash; Residential</div>
-            </div>
-            <div>
-              <div class="tc-rev">KES 1.8M</div>
-              <div class="tc-out">KES 0 due</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Upcoming Tasks + Supplier Performance -->
-    <div class="col-lg-4">
-      <div class="card2 mb-3">
-        <div class="card2-head">
-          <div class="card2-title">Upcoming Tasks</div>
-          <a href="#" class="card2-action">Board View</a>
-        </div>
-        <div>
-          <div class="task-item">
-            <div class="task-check" style="border-color:#dc2626"></div>
-            <div>
-              <div class="task-title">Review Thika Road Mall structural drawings</div>
-              <div class="task-meta">Due: Today &mdash; Assigned to: Eng. Kariuki</div>
-            </div>
-          </div>
-          <div class="task-item">
-            <div class="task-check"></div>
-            <div>
-              <div class="task-title">Send revised proposal to Patel Holdings</div>
-              <div class="task-meta">Due: Tomorrow &mdash; Assigned to: Admin</div>
-            </div>
-          </div>
-          <div class="task-item">
-            <div class="task-check"></div>
-            <div>
-              <div class="task-title">Approve 3 pending supplier quotations</div>
-              <div class="task-meta">Due: 28 May &mdash; Procurement</div>
-            </div>
-          </div>
-          <div class="task-item">
-            <div class="task-check"></div>
-            <div>
-              <div class="task-title">Monthly VAT reconciliation report</div>
-              <div class="task-meta">Due: 31 May &mdash; Finance team</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Supplier Performance -->
-      <div class="card2">
-        <div class="card2-head">
-          <div class="card2-title">Supplier Performance</div>
-          <a href="#" class="card2-action">Details</a>
-        </div>
-        <div style="padding:10px 18px 14px">
-          <div class="pipe-row" style="padding:7px 0">
-            <div class="pipe-lbl" style="font-size:11px;width:110px">BuildMart Kenya</div>
-            <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:92%;background:#16a34a"></div></div>
-            <div class="pipe-num" style="color:#16a34a">92%</div>
-          </div>
-          <div class="pipe-row" style="padding:7px 0">
-            <div class="pipe-lbl" style="font-size:11px;width:110px">Bamburi Cement</div>
-            <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:88%;background:#16a34a"></div></div>
-            <div class="pipe-num" style="color:#16a34a">88%</div>
-          </div>
-          <div class="pipe-row" style="padding:7px 0">
-            <div class="pipe-lbl" style="font-size:11px;width:110px">East Africa Steel</div>
-            <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:74%;background:#d97706"></div></div>
-            <div class="pipe-num" style="color:#d97706">74%</div>
-          </div>
-          <div class="pipe-row" style="padding:7px 0">
-            <div class="pipe-lbl" style="font-size:11px;width:110px">Nakumatt Tiles</div>
-            <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:61%;background:#dc2626"></div></div>
-            <div class="pipe-num" style="color:#dc2626">61%</div>
-          </div>
-          <div style="margin-top:10px;font-size:10px;color:var(--muted)">Score based on delivery time, quality, and compliance</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
 </div>
-</main>
 
+<!-- ─── USERS ─── -->
+<div id="sec-users" class="adm-page" style="display:none">
+  <div class="pg-head pg-row">
+    <div><h1>User Management</h1><p>All platform users — click any row to view full profile and take actions</p></div>
+  </div>
+
+  <div class="card2 mb-3" style="border-radius:10px;overflow:visible">
+    <div style="padding:12px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <input type="text" id="user-search" class="adm-input" placeholder="Search name or email…"
+             oninput="debounceUsers()" style="flex:1;min-width:180px">
+      <select id="user-role-filter" class="adm-select" onchange="loadUsers(1)">
+        <option value="">All Roles</option>
+        <option value="client">Client</option>
+        <option value="professional">Professional</option>
+        <option value="supplier">Supplier</option>
+        <option value="admin">Admin</option>
+        <option value="banned">Banned</option>
+      </select>
+      <button onclick="loadUsers(1)" class="btn btn-sm" style="background:var(--navy);color:#fff;border-radius:7px;font-size:11.5px;padding:7px 14px;border:none">Search</button>
+    </div>
+  </div>
+
+  <div class="card2">
+    <div class="card2-head">
+      <span class="card2-title">All Users</span>
+      <span id="users-count" style="font-size:11px;color:var(--muted)"></span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="adm-tbl">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Phone</th>
+            <th>Location</th>
+            <th>Joined</th>
+            <th>Verified</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="users-body">
+          <tr><td colspan="8" style="padding:24px;text-align:center;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pager" id="users-pager" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ─── FINANCE ─── -->
+<div id="sec-finance" class="adm-page" style="display:none">
+  <div class="pg-head"><h1>Finance &amp; Payments</h1><p>All M-Pesa transactions processed on the platform</p></div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-4">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#f0fdf4;color:#16a34a">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div><div class="mini-val" id="fin-revenue">—</div><div class="mini-lbl">Total Revenue (KES)</div></div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#eff6ff;color:#2563eb">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div><div class="mini-val" id="fin-txns">—</div><div class="mini-lbl">Total Transactions</div></div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#fff7ed;color:#d97706">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div><div class="mini-val" id="fin-pending">—</div><div class="mini-lbl">Pending Txns</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card2">
+    <div class="card2-head">
+      <span class="card2-title">M-Pesa Transactions</span>
+      <input type="text" id="fin-search" class="adm-input" placeholder="Search user or receipt…"
+             oninput="debounceFinance()" style="font-size:11.5px;padding:5px 10px">
+    </div>
+    <div style="overflow-x:auto">
+      <table class="adm-tbl">
+        <thead>
+          <tr><th>Date</th><th>User</th><th>Amount</th><th>Phone</th><th>M-Pesa Receipt</th><th>Status</th></tr>
+        </thead>
+        <tbody id="fin-body">
+          <tr><td colspan="6" style="padding:24px;text-align:center;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pager" id="fin-pager" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ─── VERIFICATIONS ─── -->
+<div id="sec-verifications" class="adm-page" style="display:none">
+  <div class="pg-head"><h1>Verification Queue</h1><p>Review professional identity and licence documents</p></div>
+
+  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+    <button class="vtab active" id="vtab-pending"  onclick="loadVerifications('pending')">Pending <span id="vcount-pending"  class="sb-badge" style="background:var(--accent);position:relative;top:-1px">0</span></button>
+    <button class="vtab"        id="vtab-approved" onclick="loadVerifications('approved')">Approved</button>
+    <button class="vtab"        id="vtab-rejected" onclick="loadVerifications('rejected')">Rejected</button>
+  </div>
+
+  <div class="card2">
+    <div style="overflow-x:auto">
+      <table class="adm-tbl">
+        <thead>
+          <tr><th>User</th><th>Trade</th><th>File</th><th>Type</th><th>Uploaded</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="verif-body">
+          <tr><td colspan="6" style="padding:24px;text-align:center;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ─── BIDS ─── -->
+<div id="sec-bids" class="adm-page" style="display:none">
+  <div class="pg-head"><h1>Bid Moderation</h1><p>All bids posted on the marketplace — remove inappropriate listings</p></div>
+
+  <div class="card2">
+    <div class="card2-head">
+      <span class="card2-title">All Bids</span>
+      <span id="bids-count" style="font-size:11px;color:var(--muted)"></span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="adm-tbl">
+        <thead>
+          <tr><th>Title</th><th>Posted By</th><th>Budget (KES)</th><th>Status</th><th>Applications</th><th>Posted</th><th></th></tr>
+        </thead>
+        <tbody id="bids-body">
+          <tr><td colspan="7" style="padding:24px;text-align:center;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pager" id="bids-pager" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ─── ANALYTICS ─── -->
+<div id="sec-analytics" class="adm-page" style="display:none">
+  <div class="pg-head"><h1>Platform Analytics</h1><p>Revenue and user growth — last 30 days</p></div>
+
+  <div class="row g-3">
+    <div class="col-lg-8">
+      <div class="card2">
+        <div class="card2-head"><span class="card2-title">Revenue (KES) — Last 30 Days</span></div>
+        <div style="padding:16px 18px"><div style="height:250px"><canvas id="chartRevenue"></canvas></div></div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card2">
+        <div class="card2-head"><span class="card2-title">New Signups — Last 30 Days</span></div>
+        <div style="padding:16px 18px"><div style="height:250px"><canvas id="chartSignups"></canvas></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main><!-- end #main -->
+
+<!-- ════════════════════════════════════════════════════════════════
+     USER MODAL
+════════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-overlay" onclick="maybeCloseModal(event)">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div id="m-avi" style="width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;
+                             display:grid;place-items:center;font-size:16px;font-weight:700;flex-shrink:0"></div>
+      <div class="modal-head-info">
+        <div class="modal-head-name" id="m-name">—</div>
+        <div class="modal-head-email" id="m-email">—</div>
+      </div>
+      <span class="bdg" id="m-role-badge" style="margin-right:6px"></span>
+      <button class="modal-close" onclick="document.getElementById('modal-overlay').style.display='none'">✕</button>
+    </div>
+
+    <div class="modal-body" id="modal-body">
+      <div class="info-grid">
+        <div class="info-item"><label>Phone</label><span id="m-phone">—</span></div>
+        <div class="info-item"><label>Location</label><span id="m-location">—</span></div>
+        <div class="info-item"><label>Joined</label><span id="m-joined">—</span></div>
+        <div class="info-item"><label>Verified</label><span id="m-verified">—</span></div>
+        <div class="info-item" id="m-bio-row" style="grid-column:1/-1;display:none">
+          <label>Bio</label><span id="m-bio" style="font-size:12px;color:var(--muted)"></span>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="pw-box">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <label style="display:block;font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Password</label>
+            <span style="font-size:12px;color:var(--muted);font-family:monospace">Protected (bcrypt hash — cannot be read)</span>
+          </div>
+          <button onclick="toggleResetPw()" class="btn btn-sm"
+                  style="background:var(--navy);color:#fff;border:none;border-radius:7px;font-size:11px;padding:5px 12px">Reset Password</button>
+        </div>
+        <div id="reset-pw-form" style="display:none;margin-top:10px;display:none">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <input type="password" id="new-pw" class="adm-input" placeholder="New password (min 8 chars)" style="flex:1;min-width:160px">
+            <button onclick="doResetPw()" class="btn btn-sm"
+                    style="background:var(--accent);color:#fff;border:none;border-radius:7px;font-size:11px;padding:5px 12px">Set</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Professional -->
+      <div id="m-prof" style="display:none;margin-bottom:18px">
+        <div class="sec-hd">Professional Profile</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+          <div class="info-item"><label>Trade</label><span id="m-trade"></span></div>
+          <div class="info-item"><label>NCA Grade</label><span id="m-nca"></span></div>
+          <div class="info-item"><label>Hourly Rate</label><span id="m-rate"></span></div>
+          <div class="info-item"><label>Experience</label><span id="m-exp"></span></div>
+          <div class="info-item"><label>Jobs Done</label><span id="m-jobs"></span></div>
+          <div class="info-item"><label>Rating</label><span id="m-rating"></span></div>
+        </div>
+      </div>
+
+      <!-- Documents -->
+      <div>
+        <div class="sec-hd">Documents (<span id="m-docs-count">0</span>)</div>
+        <div id="m-docs-list"></div>
+      </div>
+    </div>
+
+    <div class="modal-foot">
+      <select id="m-role-sel" class="adm-select" style="flex:1;min-width:130px">
+        <option value="client">Client</option>
+        <option value="professional">Professional</option>
+        <option value="supplier">Supplier</option>
+        <option value="admin">Admin</option>
+      </select>
+      <button onclick="doChangeRole()" class="btn btn-sm"
+              style="background:var(--navy);color:#fff;border:none;border-radius:7px;font-size:11.5px;padding:7px 14px">Change Role</button>
+      <button id="m-ban-btn" onclick="doBan()" class="btn btn-sm"
+              style="border-radius:7px;font-size:11.5px;padding:7px 14px"></button>
+      <button onclick="document.getElementById('modal-overlay').style.display='none'"
+              class="btn btn-sm" style="border:1px solid var(--rule);background:#fff;border-radius:7px;font-size:11.5px;padding:7px 14px;margin-left:auto">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// ── Sidebar toggle
+'use strict';
+
+/* ── State ────────────────────────────────────────────────────────── */
+let currentUserId = null, currentUserData = null;
+let usersPage = 1, finPage = 1, bidsPage = 1;
+let usersSearch = '', finSearch = '';
+let sectionLoaded = {};
+let verifStatus = 'pending';
+let globalStats = null;
+let bidsCache = {};
+let aCharts = {};
+let userDebounce, finDebounce;
+
+/* ── API helpers ──────────────────────────────────────────────────── */
+async function apiFetch(url) {
+  const r = await fetch(url);
+  const data = await r.json();
+  if (!r.ok) throw new Error(data.error || 'Request failed');
+  return data;
+}
+async function apiCall(method, url, body) {
+  const r = await fetch(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const data = await r.json();
+  if (!r.ok) throw new Error(data.error || 'Error ' + r.status);
+  return data;
+}
+
+/* ── Toast ────────────────────────────────────────────────────────── */
+function toast(msg, isErr) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:20px;right:20px;padding:10px 18px;border-radius:9px;color:#fff;' +
+    'font-size:12.5px;font-weight:600;z-index:9999;max-width:320px;box-shadow:0 4px 20px rgba(0,0,0,.25);' +
+    'background:' + (isErr ? '#dc2626' : '#16a34a');
+  clearTimeout(t._tid);
+  t._tid = setTimeout(() => t.style.cssText += ';display:none', 3200);
+}
+
+/* ── Escape ───────────────────────────────────────────────────────── */
+function esc(s) {
+  if (s == null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtDate(s) {
+  if (!s) return '—';
+  return new Date(s).toLocaleDateString('en-KE',{day:'numeric',month:'short',year:'numeric'});
+}
+function fmtKES(n) {
+  const v = Number(n);
+  if (isNaN(v)) return '—';
+  if (v >= 1e6) return 'KES ' + (v/1e6).toFixed(2) + 'M';
+  if (v >= 1e3) return 'KES ' + (v/1e3).toFixed(0) + 'K';
+  return 'KES ' + v.toLocaleString();
+}
+function roleBdg(role) {
+  const m = {admin:'bdg-admin',professional:'bdg-professional',client:'bdg-client',supplier:'bdg-supplier',banned:'bdg-banned'};
+  return m[role] || 'bdg-neutral';
+}
+function statusBdg(s) {
+  const m = {completed:'bdg-ok',pending:'bdg-pending',failed:'bdg-err',approved:'bdg-ok',rejected:'bdg-err',open:'bdg-ok',closed:'bdg-neutral'};
+  return m[s] || 'bdg-neutral';
+}
+
+/* ── Section switching ────────────────────────────────────────────── */
+const SECTIONS = ['overview','users','finance','verifications','bids','analytics'];
+const LABELS   = {overview:'Overview',users:'Users',finance:'Finance',verifications:'Verifications',bids:'Bids',analytics:'Analytics'};
+
+function showSection(name) {
+  SECTIONS.forEach(s => {
+    document.getElementById('sec-'+s).style.display = s === name ? 'block' : 'none';
+    const nav = document.getElementById('nav-'+s);
+    if (nav) nav.classList.toggle('active', s === name);
+  });
+  document.getElementById('bc-section').textContent = LABELS[name] || name;
+  _loadSection(name);
+}
+function _loadSection(name) {
+  switch (name) {
+    case 'overview':      loadOverview(); break;
+    case 'users':         if (!sectionLoaded.users) loadUsers(1); break;
+    case 'finance':       if (!sectionLoaded.finance) loadFinance(1); break;
+    case 'verifications': loadVerifications('pending'); break;
+    case 'bids':          if (!sectionLoaded.bids) loadBids(1); break;
+    case 'analytics':     if (!sectionLoaded.analytics) loadAnalytics(); break;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   OVERVIEW
+══════════════════════════════════════════════════════════════════ */
+async function loadOverview() {
+  try {
+    const s = await apiFetch('/api/admin/stats');
+    globalStats = s;
+
+    // KPI cards
+    document.getElementById('kpi-users').textContent    = s.users.toLocaleString();
+    document.getElementById('kpi-profs').textContent    = s.professionals.toLocaleString();
+    document.getElementById('kpi-revenue').textContent  = fmtKES(s.revenue_kes);
+    document.getElementById('kpi-bids').textContent     = s.bids.toLocaleString();
+    document.getElementById('kpi-projects').textContent = s.projects.toLocaleString();
+    document.getElementById('kpi-txns').textContent     = s.transactions.toLocaleString();
+    document.getElementById('kpi-pending-verifs').textContent = s.pending_verifications;
+    document.getElementById('kpi-revenue2').textContent = Number(s.revenue_kes).toLocaleString();
+
+    // Finance KPI mirror
+    document.getElementById('fin-revenue').textContent = Number(s.revenue_kes).toLocaleString();
+    document.getElementById('fin-txns').textContent    = s.transactions.toLocaleString();
+
+    // Pending verif alert
+    if (s.pending_verifications > 0) {
+      document.getElementById('verif-alert').style.display = 'flex';
+      document.getElementById('verif-alert-count').textContent = s.pending_verifications;
+      const badge = document.getElementById('sb-verif-badge');
+      badge.textContent = s.pending_verifications;
+      badge.style.display = '';
+      document.getElementById('vcount-pending').textContent = s.pending_verifications;
+    }
+
+    // Recent payments
+    const tbody = document.getElementById('recent-pay-body');
+    if (!s.recent_payments || !s.recent_payments.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--muted)">No payments yet</td></tr>';
+      return;
+    }
+    tbody.innerHTML = s.recent_payments.map(p => `
+      <tr>
+        <td style="font-size:12.5px;font-weight:600">${esc(p.user_name)}</td>
+        <td style="font-size:13px;font-weight:700;color:var(--navy)">KES ${Number(p.amount).toLocaleString()}</td>
+        <td style="font-size:11px;font-family:monospace;color:var(--muted)">${esc(p.mpesa_receipt||'—')}</td>
+        <td style="font-size:11px;color:var(--muted)">${fmtDate(p.completed_at)}</td>
+        <td><span class="bdg bdg-ok">Completed</span></td>
+      </tr>`).join('');
+  } catch(e) {
+    toast('Failed to load stats: '+e.message, true);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   USERS
+══════════════════════════════════════════════════════════════════ */
+function debounceUsers() {
+  clearTimeout(userDebounce);
+  userDebounce = setTimeout(() => loadUsers(1), 420);
+}
+
+async function loadUsers(page) {
+  usersPage = page || 1;
+  usersSearch = document.getElementById('user-search').value.trim();
+  const role = document.getElementById('user-role-filter').value;
+  const params = new URLSearchParams({ page: usersPage, limit: 25, search: usersSearch, role });
+  const tbody = document.getElementById('users-body');
+  tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--muted)">Loading…</td></tr>';
+
+  try {
+    const { users, total, limit } = await apiFetch('/api/admin/users?' + params);
+    sectionLoaded.users = true;
+    document.getElementById('users-count').textContent = total.toLocaleString() + ' users';
+
+    if (!users.length) {
+      tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--muted)">No users found</td></tr>';
+      document.getElementById('users-pager').style.display = 'none';
+      return;
+    }
+    tbody.innerHTML = users.map(u => `
+      <tr style="cursor:pointer" onclick="openUserModal(${u.id})">
+        <td>
+          <div style="display:flex;align-items:center;gap:9px">
+            <div style="width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;
+                        display:grid;place-items:center;font-size:11px;font-weight:700;flex-shrink:0">
+              ${esc(u.name.charAt(0).toUpperCase())}
+            </div>
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--navy)">${esc(u.name)}</div>
+              ${u.trade ? '<div style="font-size:10px;color:var(--muted)">'+esc(u.trade)+'</div>' : ''}
+            </div>
+          </div>
+        </td>
+        <td style="font-size:11.5px;color:var(--muted)">${esc(u.email)}</td>
+        <td><span class="bdg ${roleBdg(u.role)}">${esc(u.role)}</span></td>
+        <td style="font-size:11.5px">${esc(u.phone||'—')}</td>
+        <td style="font-size:11.5px">${esc(u.location||'—')}</td>
+        <td style="font-size:11px;color:var(--muted)">${fmtDate(u.created_at)}</td>
+        <td>${u.verified
+          ? '<span class="bdg bdg-ok">✓ Verified</span>'
+          : '<span class="bdg bdg-neutral">Unverified</span>'}</td>
+        <td onclick="event.stopPropagation()">
+          <button onclick="openUserModal(${u.id})"
+                  style="background:var(--navy);color:#fff;border:none;border-radius:6px;font-size:10.5px;padding:3px 10px;cursor:pointer">
+            View
+          </button>
+        </td>
+      </tr>`).join('');
+
+    renderPager('users-pager', usersPage, Math.ceil(total/limit), 'loadUsers');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:#dc2626">'+esc(e.message)+'</td></tr>';
+  }
+}
+
+async function openUserModal(id) {
+  currentUserId = id;
+  document.getElementById('modal-overlay').style.display = 'block';
+  document.getElementById('modal-body').style.opacity = '.4';
+  try {
+    const u = await apiFetch('/api/admin/users/' + id);
+    currentUserData = u;
+
+    // Header
+    document.getElementById('m-avi').textContent = u.name.charAt(0).toUpperCase();
+    document.getElementById('m-name').textContent  = u.name;
+    document.getElementById('m-email').textContent = u.email;
+    const rb = document.getElementById('m-role-badge');
+    rb.textContent = u.role; rb.className = 'bdg ' + roleBdg(u.role);
+
+    // Info
+    document.getElementById('m-phone').textContent    = u.phone || '—';
+    document.getElementById('m-location').textContent = u.location || '—';
+    document.getElementById('m-joined').textContent   = fmtDate(u.created_at);
+    document.getElementById('m-verified').innerHTML   = u.verified
+      ? '<span class="bdg bdg-ok">✓ '+(u.verification_badge||'Verified')+'</span>'
+      : '<span class="bdg bdg-neutral">Not verified</span>';
+
+    if (u.bio) {
+      document.getElementById('m-bio-row').style.display = '';
+      document.getElementById('m-bio').textContent = u.bio;
+    } else {
+      document.getElementById('m-bio-row').style.display = 'none';
+    }
+
+    // Professional
+    if (u.trade) {
+      document.getElementById('m-prof').style.display = '';
+      document.getElementById('m-trade').textContent = u.trade || '—';
+      document.getElementById('m-nca').textContent   = u.nca_grade || '—';
+      document.getElementById('m-rate').textContent  = u.hourly_rate ? 'KES '+u.hourly_rate+'/hr' : '—';
+      document.getElementById('m-exp').textContent   = u.experience_years ? u.experience_years+' yrs' : '—';
+      document.getElementById('m-jobs').textContent  = u.jobs_done || 0;
+      document.getElementById('m-rating').textContent= u.rating ? u.rating+' ★' : '—';
+    } else {
+      document.getElementById('m-prof').style.display = 'none';
+    }
+
+    // Documents
+    document.getElementById('m-docs-count').textContent = u.documents.length;
+    document.getElementById('m-docs-list').innerHTML = u.documents.length
+      ? u.documents.map(d => `
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--rule)">
+            <div>
+              <div style="font-size:12px;font-weight:500">${esc(d.original_name)}</div>
+              <div style="font-size:10px;color:var(--muted)">${esc(d.document_type)} · ${fmtDate(d.created_at)}</div>
+            </div>
+            <span class="bdg ${statusBdg(d.status)}">${d.status}</span>
+          </div>`).join('')
+      : '<div style="font-size:12px;color:var(--muted);padding:6px 0">No documents uploaded</div>';
+
+    // Footer role select & ban button
+    document.getElementById('m-role-sel').value = (u.role === 'banned') ? 'client' : u.role;
+    const bb = document.getElementById('m-ban-btn');
+    if (u.role === 'banned') {
+      bb.textContent = 'Unban User';
+      bb.style.cssText = 'background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:7px;font-size:11.5px;padding:7px 14px;cursor:pointer';
+    } else {
+      bb.textContent = 'Ban User';
+      bb.style.cssText = 'background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;border-radius:7px;font-size:11.5px;padding:7px 14px;cursor:pointer';
+    }
+
+    // Reset pw form
+    document.getElementById('reset-pw-form').style.display = 'none';
+    document.getElementById('new-pw').value = '';
+  } catch(e) {
+    toast('Failed to load user: '+e.message, true);
+  } finally {
+    document.getElementById('modal-body').style.opacity = '1';
+  }
+}
+
+function maybeCloseModal(e) {
+  if (e.target === document.getElementById('modal-overlay'))
+    document.getElementById('modal-overlay').style.display = 'none';
+}
+
+function toggleResetPw() {
+  const f = document.getElementById('reset-pw-form');
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+
+async function doResetPw() {
+  const pw = document.getElementById('new-pw').value;
+  if (!pw || pw.length < 8) { toast('Password must be at least 8 characters', true); return; }
+  try {
+    const r = await apiCall('POST', '/api/admin/users/'+currentUserId+'/reset-password', { password: pw });
+    toast(r.message);
+    document.getElementById('reset-pw-form').style.display = 'none';
+    document.getElementById('new-pw').value = '';
+  } catch(e) { toast(e.message, true); }
+}
+
+async function doChangeRole() {
+  const role = document.getElementById('m-role-sel').value;
+  try {
+    const r = await apiCall('PUT', '/api/admin/users/'+currentUserId+'/role', { role });
+    toast(r.message);
+    const rb = document.getElementById('m-role-badge');
+    rb.textContent = role; rb.className = 'bdg '+roleBdg(role);
+    if (sectionLoaded.users) loadUsers(usersPage);
+  } catch(e) { toast(e.message, true); }
+}
+
+async function doBan() {
+  const isBanned = currentUserData && currentUserData.role === 'banned';
+  if (!confirm(isBanned ? 'Unban this user?' : 'Ban this user? They will lose access.')) return;
+  try {
+    const r = await apiCall('PUT', '/api/admin/users/'+currentUserId+'/ban', {});
+    toast(r.message);
+    await openUserModal(currentUserId);
+    if (sectionLoaded.users) loadUsers(usersPage);
+  } catch(e) { toast(e.message, true); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   FINANCE
+══════════════════════════════════════════════════════════════════ */
+function debounceFinance() {
+  clearTimeout(finDebounce);
+  finDebounce = setTimeout(() => loadFinance(1), 420);
+}
+
+async function loadFinance(page) {
+  finPage = page || 1;
+  finSearch = document.getElementById('fin-search').value.trim();
+  const params = new URLSearchParams({ page: finPage, limit: 30, search: finSearch });
+  const tbody = document.getElementById('fin-body');
+  tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--muted)">Loading…</td></tr>';
+
+  try {
+    const { transactions, total, limit } = await apiFetch('/api/admin/transactions?'+params);
+    sectionLoaded.finance = true;
+
+    // Count pending in current result set for the mini stat
+    const pending = transactions.filter(t => t.status === 'pending').length;
+    document.getElementById('fin-pending').textContent = pending + (total > limit ? '+' : '');
+
+    if (!transactions.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--muted)">No transactions found</td></tr>';
+      document.getElementById('fin-pager').style.display = 'none';
+      return;
+    }
+    tbody.innerHTML = transactions.map(t => `
+      <tr>
+        <td style="font-size:11px;color:var(--muted)">${fmtDate(t.created_at)}</td>
+        <td>
+          <div style="font-size:12px;font-weight:600">${esc(t.user_name)}</div>
+          <div style="font-size:10.5px;color:var(--muted)">${esc(t.user_email)}</div>
+        </td>
+        <td style="font-size:13px;font-weight:700;color:var(--navy)">KES ${Number(t.amount).toLocaleString()}</td>
+        <td style="font-size:11.5px">${esc(t.phone||'—')}</td>
+        <td style="font-size:11px;font-family:monospace;color:var(--muted)">${esc(t.mpesa_receipt||'—')}</td>
+        <td><span class="bdg ${statusBdg(t.status)}">${t.status}</span></td>
+      </tr>`).join('');
+
+    renderPager('fin-pager', finPage, Math.ceil(total/limit), 'loadFinance');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:#dc2626">'+esc(e.message)+'</td></tr>';
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   VERIFICATIONS
+══════════════════════════════════════════════════════════════════ */
+async function loadVerifications(status) {
+  verifStatus = status || 'pending';
+  ['pending','approved','rejected'].forEach(s => {
+    document.getElementById('vtab-'+s).classList.toggle('active', s === verifStatus);
+  });
+  const tbody = document.getElementById('verif-body');
+  tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--muted)">Loading…</td></tr>';
+  try {
+    const docs = await apiFetch('/api/admin/verifications?status='+verifStatus);
+    if (verifStatus === 'pending') {
+      document.getElementById('vcount-pending').textContent = docs.length;
+    }
+    if (!docs.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--muted)">No '+verifStatus+' documents</td></tr>';
+      return;
+    }
+    tbody.innerHTML = docs.map(d => `
+      <tr>
+        <td>
+          <div style="font-size:12.5px;font-weight:600">${esc(d.user_name)}</div>
+          <div style="font-size:10.5px;color:var(--muted)">${esc(d.user_email)}</div>
+        </td>
+        <td style="font-size:12px">${esc(d.trade||'—')}</td>
+        <td>
+          <div style="font-size:12px;font-weight:500">${esc(d.original_name)}</div>
+          <div style="font-size:10px;color:var(--muted)">${(d.size_bytes/1024).toFixed(0)} KB · ${esc(d.mime_type)}</div>
+        </td>
+        <td><span class="bdg bdg-neutral">${esc(d.document_type.replace(/_/g,' '))}</span></td>
+        <td style="font-size:11px;color:var(--muted)">${fmtDate(d.created_at)}</td>
+        <td>
+          ${verifStatus === 'pending'
+            ? `<button onclick="approveDoc(${d.id})"
+                       style="background:#16a34a;color:#fff;border:none;border-radius:6px;font-size:10.5px;padding:4px 9px;cursor:pointer;margin-right:4px">Approve</button>
+               <button onclick="rejectDoc(${d.id})"
+                       style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;border-radius:6px;font-size:10.5px;padding:4px 9px;cursor:pointer">Reject</button>`
+            : `<span class="bdg ${statusBdg(verifStatus)}">${verifStatus}</span>
+               ${d.rejection_reason ? '<div style="font-size:10px;color:var(--muted);margin-top:3px">'+esc(d.rejection_reason)+'</div>' : ''}`
+          }
+        </td>
+      </tr>`).join('');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:#dc2626">'+esc(e.message)+'</td></tr>';
+  }
+}
+
+async function approveDoc(id) {
+  if (!confirm('Approve this document and mark user as verified?')) return;
+  try {
+    const r = await apiCall('PUT', '/api/admin/verifications/'+id+'/approve', {});
+    toast(r.message);
+    loadVerifications(verifStatus);
+    loadOverview();
+  } catch(e) { toast(e.message, true); }
+}
+
+async function rejectDoc(id) {
+  const reason = prompt('Rejection reason (will be shown to the user):');
+  if (!reason || !reason.trim()) return;
+  try {
+    const r = await apiCall('PUT', '/api/admin/verifications/'+id+'/reject', { reason: reason.trim() });
+    toast(r.message);
+    loadVerifications(verifStatus);
+  } catch(e) { toast(e.message, true); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   BIDS
+══════════════════════════════════════════════════════════════════ */
+async function loadBids(page) {
+  bidsPage = page || 1;
+  const tbody = document.getElementById('bids-body');
+  tbody.innerHTML = '<tr><td colspan="7" style="padding:20px;text-align:center;color:var(--muted)">Loading…</td></tr>';
+  try {
+    const bids = await apiFetch('/api/admin/bids?page='+bidsPage+'&limit=30');
+    sectionLoaded.bids = true;
+    document.getElementById('bids-count').textContent = bids.length + ' bids (this page)';
+    bids.forEach(b => bidsCache[b.id] = b);
+    if (!bids.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="padding:20px;text-align:center;color:var(--muted)">No bids found</td></tr>';
+      return;
+    }
+    tbody.innerHTML = bids.map(b => `
+      <tr>
+        <td>
+          <div style="font-size:12px;font-weight:600;color:var(--navy)">${esc(b.title)}</div>
+          <div style="font-size:10px;color:var(--muted)">${esc(b.location||'—')}</div>
+        </td>
+        <td>
+          <div style="font-size:12px">${esc(b.poster_name)}</div>
+          <div style="font-size:10.5px;color:var(--muted)">${esc(b.poster_email)}</div>
+        </td>
+        <td style="font-size:12px;font-weight:500">
+          ${(b.budget_min && b.budget_max)
+            ? Number(b.budget_min).toLocaleString()+' – '+Number(b.budget_max).toLocaleString()
+            : '—'}
+        </td>
+        <td><span class="bdg ${statusBdg(b.status)}">${b.status}</span></td>
+        <td style="text-align:center;font-size:12px">${b.applications_count||0}</td>
+        <td style="font-size:11px;color:var(--muted)">${fmtDate(b.created_at)}</td>
+        <td>
+          <button onclick="deleteBid(${b.id})"
+                  style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;border-radius:6px;font-size:10.5px;padding:4px 9px;cursor:pointer">Delete</button>
+        </td>
+      </tr>`).join('');
+
+    const pager = document.getElementById('bids-pager');
+    pager.style.display = bids.length === 30 ? 'flex' : 'none';
+    if (bids.length === 30) {
+      pager.innerHTML = '<span style="font-size:11px;color:var(--muted)">Page '+bidsPage+'</span>' +
+        '<div style="display:flex;gap:6px">' +
+        (bidsPage > 1 ? '<button onclick="loadBids('+(bidsPage-1)+')" style="'+pagerBtn+'">← Prev</button>' : '') +
+        '<button onclick="loadBids('+(bidsPage+1)+')" style="'+pagerBtn+'">Next →</button></div>';
+    }
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="7" style="padding:20px;text-align:center;color:#dc2626">'+esc(e.message)+'</td></tr>';
+  }
+}
+
+async function deleteBid(id) {
+  const b = bidsCache[id];
+  const title = b ? b.title : 'this bid';
+  if (!confirm('Delete "'+title+'"? This cannot be undone.')) return;
+  try {
+    const r = await apiCall('DELETE', '/api/admin/bids/'+id, {});
+    toast(r.message);
+    loadBids(bidsPage);
+  } catch(e) { toast(e.message, true); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ANALYTICS
+══════════════════════════════════════════════════════════════════ */
+async function loadAnalytics() {
+  sectionLoaded.analytics = true;
+  try {
+    const { revenueByDay, signupsByDay } = await apiFetch('/api/admin/analytics');
+
+    const rCtx = document.getElementById('chartRevenue').getContext('2d');
+    if (aCharts.revenue) aCharts.revenue.destroy();
+    aCharts.revenue = new Chart(rCtx, {
+      type: 'line',
+      data: {
+        labels: revenueByDay.map(d => d.day.slice(5)),
+        datasets: [{
+          label: 'Revenue KES',
+          data: revenueByDay.map(d => Number(d.total)),
+          borderColor: '#011D47', backgroundColor: 'rgba(1,29,71,0.07)',
+          borderWidth: 2, pointRadius: 3, fill: true, tension: 0.3,
+        }]
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ display:false } },
+        scales:{
+          x:{ grid:{ display:false }, ticks:{ font:{ size:9 }, color:'#9ca3af' } },
+          y:{ grid:{ color:'#f3f4f6' }, border:{ display:false },
+              ticks:{ font:{ size:9 }, color:'#9ca3af', callback: v => 'KES '+v.toLocaleString() } }
+        }
+      }
+    });
+
+    const sCtx = document.getElementById('chartSignups').getContext('2d');
+    if (aCharts.signups) aCharts.signups.destroy();
+    aCharts.signups = new Chart(sCtx, {
+      type: 'bar',
+      data: {
+        labels: signupsByDay.map(d => d.day.slice(5)),
+        datasets: [{
+          label: 'New Users',
+          data: signupsByDay.map(d => Number(d.total)),
+          backgroundColor: 'rgba(196,49,0,0.75)',
+          borderRadius: 4, borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ display:false } },
+        scales:{
+          x:{ grid:{ display:false }, ticks:{ font:{ size:9 }, color:'#9ca3af' } },
+          y:{ grid:{ color:'#f3f4f6' }, border:{ display:false },
+              ticks:{ font:{ size:9 }, color:'#9ca3af', stepSize:1 } }
+        }
+      }
+    });
+
+    if (!revenueByDay.length && !signupsByDay.length) {
+      toast('No analytics data yet — make some transactions and signups first!');
+    }
+  } catch(e) { toast('Analytics error: '+e.message, true); }
+}
+
+/* ── Pagination helper ────────────────────────────────────────────── */
+const pagerBtn = 'padding:4px 10px;border:1px solid var(--rule);border-radius:6px;background:#fff;font-size:10.5px;cursor:pointer';
+function renderPager(id, page, total, fn) {
+  const el = document.getElementById(id);
+  if (total <= 1) { el.style.display='none'; return; }
+  el.style.display = 'flex';
+  el.innerHTML = '<span style="font-size:11px;color:var(--muted)">Page '+page+' of '+total+'</span>' +
+    '<div style="display:flex;gap:6px">' +
+    (page > 1     ? '<button onclick="'+fn+'('+(page-1)+')" style="'+pagerBtn+'">← Prev</button>' : '') +
+    (page < total ? '<button onclick="'+fn+'('+(page+1)+')" style="'+pagerBtn+'">Next →</button>' : '') +
+    '</div>';
+}
+
+/* ── Sidebar toggle ───────────────────────────────────────────────── */
 function toggleSidebar() {
   document.getElementById('sb').classList.toggle('collapsed');
 }
-function toggleNav(el) {
-  el.classList.toggle('open');
-}
 
-// ── Date
-const d = new Date();
-document.getElementById('pg-date').textContent =
-  d.toLocaleDateString('en-KE', { weekday:'long', year:'numeric', month:'long', day:'numeric' }) +
-  ' — Platform performing normally';
-
-// ── Revenue Chart
-(function() {
-  const ctx = document.getElementById('revenueChart').getContext('2d');
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'],
-      datasets: [
-        {
-          label: 'Revenue',
-          data: [1840, 2250, 1950, 2100, 2420, 2780, 3140],
-          backgroundColor: 'rgba(1,29,71,0.85)',
-          borderRadius: 5,
-          borderSkipped: false,
-        },
-        {
-          label: 'Expenses',
-          data: [1220, 1480, 1310, 1390, 1620, 1760, 1920],
-          backgroundColor: 'rgba(196,49,0,0.75)',
-          borderRadius: 5,
-          borderSkipped: false,
-        }
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: {
-        callbacks: {
-          label: ctx => ' KES ' + (ctx.raw * 1000).toLocaleString()
-        }
-      }},
-      scales: {
-        x: { grid: { display: false }, ticks: { font: { family: 'Sora', size: 10 }, color: '#9ca3af' } },
-        y: { grid: { color: '#f3f4f6' }, ticks: {
-          font: { family: 'Sora', size: 10 }, color: '#9ca3af',
-          callback: v => 'KES ' + v + 'K'
-        }, border: { display: false } }
-      }
-    }
-  });
-})();
-
-// ── Donut Chart
-(function() {
-  const ctx = document.getElementById('projectDonut').getContext('2d');
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Active', 'Completed', 'On Hold', 'Overdue'],
-      datasets: [{ data: [14, 8, 4, 3], backgroundColor: ['#011D47','#16a34a','#d97706','#dc2626'], borderWidth: 0, hoverOffset: 4 }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false, cutout: '72%',
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ' ' + ctx.label + ': ' + ctx.raw + ' projects' } }
-      }
-    }
-  });
-})();
+/* ── Init ─────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  const d = new Date();
+  document.getElementById('pg-date').textContent =
+    d.toLocaleDateString('en-KE',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('tb-date').textContent =
+    d.toLocaleDateString('en-KE',{day:'numeric',month:'short',year:'numeric'});
+  showSection('overview');
+});
 </script>
 </body>
 </html>

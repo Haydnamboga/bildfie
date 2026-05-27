@@ -70,7 +70,9 @@ router.get('/users/:id', wrap(async (req, res) => {
     .leftJoin('professional_profiles as pp', 'pp.user_id', 'u.id')
     .where('u.id', req.params.id)
     .select(
-      'u.*',
+      'u.id','u.name','u.email','u.role','u.phone','u.location','u.bio',
+      'u.avatar','u.verified','u.verification_badge','u.rating',
+      'u.review_count','u.created_at','u.updated_at',
       'pp.trade','pp.experience_years','pp.nca_grade','pp.nca_license',
       'pp.hourly_rate','pp.available','pp.jobs_done','pp.on_time_percent'
     )
@@ -287,6 +289,88 @@ router.get('/stats', wrap(async (req, res) => {
     pending_verifications: Number(pending_verifications),
     recent_payments,
   });
+}));
+
+/* ══════════════════════════════════════════════════════════════════════
+   TRANSACTIONS
+══════════════════════════════════════════════════════════════════════ */
+
+// GET /api/admin/transactions?page=&limit=&search=
+router.get('/transactions', wrap(async (req, res) => {
+  const { page = 1, limit = 30, search } = req.query;
+  const offset = (Number(page) - 1) * Number(limit);
+
+  const base = () => {
+    let q = db('mpesa_transactions as t')
+      .join('users as u', 't.user_id', 'u.id')
+      .select(
+        't.id','t.amount','t.phone','t.mpesa_receipt',
+        't.status','t.created_at','t.completed_at',
+        'u.id as user_id','u.name as user_name','u.email as user_email'
+      );
+    if (search) q = q.where(b =>
+      b.whereILike('u.name', `%${search}%`).orWhereILike('t.mpesa_receipt', `%${search}%`)
+    );
+    return q;
+  };
+
+  const [transactions, [{ total }]] = await Promise.all([
+    base().orderBy('t.created_at', 'desc').limit(Number(limit)).offset(offset),
+    base().count('t.id as total'),
+  ]);
+
+  res.json({ transactions, total: Number(total), page: Number(page), limit: Number(limit) });
+}));
+
+/* ══════════════════════════════════════════════════════════════════════
+   ANALYTICS
+══════════════════════════════════════════════════════════════════════ */
+
+// GET /api/admin/analytics  — revenue & signups, last 30 days
+router.get('/analytics', wrap(async (req, res) => {
+  const isPg = db.client.config.client === 'pg';
+
+  const [revenueByDay, signupsByDay] = await Promise.all([
+    isPg
+      ? db('mpesa_transactions').where('status', 'completed')
+          .whereRaw("created_at >= NOW() - INTERVAL '30 days'")
+          .select(db.raw("to_char(created_at::date,'YYYY-MM-DD') as day"), db.raw('SUM(amount) as total'))
+          .groupByRaw("to_char(created_at::date,'YYYY-MM-DD')").orderBy('day')
+      : db('mpesa_transactions').where('status', 'completed')
+          .whereRaw("created_at >= date('now','-30 days')")
+          .select(db.raw("strftime('%Y-%m-%d',created_at) as day"), db.raw('SUM(amount) as total'))
+          .groupByRaw("strftime('%Y-%m-%d',created_at)").orderBy('day'),
+
+    isPg
+      ? db('users')
+          .whereRaw("created_at >= NOW() - INTERVAL '30 days'")
+          .select(db.raw("to_char(created_at::date,'YYYY-MM-DD') as day"), db.raw('COUNT(id) as total'))
+          .groupByRaw("to_char(created_at::date,'YYYY-MM-DD')").orderBy('day')
+      : db('users')
+          .whereRaw("created_at >= date('now','-30 days')")
+          .select(db.raw("strftime('%Y-%m-%d',created_at) as day"), db.raw('COUNT(id) as total'))
+          .groupByRaw("strftime('%Y-%m-%d',created_at)").orderBy('day'),
+  ]);
+
+  res.json({ revenueByDay, signupsByDay });
+}));
+
+/* ══════════════════════════════════════════════════════════════════════
+   RESET PASSWORD
+══════════════════════════════════════════════════════════════════════ */
+
+// POST /api/admin/users/:id/reset-password
+const resetPwRules = validate([
+  body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters'),
+]);
+router.post('/users/:id/reset-password', resetPwRules, wrap(async (req, res) => {
+  const bcrypt = require('bcryptjs');
+  const user = await db('users').where({ id: req.params.id }).first('id', 'name');
+  if (!user) return res.status(404).json({ error: 'User not found' });
+
+  const hash = await bcrypt.hash(req.body.password, 12);
+  await db('users').where({ id: req.params.id }).update({ password_hash: hash, updated_at: db.fn.now() });
+  res.json({ message: `Password reset for ${user.name}` });
 }));
 
 module.exports = router;
