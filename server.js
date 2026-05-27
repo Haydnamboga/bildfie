@@ -138,7 +138,7 @@ app.get('/api/health',        (req, res) => res.json({
   env:     process.env.NODE_ENV,
   uptime:  Math.floor(process.uptime()),
   time:    new Date(),
-  version: '2026-05-27c',
+  version: '2026-05-27d',
 }));
 
 /* ── One-time admin bootstrap (disabled after first use) ─────────────── */
