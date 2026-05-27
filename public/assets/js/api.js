@@ -94,7 +94,11 @@ window.BLApi = {
   async respondInvitation(id, status) { return apiFetch(`/invitations/${id}/respond`, { method: 'PUT', body: JSON.stringify({ status }) }); },
 
   /* ── Bids ── */
-  async getBids() { return apiFetch('/bids'); },
+  async getBids(params = {}) {
+    const qs = new URLSearchParams(params).toString();
+    const result = await apiFetch(`/bids?${qs}`);
+    return result ? result.bids : null;
+  },
   async applyBid(id, data) { return apiFetch(`/bids/${id}/apply`, { method: 'POST', body: JSON.stringify(data) }); },
 
   /* ── Materials ── */
@@ -109,6 +113,15 @@ window.BLApi = {
     const qs = new URLSearchParams(params).toString();
     return apiFetch(`/equipment?${qs}`);
   },
+
+  /* ── Transport ── */
+  async getTransport(params = {}) {
+    const qs = new URLSearchParams(params).toString();
+    return apiFetch(`/transport?${qs}`);
+  },
+
+  /* ── Public projects ── */
+  async getPublicProjects() { return apiFetch('/projects'); },
 
   /* ── Messages ── */
   async getMessages() { return apiFetch('/messages'); },

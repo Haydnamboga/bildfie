@@ -9,7 +9,8 @@
     "migrate": "node db/migrate.js",
     "migrate:rollback": "node db/migrate.js rollback",
     "migrate:status": "node db/migrate.js status",
-    "seed": "node db/seed.js",
+    "seed": "npx knex seed:run",
+    "clear-demo": "node db/clear-demo.js",
     "build": "npm install"
   },
   "engines": {

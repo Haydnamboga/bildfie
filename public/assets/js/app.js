@@ -23,17 +23,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   initChips();
 
   /* ── Fetch live data (non-blocking; falls back to BL static data) ── */
-  const [apiProfs, apiMats, apiBids, apiEqs] = await Promise.all([
+  const [apiProfs, apiMats, apiBids, apiEqs, apiTr, apiProjs] = await Promise.all([
     window.BLApi?.getProfessionals({ limit: 12 }).catch(() => null),
     window.BLApi?.getMaterials({ limit: 12 }).catch(() => null),
     window.BLApi?.getBids().catch(() => null),
     window.BLApi?.getEquipment().catch(() => null),
+    window.BLApi?.getTransport().catch(() => null),
+    window.BLApi?.getPublicProjects().catch(() => null),
   ]);
 
-  if (apiProfs) BL.professionals = apiProfs;
-  if (apiMats)  BL.materials     = apiMats;
-  if (apiBids)  BL.bids          = apiBids;
-  if (apiEqs)   BL.equipment     = apiEqs;
+  // null  = API call failed (offline / error) → keep static fallback
+  // []    = API online but empty              → show empty state
+  // [...] = real data                         → show it
+  if (apiProfs  !== null) BL.professionals = apiProfs;
+  if (apiMats   !== null) BL.materials     = apiMats;
+  if (apiBids   !== null) BL.bids          = apiBids;
+  if (apiEqs    !== null) BL.equipment     = apiEqs;
+  if (apiTr     !== null) BL.transport     = apiTr;
+  if (apiProjs  !== null) BL.projects      = apiProjs;
 
   /* ── Render marketplace grids ── */
   const grid = id => document.getElementById(id);

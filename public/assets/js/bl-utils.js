@@ -86,6 +86,15 @@ function initTabs() {
   });
 }
 
+/* ── PASSWORD SHOW / HIDE ────────────────────────────────────────────── */
+function togglePwd(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  if (!inp) return;
+  const show = inp.type === 'password';
+  inp.type       = show ? 'text' : 'password';
+  btn.textContent = show ? 'Hide' : 'Show';
+}
+
 /* ── CHECKBOX TOGGLE ─────────────────────────────────────────────────── */
 function toggleCheck(el) {
   el.querySelector('.bl-cb-box')?.classList.toggle('on');

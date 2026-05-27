@@ -23,6 +23,12 @@ services:
       - key: ALLOWED_ORIGINS
         sync: false           # same as APP_URL
 
+      # One-time admin bootstrap — set both, visit /api/setup-admin?secret=<value>, then DELETE both vars
+      - key: ADMIN_BOOTSTRAP_SECRET
+        sync: false
+      - key: ADMIN_BOOTSTRAP_EMAIL
+        sync: false           # the email you registered with on the live site
+
       # M-Pesa (fill in Render dashboard — never commit real values)
       - key: MPESA_ENV
         value: production

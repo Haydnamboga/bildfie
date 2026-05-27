@@ -8,6 +8,14 @@
 /* ── PROFESSIONALS GRID ─────────────────────────────────────────────── */
 function renderProfessionals(container, data, limit = 8) {
   data = (data || BL.professionals).slice(0, limit);
+  if (!data.length) {
+    container.innerHTML = `<div class="col-12 text-center py-5 text-muted">
+      <i class="bi bi-people" style="font-size:2.5rem;opacity:.25"></i>
+      <div class="mt-2 fw-bold">No professionals listed yet</div>
+      <div class="small mt-1"><a href="/register?role=professional">Join as a professional</a> to be the first listed here.</div>
+    </div>`;
+    return;
+  }
   container.innerHTML = data.map(p => {
     const tags = Array.isArray(p.tags) ? p.tags
       : (typeof p.tags === 'string' ? p.tags.split(',') : []);
@@ -60,6 +68,14 @@ function renderProfessionals(container, data, limit = 8) {
 /* ── MATERIALS GRID ─────────────────────────────────────────────────── */
 function renderMaterials(container, data, limit = 9) {
   data = (data || BL.materials).slice(0, limit);
+  if (!data.length) {
+    container.innerHTML = `<div class="col-12 text-center py-5 text-muted">
+      <i class="bi bi-box-seam" style="font-size:2.5rem;opacity:.25"></i>
+      <div class="mt-2 fw-bold">No materials listed yet</div>
+      <div class="small mt-1">Suppliers can list materials after registering.</div>
+    </div>`;
+    return;
+  }
   const stockCls = { in: 'bl-stock-in', low: 'bl-stock-low', out: 'bl-stock-out' };
   const stockLbl = { in: 'In Stock', low: 'Low Stock', out: 'Out of Stock' };
   const badgeCls = { bulk: 'bl-badge-bulk', new: 'bl-badge-new', sale: 'bl-badge-sale' };
@@ -102,6 +118,14 @@ function renderMaterials(container, data, limit = 9) {
 /* ── BIDS GRID ──────────────────────────────────────────────────────── */
 function renderBids(container, data) {
   data = data || BL.bids;
+  if (!data.length) {
+    container.innerHTML = `<div class="col-12 text-center py-5 text-muted">
+      <i class="bi bi-megaphone" style="font-size:2.5rem;opacity:.25"></i>
+      <div class="mt-2 fw-bold">No open bids right now</div>
+      <div class="small mt-1">Post a project to invite professionals to bid.</div>
+    </div>`;
+    return;
+  }
   const urgCls = { hot: 'bl-bid-hot', new: 'bl-bid-new', warm: 'bl-bid-warm' };
   const urgLbl = { hot: 'Hot', new: 'New', warm: 'Closing' };
   container.innerHTML = data.map(b => `
@@ -133,6 +157,14 @@ function renderBids(container, data) {
 /* ── PROJECTS GRID ──────────────────────────────────────────────────── */
 function renderProjects(container, data) {
   data = data || BL.projects;
+  if (!data.length) {
+    container.innerHTML = `<div class="col-12 text-center py-5 text-muted">
+      <i class="bi bi-building" style="font-size:2.5rem;opacity:.25"></i>
+      <div class="mt-2 fw-bold">No projects showcased yet</div>
+      <div class="small mt-1">Completed projects from your dashboard will appear here.</div>
+    </div>`;
+    return;
+  }
   container.innerHTML = data.map(p => {
     const tags = Array.isArray(p.tags) ? p.tags
       : (typeof p.tags === 'string' ? JSON.parse(p.tags || '[]') : []);
@@ -167,6 +199,14 @@ function renderProjects(container, data) {
 /* ── EQUIPMENT CARDS ────────────────────────────────────────────────── */
 function renderEquipment(container, data) {
   data = data || BL.equipment;
+  if (!data.length) {
+    container.innerHTML = `<div class="col-12 text-center py-5 text-muted">
+      <i class="bi bi-truck" style="font-size:2.5rem;opacity:.25"></i>
+      <div class="mt-2 fw-bold">No equipment listed yet</div>
+      <div class="small mt-1">Equipment owners can list their machinery after registering.</div>
+    </div>`;
+    return;
+  }
   container.innerHTML = data.map(e => {
     let specs = {};
     try { specs = typeof e.specs === 'string' ? JSON.parse(e.specs) : (e.specs || {}); } catch {}
@@ -213,6 +253,14 @@ function renderEquipment(container, data) {
 /* ── TRANSPORT CARDS ────────────────────────────────────────────────── */
 function renderTransport(container, data) {
   data = data || BL.transport;
+  if (!data.length) {
+    container.innerHTML = `<div class="col-12 text-center py-5 text-muted">
+      <i class="bi bi-signpost-2" style="font-size:2.5rem;opacity:.25"></i>
+      <div class="mt-2 fw-bold">No transport providers listed yet</div>
+      <div class="small mt-1">Logistics companies can list their services after registering.</div>
+    </div>`;
+    return;
+  }
   const modeLabel = { available: 'Available', contract: 'Contract', tripbased: 'Trip Based' };
   const modeColor = { available: '#E8F5E9,#2E7D32', contract: '#E3F2FD,#1565C0', tripbased: '#FEF0EB,#C43100' };
   container.innerHTML = data.map(t => `
