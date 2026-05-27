@@ -91,7 +91,7 @@ function makePassword(shortCode, passkey, ts) {
  *
  * @returns {object} Daraja response with CheckoutRequestID and CustomerMessage
  */
-async function stkPush({ phone, amount, accountRef = 'BuildLink', description = 'Payment' }) {
+async function stkPush({ phone, amount, accountRef = 'Bildfie', description = 'Payment' }) {
   const token     = await getAccessToken();
   const tillCode  = process.env.MPESA_SHORTCODE;
   // For tills under a head-office paybill, MPESA_HEAD_OFFICE_SHORTCODE is the

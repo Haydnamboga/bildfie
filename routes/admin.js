@@ -28,6 +28,7 @@ const db           = require('../db/knex');
 const requireAuth  = require('../middleware/auth');
 const requireRole  = require('../middleware/role');
 const validate     = require('../middleware/validate');
+const mailer       = require('../services/email');
 
 const wrap = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
@@ -179,6 +180,13 @@ router.put('/verifications/:id/approve', wrap(async (req, res) => {
     });
   });
 
+  // Email the user (non-blocking)
+  const approvedUser = await db('users').where({ id: doc.user_id }).select('email','name').first();
+  if (approvedUser) {
+    mailer.sendVerificationResult(approvedUser.email, approvedUser.name, true, doc.document_type, badge)
+      .catch(err => console.warn('[email] verify-approve failed:', err.message));
+  }
+
   res.json({ message: 'Document approved — user marked as verified', badge });
 }));
 
@@ -209,6 +217,13 @@ router.put('/verifications/:id/reject', rejectRules, wrap(async (req, res) => {
       link:    '/profile',
     });
   });
+
+  // Email the user (non-blocking)
+  const rejectedUser = await db('users').where({ id: doc.user_id }).select('email','name').first();
+  if (rejectedUser) {
+    mailer.sendVerificationResult(rejectedUser.email, rejectedUser.name, false, doc.document_type, reason)
+      .catch(err => console.warn('[email] verify-reject failed:', err.message));
+  }
 
   res.json({ message: 'Document rejected — user notified' });
 }));

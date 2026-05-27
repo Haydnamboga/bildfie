@@ -11,6 +11,8 @@ const bcrypt     = require('bcryptjs');
 const validate   = require('../middleware/validate');
 const { avatarUpload, documentUpload, wrapUpload } = require('../middleware/upload');
 
+const mailer = require('../services/email');
+
 const wrap = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
 /* ── Rate limiters ──────────────────────────────────────────────────── */
@@ -146,12 +148,22 @@ router.post('/register', authLimiter, registerRules, wrap(async (req, res) => {
   req.session.userName = name;
   req.session.userRole = role;
 
+  // Send welcome email (non-blocking — don't fail registration if email fails)
+  mailer.sendWelcome(email, name, role).catch(err =>
+    console.warn('[email] welcome failed:', err.message)
+  );
+
   res.status(201).json({ id: uid, name, email, role });
 }));
 
-// POST /api/auth/logout
+// POST /api/auth/logout — for fetch() calls from JS
 router.post('/logout', (req, res) => {
   req.session.destroy(() => res.json({ message: 'Logged out' }));
+});
+
+// GET /api/auth/logout — for direct href links (sidebar, etc.)
+router.get('/logout', (req, res) => {
+  req.session.destroy(() => res.redirect('/login'));
 });
 
 // GET /api/auth/me
@@ -228,14 +240,17 @@ router.post('/forgot-password', forgotLimiter, forgotRules, wrap(async (req, res
 
   const resetLink = `${process.env.APP_URL || 'http://localhost:3000'}/reset-password?token=${token}`;
 
-  if (process.env.NODE_ENV !== 'production') {
-    // Dev convenience: expose token so you can test without email
-    return res.json({ message: 'Reset token generated (dev only)', token, resetLink });
-  }
+  // In dev: also expose the token/link in the response so you can test without SMTP
+  const devExtra = process.env.NODE_ENV !== 'production'
+    ? { token, resetLink }
+    : {};
 
-  // TODO Phase 5: send email via nodemailer
-  // await sendPasswordResetEmail(user.email, user.name, resetLink);
-  res.json({ message: 'If that email exists you will receive a reset link' });
+  // Send email (non-blocking — always respond 200 to prevent user enumeration)
+  mailer.sendPasswordReset(email, user.name, token).catch(err =>
+    console.error('[email] password-reset send failed:', err.message)
+  );
+
+  res.json({ message: 'If that email exists you will receive a reset link', ...devExtra });
 }));
 
 // POST /api/auth/reset-password

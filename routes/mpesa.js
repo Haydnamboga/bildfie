@@ -20,7 +20,7 @@ const pushRules = validate([
 // Free-form payment: caller provides phone + amount directly.
 
 router.post('/stk-push', requireAuth, pushRules, wrap(async (req, res) => {
-  const { phone, amount, account_ref = 'BuildLink', description = 'Payment' } = req.body;
+  const { phone, amount, account_ref = 'Bildfie', description = 'Payment' } = req.body;
 
   const result = await mpesa.stkPush({ phone, amount, accountRef: account_ref, description });
 

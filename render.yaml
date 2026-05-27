@@ -41,6 +41,20 @@ services:
       - key: MPESA_HEAD_OFFICE_SHORTCODE
         sync: false
 
+      # Transactional email — nodemailer SMTP
+      # Works with Gmail App Password, SendGrid, Mailgun, Resend SMTP, etc.
+      # Without these, emails are silently dropped in production.
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        sync: false           # e.g. Bildfie <noreply@bildfie.com>
+
 databases:
   - name: bildfie-db
     databaseName: bildfie

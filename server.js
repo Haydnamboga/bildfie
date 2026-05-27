@@ -165,9 +165,10 @@ app.get('/equipment',     (req, res) => res.render('pages/equipment'));
 app.get('/transport',     (req, res) => res.render('pages/transport'));
 app.get('/facilities',    (req, res) => res.render('pages/facilities'));
 app.get('/projects',      (req, res) => res.render('pages/projects'));
-app.get('/login',         (req, res) => res.render('pages/login'));
-app.get('/register',      (req, res) => res.render('pages/register'));
-app.get('/account',       (req, res) => res.render('pages/account'));
+app.get('/login',           (req, res) => res.render('pages/login'));
+app.get('/register',        (req, res) => res.render('pages/register'));
+app.get('/reset-password',  (req, res) => res.render('pages/reset-password'));
+app.get('/account',         (req, res) => res.render('pages/account'));
 app.get('/profile',       (req, res) => res.render('pages/profile'));
 
 /* ── Dashboard ───────────────────────────────────────────────────────── */
