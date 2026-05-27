@@ -782,8 +782,8 @@ async function becomeProfessional(e) {
   btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Activating…';
 
   try {
-    const r = await fetch('/api/auth/become-professional', {
-      method: 'POST',
+    const r = await fetch('/api/auth/professional', {
+      method: 'PUT',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ trade, nca_grade, experience_years, hourly_rate }),

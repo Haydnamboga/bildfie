@@ -292,13 +292,15 @@ const becomeProfRules = validate([
   body('tags').optional().isArray(),
 ]);
 
-// PUT /api/auth/professional — professionals update their own profile
+// PUT /api/auth/professional — update professional profile (or upgrade client → professional)
 router.put('/professional', proProfileRules, wrap(async (req, res) => {
   if (!req.session.userId) return res.status(401).json({ error: 'Not authenticated' });
-  if (req.session.userRole !== 'professional')
-    return res.status(403).json({ error: 'Professional account required' });
 
   const { trade, experience_years, hourly_rate, available, nca_grade, tags } = req.body;
+
+  // If the user is not yet a professional, require a trade and upgrade their role
+  const isUpgrade = req.session.userRole !== 'professional';
+  if (isUpgrade && !trade) return res.status(400).json({ error: 'Trade is required' });
 
   const profileUpdates = {};
   if (trade            !== undefined) profileUpdates.trade            = trade;
@@ -308,14 +310,19 @@ router.put('/professional', proProfileRules, wrap(async (req, res) => {
   if (nca_grade        !== undefined) profileUpdates.nca_grade        = nca_grade;
 
   await db.transaction(async trx => {
-    if (Object.keys(profileUpdates).length) {
-      const exists = await trx('professional_profiles').where({ user_id: req.session.userId }).first('id');
-      if (exists) {
-        await trx('professional_profiles').where({ user_id: req.session.userId }).update(profileUpdates);
-      } else {
-        await trx('professional_profiles').insert({ user_id: req.session.userId, trade: trade || 'General', ...profileUpdates });
-      }
+    // Upgrade role if needed
+    if (isUpgrade) {
+      await trx('users').where({ id: req.session.userId }).update({ role: 'professional', updated_at: db.fn.now() });
     }
+
+    const exists = await trx('professional_profiles').where({ user_id: req.session.userId }).first('id');
+    if (exists) {
+      if (Object.keys(profileUpdates).length)
+        await trx('professional_profiles').where({ user_id: req.session.userId }).update(profileUpdates);
+    } else {
+      await trx('professional_profiles').insert({ user_id: req.session.userId, trade: trade || 'General', ...profileUpdates });
+    }
+
     // Replace tags wholesale if provided
     if (Array.isArray(tags)) {
       await trx('professional_tags').where({ user_id: req.session.userId }).delete();
@@ -327,10 +334,14 @@ router.put('/professional', proProfileRules, wrap(async (req, res) => {
     }
   });
 
-  // Return updated profile
-  const prof = await db('professional_profiles').where({ user_id: req.session.userId }).first();
+  if (isUpgrade) req.session.userRole = 'professional';
+
+  // Return updated profile + user info
+  const user    = await db('users').where({ id: req.session.userId })
+    .select('id','name','email','role','phone','location','avatar','bio','verified','verification_badge').first();
+  const prof    = await db('professional_profiles').where({ user_id: req.session.userId }).first();
   const tagRows = await db('professional_tags').where({ user_id: req.session.userId }).select('tag');
-  res.json({ ...prof, tags: tagRows.map(r => r.tag) });
+  res.json({ ...user, ...(prof || {}), tags: tagRows.map(r => r.tag) });
 }));
 
 // POST /api/auth/become-professional — upgrade a client account to professional
