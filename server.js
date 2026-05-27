@@ -134,10 +134,11 @@ app.use('/api/prices',        require('./routes/prices'));
 app.use('/api/mpesa',         require('./routes/mpesa'));
 app.use('/api/admin',         require('./routes/admin'));
 app.get('/api/health',        (req, res) => res.json({
-  status: 'ok',
-  env:    process.env.NODE_ENV,
-  uptime: Math.floor(process.uptime()),
-  time:   new Date(),
+  status:  'ok',
+  env:     process.env.NODE_ENV,
+  uptime:  Math.floor(process.uptime()),
+  time:    new Date(),
+  version: '2026-05-27c',
 }));
 
 /* ── One-time admin bootstrap (disabled after first use) ─────────────── */

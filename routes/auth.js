@@ -284,6 +284,14 @@ const proProfileRules = validate([
   body('nca_grade').optional().trim(),
 ]);
 
+const becomeProfRules = validate([
+  body('trade').trim().notEmpty().withMessage('Trade is required'),
+  body('experience_years').optional().isInt({ min: 0, max: 60 }),
+  body('hourly_rate').optional().isInt({ min: 0 }),
+  body('nca_grade').optional().trim(),
+  body('tags').optional().isArray(),
+]);
+
 // PUT /api/auth/professional — professionals update their own profile
 router.put('/professional', proProfileRules, wrap(async (req, res) => {
   if (!req.session.userId) return res.status(401).json({ error: 'Not authenticated' });
@@ -326,13 +334,7 @@ router.put('/professional', proProfileRules, wrap(async (req, res) => {
 }));
 
 // POST /api/auth/become-professional — upgrade a client account to professional
-router.post('/become-professional', validate([
-  body('trade').trim().notEmpty().withMessage('Trade is required'),
-  body('experience_years').optional().isInt({ min: 0, max: 60 }),
-  body('hourly_rate').optional().isInt({ min: 0 }),
-  body('nca_grade').optional().trim(),
-  body('tags').optional().isArray(),
-]), wrap(async (req, res) => {
+router.post('/become-professional', becomeProfRules, wrap(async (req, res) => {
   if (!req.session.userId) return res.status(401).json({ error: 'Not authenticated' });
 
   const { trade, experience_years = 0, hourly_rate = 0, nca_grade, tags = [] } = req.body;
