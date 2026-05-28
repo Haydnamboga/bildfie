@@ -17,10 +17,10 @@ const wrap = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch
 
 /* ── Rate limiters ──────────────────────────────────────────────────── */
 
-/** 10 attempts per 15 min on login / register */
+/** 30 attempts per 15 min on login / register */
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 10,
+  max: 30,
   message: { error: 'Too many attempts — please try again in 15 minutes' },
   standardHeaders: true,
   legacyHeaders: false,
