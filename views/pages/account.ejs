@@ -177,8 +177,10 @@
                   </select>
                 </div>
               </div>
+              <div id="pro-ok" class="bl-auth-ok"></div>
+              <div id="pro-err" class="bl-auth-err"></div>
               <div class="d-flex gap-2 mt-4">
-                <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+                <button class="btn btn-primary" onclick="saveProProfile(this)">Save Changes</button>
                 <a href="/profile" class="btn btn-outline-secondary">View Public Profile →</a>
               </div>
             </div>
@@ -490,7 +492,8 @@ function showTab(name, el) {
 function populateAccount(user) {
   _originalUser = user;
   document.getElementById('acc-name').textContent = user.name || '—';
-  document.getElementById('acc-meta').textContent = `${user.email} · ${user.role === 'professional' ? user.trade || 'Professional' : 'Client'} · ${user.location || 'Kenya'}`;
+  const roleLabel = user.role === 'professional' ? (user.trade || 'Professional') : user.role === 'admin' ? 'Administrator' : 'Client';
+  document.getElementById('acc-meta').textContent = `${user.email} · ${roleLabel} · ${user.location || 'Kenya'}`;
   document.getElementById('acc-avatar').src = user.avatar || `https://i.pravatar.cc/100?img=${user.id % 70 + 1}`;
   if (user.verification_badge) {
     const badge = document.getElementById('acc-badge');
@@ -514,7 +517,8 @@ function populateAccount(user) {
     document.getElementById('pf-exp').value   = user.experience_years ? `${user.experience_years} years` : '';
     document.getElementById('pf-rate').value  = user.hourly_rate || '';
     document.getElementById('pf-avail').value = user.available ? '1' : '0';
-  } else {
+  } else if (user.role !== 'admin') {
+    // Only non-admin, non-professional users see the upgrade card
     document.getElementById('become-pro-card').style.display = 'block';
   }
   // Subscription
@@ -763,6 +767,31 @@ async function deleteDoc(id, btn) {
   } catch {
     showToast('Network error', 'error');
     btn.disabled = false;
+  }
+}
+
+/* ── Save Professional Profile (rate / availability) ── */
+async function saveProProfile(btn) {
+  hideMsg('pro-ok'); hideMsg('pro-err');
+  const hourly_rate = parseInt(document.getElementById('pf-rate').value) || 0;
+  const available   = document.getElementById('pf-avail').value === '1';
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+  try {
+    const r = await fetch('/api/auth/professional', {
+      method: 'PUT',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ hourly_rate, available }),
+    });
+    const d = await r.json();
+    if (!r.ok) { showMsg('pro-err', d.error || 'Failed to save — please try again.'); return; }
+    showMsg('pro-ok', 'Professional profile updated <i class="bi bi-check"></i>');
+  } catch {
+    showMsg('pro-err', 'Network error — please try again.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Save Changes';
   }
 }
 

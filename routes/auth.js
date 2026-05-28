@@ -295,6 +295,7 @@ const becomeProfRules = validate([
 // PUT /api/auth/professional — update professional profile (or upgrade client → professional)
 router.put('/professional', proProfileRules, wrap(async (req, res) => {
   if (!req.session.userId) return res.status(401).json({ error: 'Not authenticated' });
+  if (req.session.userRole === 'admin') return res.status(403).json({ error: 'Admin accounts cannot use this endpoint' });
 
   const { trade, experience_years, hourly_rate, available, nca_grade, tags } = req.body;
 
