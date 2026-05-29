@@ -48,7 +48,26 @@
 > **Module 1 complete — 21/21 lessons (~38,800 words).**
 
 ## Module 2 — Character, Leadership and Human Relations (20 lessons)
-_Lesson topics pending — please paste the lesson list when we reach this module._
+- ✅ 2.1 Time Management
+- ✅ 2.2 Devotion to Study
+- ✅ 2.3 Discipline & Order
+- ✅ 2.4 Lifelong Learning
+- ✅ 2.5 Practical Skill Repetition
+- ⏳ 2.6 Work Ethics
+- ⏳ 2.7 Human Relations
+- ⏳ 2.8 Conflict Resolution
+- ⏳ 2.9 Science of Peace-Making
+- ⏳ 2.10 Leadership Development
+- ⏳ 2.11 Emotional Intelligence
+- ⏳ 2.12 Missionary Conduct
+- ⏳ 2.13 Christian Standards *(relational/professional angle; cf. 1.13)*
+- ⏳ 2.14 Hospitality & Service Culture
+- ⏳ 2.15 Teamwork
+- ⏳ 2.16 Physical Endurance Development
+- ⏳ 2.17 Personal Hygiene
+- ⏳ 2.18 Dress & Modesty *(dress-reform principles; cf. 1.13)*
+- ⏳ 2.19 Professional Conduct
+- ⏳ 2.20 Assessment *(module review + examination)*
 
 ## Module 3 — Evangelism and Missionary Ministry (16 lessons)
 _Lesson topics pending._
