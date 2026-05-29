@@ -32,10 +32,10 @@
 - ✅ **1.7 Missionary Spiritual Formation**
 - ✅ **1.8 Prophetic Guidance**
 - ✅ **1.9 Biblical Counselling**
-- ⏳ 1.10 Medical Ministry
-- ⏳ 1.11 Ministry of Healing
-- ⏳ 1.12 History of Self-Supporting Work
-- ⏳ 1.13 Christian Standards
+- ✅ **1.10 Medical Ministry**
+- ✅ **1.11 Ministry of Healing**
+- ✅ **1.12 History of Self-Supporting Work**
+- ✅ **1.13 Christian Standards**
 - ⏳ 1.14 Biblical Principles of Health
 - ⏳ 1.15 Christian Ethics
 - ⏳ 1.16 Christian Administration
