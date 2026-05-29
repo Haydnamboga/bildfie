@@ -28,10 +28,10 @@
 - ✅ **1.3 Steps to Christ**
 - ✅ **1.4 Faith and Works**
 - ✅ **1.5 Sanctuary Message**
-- ⏳ 1.6 Daniel and Revelation
-- ⏳ 1.7 Missionary Spiritual Formation
-- ⏳ 1.8 Prophetic Guidance
-- ⏳ 1.9 Biblical Counselling
+- ✅ **1.6 Daniel and Revelation**
+- ✅ **1.7 Missionary Spiritual Formation**
+- ✅ **1.8 Prophetic Guidance**
+- ✅ **1.9 Biblical Counselling**
 - ⏳ 1.10 Medical Ministry
 - ⏳ 1.11 Ministry of Healing
 - ⏳ 1.12 History of Self-Supporting Work
