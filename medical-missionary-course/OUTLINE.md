@@ -36,14 +36,16 @@
 - ✅ **1.11 Ministry of Healing**
 - ✅ **1.12 History of Self-Supporting Work**
 - ✅ **1.13 Christian Standards**
-- ⏳ 1.14 Biblical Principles of Health
-- ⏳ 1.15 Christian Ethics
-- ⏳ 1.16 Christian Administration
-- ⏳ 1.17 How to Study the Bible
-- ⏳ 1.18 Principles of True Education
-- ⏳ 1.19 Lifework & Calling
-- ⏳ 1.20 Lifework & Calling  ⚠️ *(listed twice on the page — confirm intended title for 1.20, or split into Part 1 / Part 2)*
-- ⏳ 1.21 Prayer & Devotional Life
+- ✅ **1.14 Biblical Principles of Health**
+- ✅ **1.15 Christian Ethics**
+- ✅ **1.16 Christian Administration**
+- ✅ **1.17 How to Study the Bible**
+- ✅ **1.18 Principles of True Education**
+- ✅ **1.19 Lifework & Calling — Part 1** *(the page listed "Lifework & Calling" twice; split into Part 1/Part 2 — adjust if you intended a different title for 1.20)*
+- ✅ **1.20 Lifework & Calling — Part 2**
+- ✅ **1.21 Prayer & Devotional Life**
+
+> **Module 1 complete — 21/21 lessons (~38,800 words).**
 
 ## Module 2 — Character, Leadership and Human Relations (20 lessons)
 _Lesson topics pending — please paste the lesson list when we reach this module._
