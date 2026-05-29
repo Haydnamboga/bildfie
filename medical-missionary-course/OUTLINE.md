@@ -63,11 +63,13 @@
 - ✅ 2.13 Christian Standards *(relational/professional angle; cf. 1.13)*
 - ✅ 2.14 Hospitality & Service Culture
 - ✅ 2.15 Teamwork
-- ⏳ 2.16 Physical Endurance Development
-- ⏳ 2.17 Personal Hygiene
-- ⏳ 2.18 Dress & Modesty *(dress-reform principles; cf. 1.13)*
-- ⏳ 2.19 Professional Conduct
-- ⏳ 2.20 Assessment *(module review + examination)*
+- ✅ 2.16 Physical Endurance Development
+- ✅ 2.17 Personal Hygiene
+- ✅ 2.18 Dress & Modesty *(dress-reform principles; cf. 1.13)*
+- ✅ 2.19 Professional Conduct
+- ✅ 2.20 Assessment *(module review + examination)*
+
+> **Module 2 complete — 20/20 lessons (~27,300 words).**
 
 ## Module 3 — Evangelism and Missionary Ministry (16 lessons)
 _Lesson topics pending._
