@@ -58,11 +58,11 @@
 - ✅ 2.8 Conflict Resolution
 - ✅ 2.9 Science of Peace-Making
 - ✅ 2.10 Leadership Development
-- ⏳ 2.11 Emotional Intelligence
-- ⏳ 2.12 Missionary Conduct
-- ⏳ 2.13 Christian Standards *(relational/professional angle; cf. 1.13)*
-- ⏳ 2.14 Hospitality & Service Culture
-- ⏳ 2.15 Teamwork
+- ✅ 2.11 Emotional Intelligence
+- ✅ 2.12 Missionary Conduct
+- ✅ 2.13 Christian Standards *(relational/professional angle; cf. 1.13)*
+- ✅ 2.14 Hospitality & Service Culture
+- ✅ 2.15 Teamwork
 - ⏳ 2.16 Physical Endurance Development
 - ⏳ 2.17 Personal Hygiene
 - ⏳ 2.18 Dress & Modesty *(dress-reform principles; cf. 1.13)*
