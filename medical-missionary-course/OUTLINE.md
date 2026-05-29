@@ -53,11 +53,11 @@
 - ✅ 2.3 Discipline & Order
 - ✅ 2.4 Lifelong Learning
 - ✅ 2.5 Practical Skill Repetition
-- ⏳ 2.6 Work Ethics
-- ⏳ 2.7 Human Relations
-- ⏳ 2.8 Conflict Resolution
-- ⏳ 2.9 Science of Peace-Making
-- ⏳ 2.10 Leadership Development
+- ✅ 2.6 Work Ethics
+- ✅ 2.7 Human Relations
+- ✅ 2.8 Conflict Resolution
+- ✅ 2.9 Science of Peace-Making
+- ✅ 2.10 Leadership Development
 - ⏳ 2.11 Emotional Intelligence
 - ⏳ 2.12 Missionary Conduct
 - ⏳ 2.13 Christian Standards *(relational/professional angle; cf. 1.13)*
