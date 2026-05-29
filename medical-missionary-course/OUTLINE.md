@@ -24,10 +24,10 @@
 
 ## Module 1 — Spiritual and Biblical Foundations of MMW (21 lessons)
 - ✅ **1.1 Bible Doctrines**
-- ⏳ 1.2 The Life of Christ
-- ⏳ 1.3 Steps to Christ
-- ⏳ 1.4 Faith and Works
-- ⏳ 1.5 Sanctuary Message
+- ✅ **1.2 The Life of Christ**
+- ✅ **1.3 Steps to Christ**
+- ✅ **1.4 Faith and Works**
+- ✅ **1.5 Sanctuary Message**
 - ⏳ 1.6 Daniel and Revelation
 - ⏳ 1.7 Missionary Spiritual Formation
 - ⏳ 1.8 Prophetic Guidance
