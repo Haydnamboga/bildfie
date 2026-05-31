@@ -1,0 +1,21 @@
+# Netlify / Cloudflare Pages config for the CECOME static site.
+# If you deploy the `cecome/` folder as its own repo root, this works as-is.
+# (If you instead deploy the whole bildfie repo, set base = "cecome".)
+
+[build]
+  publish = "."
+  command = ""
+
+# Long-cache the fingerprint-free assets lightly; tune as you like.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+# Basic security headers (safe defaults for a static brochure site).
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"

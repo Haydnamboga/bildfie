@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Replace the domain below with the live site URL once deployed.
+Sitemap: https://cecome.org/sitemap.xml

@@ -23,6 +23,9 @@ Thumbs.db
 dist/
 build/
 
+# Generated archive of the CECOME static site (source lives in cecome/)
+cecome-website.zip
+
 # Logs
 *.log
 npm-debug.log*

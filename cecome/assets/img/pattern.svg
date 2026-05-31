@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <g fill="none" stroke="#ffffff" stroke-width="1.4">
+    <!-- center diamond (weave motif) -->
+    <path d="M60 30 L90 60 L60 90 L30 60 Z"/>
+    <path d="M60 44 L76 60 L60 76 L44 60 Z"/>
+    <!-- lattice diamonds (tile seamlessly across edges & corners) -->
+    <path d="M0 -12 L12 0 L0 12 L-12 0 Z"/>
+    <path d="M120 -12 L132 0 L120 12 L108 0 Z"/>
+    <path d="M0 108 L12 120 L0 132 L-12 120 Z"/>
+    <path d="M120 108 L132 120 L120 132 L108 120 Z"/>
+    <path d="M60 -12 L72 0 L60 12 L48 0 Z"/>
+    <path d="M60 108 L72 120 L60 132 L48 120 Z"/>
+    <path d="M-12 60 L0 72 L12 60 L0 48 Z"/>
+    <path d="M108 60 L120 72 L132 60 L120 48 Z"/>
+  </g>
+  <g fill="#ffffff">
+    <circle cx="30" cy="30" r="2"/>
+    <circle cx="90" cy="30" r="2"/>
+    <circle cx="30" cy="90" r="2"/>
+    <circle cx="90" cy="90" r="2"/>
+    <circle cx="60" cy="60" r="2.4"/>
+  </g>
+</svg>
