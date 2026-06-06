@@ -1,0 +1,47 @@
+<div class="page-header d-flex justify-content-between align-items-start">
+  <div>
+    <nav><ol class="breadcrumb small mb-1"><li class="breadcrumb-item"><a href="/field/communications">Communications</a></li><li class="breadcrumb-item active">Message</li></ol></nav>
+    <h1 class="h4 fw-bold mb-0"><%= msg.subject %></h1>
+    <p class="text-muted small">
+      <% if (msg.from_field) { %>From: Field Office → <%= msg.to_church_name||'All Churches' %>
+      <% } else { %>From: <%= msg.from_church_name||'Unknown' %> <% if (msg.sender_name) { %>(<%= msg.sender_name %>)<% } %> → Field Office<% } %>
+      · <%= new Date(msg.created_at).toLocaleString() %>
+    </p>
+  </div>
+  <span class="badge badge-status-<%= msg.status %>"><%= msg.status %></span>
+</div>
+<div class="row g-3">
+  <div class="col-md-8">
+    <div class="card mb-3"><div class="card-body"><p style="white-space:pre-wrap"><%= msg.message %></p></div></div>
+    <% if (replies.length) { %>
+    <h6 class="fw-bold mb-2">Replies</h6>
+    <% replies.forEach(r => { %>
+    <div class="card mb-2 border-start border-primary border-3">
+      <div class="card-body py-2">
+        <div class="d-flex justify-content-between small text-muted mb-1"><span><%= r.sender_name||'Field Office' %></span><span><%= new Date(r.created_at).toLocaleString() %></span></div>
+        <p class="small mb-0" style="white-space:pre-wrap"><%= r.message %></p>
+      </div>
+    </div>
+    <% }) %>
+    <% } %>
+    <% if (!msg.from_field) { %>
+    <div class="card mt-3">
+      <div class="card-header">Reply</div>
+      <div class="card-body">
+        <form method="POST" action="/field/communications/<%= msg.id %>/reply">
+          <input type="hidden" name="to_church_id" value="<%= msg.from_church_id %>">
+          <div class="mb-2"><textarea name="message" class="form-control" rows="4" placeholder="Write your reply..." required></textarea></div>
+          <button class="btn btn-primary btn-sm">Send Reply</button>
+        </form>
+      </div>
+    </div>
+    <% } %>
+  </div>
+  <div class="col-md-4">
+    <div class="card"><div class="card-header">Details</div><div class="card-body small">
+      <div class="mb-2"><span class="text-muted">Type:</span> <span class="badge bg-info text-dark"><%= msg.message_type.replace('_',' ') %></span></div>
+      <div class="mb-2"><span class="text-muted">Status:</span> <span class="badge badge-status-<%= msg.status %>"><%= msg.status %></span></div>
+      <div class="mb-2"><span class="text-muted">Date:</span> <%= new Date(msg.created_at).toLocaleDateString() %></div>
+    </div></div>
+  </div>
+</div>

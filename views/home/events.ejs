@@ -1,0 +1,34 @@
+<section class="py-5">
+  <div class="container">
+    <h1 class="section-title mb-1">Events</h1>
+    <p class="text-muted mb-4">Field-wide and church events across Nyamira West</p>
+    <div class="row g-3">
+      <% events.forEach(e => { %>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <span class="badge bg-primary mb-2"><%= (e.event_type||'event').replace(/_/g,' ') %></span>
+                <% if (e.field_wide) { %><span class="badge bg-warning text-dark ms-1 mb-2">Field-wide</span><% } %>
+                <h5 class="fw-bold"><%= e.title %></h5>
+              </div>
+              <span class="badge bg-<%= e.status==='upcoming'?'success':e.status==='ongoing'?'primary':'secondary' %>"><%= e.status %></span>
+            </div>
+            <% if (e.description) { %><p class="text-muted small"><%= e.description.substring(0,150) %></p><% } %>
+            <div class="d-flex gap-3 flex-wrap small text-muted">
+              <span><i class="bi bi-calendar3"></i> <%= new Date(e.start_date).toLocaleDateString('en-KE',{weekday:'short',month:'short',day:'numeric',year:'numeric'}) %></span>
+              <% if (e.end_date && e.end_date !== e.start_date) { %><span>— <%= new Date(e.end_date).toLocaleDateString() %></span><% } %>
+              <% if (e.venue) { %><span><i class="bi bi-geo-alt"></i> <%= e.venue %></span><% } %>
+              <% if (e.church_name) { %><span><i class="bi bi-building"></i> <%= e.church_name %></span><% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+      <% if (!events.length) { %>
+      <div class="col-12 text-center py-5 text-muted"><i class="bi bi-calendar-x display-4"></i><p>No events at the moment.</p></div>
+      <% } %>
+    </div>
+  </div>
+</section>

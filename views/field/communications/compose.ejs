@@ -1,0 +1,22 @@
+<div class="page-header"><h1 class="h3 fw-bold mb-1">Send Message</h1><p class="text-muted mb-0">Send a message to a church or broadcast to all</p></div>
+<% if (errors.length) { %><div class="alert alert-danger"><%errors.forEach(e=>{%><div><%=e%></div><%})%></div><% } %>
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <form method="POST" action="/field/communications/compose" class="card">
+      <div class="card-body row g-3">
+        <div class="col-12"><label class="form-label">To (Church)</label>
+          <select name="to_church_id" class="form-select"><option value="">— All Churches (Broadcast) —</option><%churches.forEach(c=>{%><option value="<%= c.id %>"><%= c.name %></option><%})%></select>
+        </div>
+        <div class="col-md-6"><label class="form-label">Message Type</label>
+          <select name="message_type" class="form-select"><%['general','report_request','approval','directive'].forEach(t=>{%><option value="<%= t %>"><%= t.replace('_',' ') %></option><%})%></select>
+        </div>
+        <div class="col-12"><label class="form-label fw-semibold">Subject *</label><input name="subject" class="form-control" required></div>
+        <div class="col-12"><label class="form-label fw-semibold">Message *</label><textarea name="message" class="form-control" rows="6" required></textarea></div>
+        <div class="col-12 d-flex gap-2">
+          <button class="btn btn-primary"><i class="bi bi-send"></i> Send Message</button>
+          <a href="/field/communications" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

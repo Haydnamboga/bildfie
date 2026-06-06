@@ -1,0 +1,21 @@
+<div class="page-header d-flex justify-content-between align-items-center">
+  <div><h1 class="h3 fw-bold mb-1">Reports</h1><p class="text-muted mb-0">Church reports submitted to the field</p></div>
+  <a href="/church/reports/submit" class="btn btn-primary"><i class="bi bi-send"></i> Submit Report</a>
+</div>
+<div class="card"><div class="card-body p-0">
+  <table class="table table-hover mb-0">
+    <thead><tr><th>Period</th><th>Type</th><th>Status</th><th>Date</th><th></th></tr></thead>
+    <tbody>
+      <%reports.forEach(r=>{%>
+      <tr>
+        <td class="fw-semibold small"><%=r.period_label||'—'%></td>
+        <td><span class="badge bg-primary bg-opacity-10 text-primary"><%=r.report_type%></span></td>
+        <td><span class="badge badge-status-<%=r.status%>"><%=r.status%></span></td>
+        <td class="small text-muted"><%=new Date(r.created_at).toLocaleDateString()%></td>
+        <td><a href="/church/reports/<%=r.id%>" class="btn btn-sm btn-link p-0">View</a></td>
+      </tr>
+      <%})%>
+      <%if(!reports.length){%><tr><td colspan="5" class="text-center py-4 text-muted">No reports submitted yet.</td></tr><%}%>
+    </tbody>
+  </table>
+</div></div>

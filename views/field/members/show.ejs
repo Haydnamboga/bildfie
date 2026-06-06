@@ -1,0 +1,73 @@
+<div class="page-header d-flex justify-content-between align-items-start">
+  <div>
+    <nav><ol class="breadcrumb small mb-1"><li class="breadcrumb-item"><a href="/field/members">Members</a></li><li class="breadcrumb-item active"><%= member.first_name %> <%= member.last_name %></li></ol></nav>
+    <h1 class="h3 fw-bold mb-0"><%= member.first_name %> <%= member.last_name %></h1>
+    <p class="text-muted small"><%= member.church_name %></p>
+  </div>
+  <span class="badge badge-status-<%= member.membership_status %> fs-6"><%= member.membership_status %></span>
+</div>
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card mb-3">
+      <div class="card-header">Personal Information</div>
+      <div class="card-body small">
+        <% if (member.phone) { %><div class="mb-2"><span class="text-muted">Phone:</span> <strong><%= member.phone %></strong></div><% } %>
+        <% if (member.email) { %><div class="mb-2"><span class="text-muted">Email:</span> <%= member.email %></div><% } %>
+        <% if (member.gender) { %><div class="mb-2"><span class="text-muted">Gender:</span> <%= member.gender %></div><% } %>
+        <% if (member.dob) { %><div class="mb-2"><span class="text-muted">DOB:</span> <%= new Date(member.dob).toLocaleDateString() %></div><% } %>
+        <% if (member.marital_status) { %><div class="mb-2"><span class="text-muted">Marital:</span> <%= member.marital_status %></div><% } %>
+        <% if (member.occupation) { %><div class="mb-2"><span class="text-muted">Occupation:</span> <%= member.occupation %></div><% } %>
+        <% if (member.baptism_date) { %><div class="mb-2"><span class="text-muted">Baptism:</span> <%= new Date(member.baptism_date).toLocaleDateString() %></div><% } %>
+        <% if (member.joined_date) { %><div class="mb-2"><span class="text-muted">Joined:</span> <%= new Date(member.joined_date).toLocaleDateString() %></div><% } %>
+        <% if (member.address) { %><div class="mb-2"><span class="text-muted">Address:</span> <%= member.address %></div><% } %>
+      </div>
+    </div>
+    <div class="card mb-3">
+      <div class="card-header">Departments</div>
+      <div class="card-body p-0">
+        <% if (depts.length) { %>
+        <ul class="list-group list-group-flush">
+          <% depts.forEach(d => { %><li class="list-group-item small px-3"><i class="bi bi-diagram-3 me-2 text-primary"></i><%= d.name %> <span class="text-muted">(<%=d.role_in_dept%>)</span></li><% }) %>
+        </ul>
+        <% } else { %><div class="p-3 small text-muted">Not in any department.</div><% } %>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">Giving Summary</div>
+      <div class="card-body text-center">
+        <div class="fw-bold fs-4 text-success">KES <%= Number(givingTotal||0).toLocaleString() %></div>
+        <div class="small text-muted">Total giving</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="card mb-3">
+      <div class="card-header">Attendance History</div>
+      <div class="card-body p-0">
+        <table class="table table-sm mb-0">
+          <thead><tr><th>Date</th><th>Service</th><th>Type</th></tr></thead>
+          <tbody>
+            <% attendance.forEach(a => { %>
+            <tr><td class="small"><%= new Date(a.scheduled_at).toLocaleDateString() %></td><td class="small"><%= a.title %></td><td><span class="badge bg-light text-dark"><%= a.service_type %></span></td></tr>
+            <% }) %>
+            <% if (!attendance.length) { %><tr><td colspan="3" class="text-center text-muted small py-3">No attendance records.</td></tr><% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">Giving Records</div>
+      <div class="card-body p-0">
+        <table class="table table-sm mb-0">
+          <thead><tr><th>Date</th><th>Type</th><th>Amount</th></tr></thead>
+          <tbody>
+            <% giving.forEach(g => { %>
+            <tr><td class="small"><%= new Date(g.date).toLocaleDateString() %></td><td class="small"><%= g.giving_type.replace('_',' ') %></td><td class="small fw-semibold text-success">KES <%= Number(g.amount).toLocaleString() %></td></tr>
+            <% }) %>
+            <% if (!giving.length) { %><tr><td colspan="3" class="text-center text-muted small py-3">No giving records.</td></tr><% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

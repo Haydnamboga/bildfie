@@ -1,0 +1,70 @@
+<div class="page-header d-flex justify-content-between align-items-start">
+  <div>
+    <nav><ol class="breadcrumb small mb-1"><li class="breadcrumb-item"><a href="/church/services">Services</a></li><li class="breadcrumb-item active"><%=service.title%></li></ol></nav>
+    <h1 class="h3 fw-bold mb-0"><%=service.title%></h1>
+    <p class="text-muted small"><%=new Date(service.scheduled_at).toLocaleString()%></p>
+  </div>
+  <span class="badge bg-primary"><%=service.service_type%></span>
+</div>
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card mb-3"><div class="card-header">Service Info</div><div class="card-body small">
+      <%if(service.theme){%><div class="mb-2"><span class="text-muted">Theme:</span> <strong><%=service.theme%></strong></div><%}%>
+      <%if(service.scripture_reference){%><div class="mb-2"><span class="text-muted">Scripture:</span> <%=service.scripture_reference%></div><%}%>
+      <%if(service.preacher_name){%><div class="mb-2"><span class="text-muted">Preacher:</span> <%=service.preacher_name%></div><%}%>
+      <%if(service.officiant_name){%><div class="mb-2"><span class="text-muted">Officiant:</span> <%=service.officiant_name%></div><%}%>
+      <hr>
+      <div class="row text-center">
+        <div class="col-4"><div class="fw-bold fs-4 text-success"><%=service.members_present||0%></div><div class="text-muted small">Members</div></div>
+        <div class="col-4"><div class="fw-bold fs-4 text-info"><%=service.visitors_present||0%></div><div class="text-muted small">Visitors</div></div>
+        <div class="col-4"><div class="fw-bold fs-4"><%=(service.members_present||0)+(service.visitors_present||0)%></div><div class="text-muted small">Total</div></div>
+      </div>
+    </div></div>
+    <%if(sermon){%>
+    <div class="card mb-3"><div class="card-header">Sermon</div><div class="card-body small">
+      <div class="fw-bold"><%=sermon.title%></div>
+      <%if(sermon.scripture_reference){%><div class="text-muted"><%=sermon.scripture_reference%></div><%}%>
+      <%if(sermon.summary){%><p class="mt-2"><%=sermon.summary%></p><%}%>
+    </div></div>
+    <%}%>
+    <%if(givingTotal > 0){%>
+    <div class="card"><div class="card-header">Offering Collection</div><div class="card-body text-center">
+      <div class="fw-bold fs-3 text-success">KES <%=Number(givingTotal).toLocaleString()%></div>
+      <div class="text-muted small"><%=giving.length%> records</div>
+    </div></div>
+    <%}%>
+  </div>
+  <div class="col-md-8">
+    <div class="card mb-3">
+      <div class="card-header d-flex justify-content-between">
+        <span>Attendance (<%=attendees.length%>)</span>
+        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#attendModal">+ Add Attendance</button>
+      </div>
+      <div class="card-body p-0">
+        <%if(attendees.length){%>
+        <table class="table table-sm mb-0"><thead><tr><th>Name</th><th>Type</th><th>Time</th></tr></thead>
+        <tbody>
+          <%attendees.forEach(a=>{%><tr>
+            <td class="small"><%=a.member_name||a.visitor_name||'Visitor'%></td>
+            <td><span class="badge <%=a.member_id?'bg-success':'bg-info'%>"><%=a.member_id?'Member':'Visitor'%></span></td>
+            <td class="small text-muted"><%=new Date(a.checked_in_at).toLocaleTimeString()%></td>
+          </tr><%})%>
+        </tbody></table>
+        <%}else{%><div class="p-4 text-center text-muted small">No attendance recorded.</div><%}%>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Attendance Modal -->
+<div class="modal fade" id="attendModal" tabindex="-1">
+  <div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header"><h5 class="modal-title">Record Attendance</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <form method="POST" action="/church/services/<%=service.id%>/attendance">
+      <div class="modal-body">
+        <div class="mb-3"><label class="form-label">Visitor Name (for walk-ins)</label><input name="visitor_name" class="form-control" placeholder="Leave blank for member"></div>
+        <div class="mb-3"><label class="form-label">Visitor Phone</label><input name="visitor_phone" class="form-control"></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-primary">Record</button><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+    </form>
+  </div></div>
+</div>

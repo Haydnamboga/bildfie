@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    :root { --pub-primary: #1a3a5c; --pub-gold: #c8a44a; --pub-green: #2d6a4f; }
+    body { font-family: 'Inter', sans-serif; }
+    .navbar { background: var(--pub-primary); }
+    .navbar-brand { font-family: 'Playfair Display', serif; color: #fff !important; font-size: 1.1rem; }
+    .nav-link { color: rgba(255,255,255,.8) !important; }
+    .nav-link:hover, .nav-link.active { color: var(--pub-gold) !important; }
+    .hero { background: linear-gradient(135deg, var(--pub-primary) 0%, #0f2940 50%, var(--pub-green) 100%); min-height: 70vh; display: flex; align-items: center; position: relative; overflow: hidden; }
+    .hero::before { content: '✝'; position: absolute; right: -2rem; bottom: -2rem; font-size: 20rem; color: rgba(255,255,255,.03); }
+    .section-title { font-family: 'Playfair Display', serif; color: var(--pub-primary); }
+    .card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.06); transition: transform .2s; }
+    .card:hover { transform: translateY(-3px); }
+    .church-card { border-left: 4px solid var(--pub-gold); }
+    .btn-primary { background: var(--pub-primary); border-color: var(--pub-primary); }
+    .btn-gold { background: var(--pub-gold); border-color: var(--pub-gold); color: #fff; }
+    .footer { background: var(--pub-primary); color: rgba(255,255,255,.7); }
+    .footer a { color: var(--pub-gold); }
+    .badge-event { background: linear-gradient(90deg, var(--pub-primary), var(--pub-green)); color: #fff; }
+    .scripture-banner { background: var(--pub-gold); color: #fff; padding: 1rem; text-align: center; font-style: italic; }
+    .stat-hero { background: rgba(255,255,255,.1); backdrop-filter: blur(10px); border-radius: 12px; padding: 1.5rem; text-align: center; border: 1px solid rgba(255,255,255,.2); }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+        <span style="font-size:1.5rem;color:var(--pub-gold)">✝</span>
+        Nyamira West Field
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="/churches">Churches</a></li>
+          <li class="nav-item"><a class="nav-link" href="/events">Events</a></li>
+          <li class="nav-item"><a class="nav-link" href="/sermons">Sermons</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
+          <% if (locals.session?.userId) { %>
+            <li class="nav-item"><a class="nav-link" href="/portal/dashboard"><i class="bi bi-person-circle"></i> Portal</a></li>
+          <% } else { %>
+            <li class="nav-item ms-2"><a class="btn btn-sm btn-gold" href="/auth/login">Sign In</a></li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <%- body %>
+
+  <!-- Footer -->
+  <footer class="footer py-5 mt-5">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <h6 class="text-white fw-bold">✝ Nyamira West Field</h6>
+          <p class="small">Seventh-day Adventist Church<br>Nyamira West Field, Kenya</p>
+          <p class="small"><i class="bi bi-telephone"></i> +254 700 000 000</p>
+          <p class="small"><i class="bi bi-envelope"></i> nyamirawestfield@sda.ke</p>
+        </div>
+        <div class="col-md-4">
+          <h6 class="text-white fw-bold">Quick Links</h6>
+          <ul class="list-unstyled small">
+            <li><a href="/churches">Our Churches</a></li>
+            <li><a href="/events">Upcoming Events</a></li>
+            <li><a href="/sermons">Sermons</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/auth/login">Staff Login</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <h6 class="text-white fw-bold">Scripture</h6>
+          <p class="small fst-italic">"Go therefore and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit."</p>
+          <p class="small" style="color:var(--pub-gold)">— Matthew 28:19</p>
+        </div>
+      </div>
+      <hr style="border-color:rgba(255,255,255,.1)">
+      <p class="text-center small mb-0">&copy; <%= new Date().getFullYear() %> Nyamira West Field SDA. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

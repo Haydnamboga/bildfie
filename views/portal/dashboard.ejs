@@ -1,0 +1,112 @@
+<section class="py-4">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="section-title mb-1">Welcome, <%= locals.session?.userName %></h2>
+        <%if(church){%><p class="text-muted mb-0"><i class="bi bi-building"></i> <%=church.name%></p><%}%>
+      </div>
+      <a href="/portal/profile" class="btn btn-outline-primary btn-sm"><i class="bi bi-person"></i> My Profile</a>
+    </div>
+
+    <div class="row g-3">
+      <!-- Events -->
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-header fw-bold"><i class="bi bi-calendar-event me-2 text-primary"></i>Upcoming Events</div>
+          <div class="card-body p-0">
+            <%if(events.length){%>
+            <ul class="list-group list-group-flush">
+              <%events.forEach(e=>{%>
+              <li class="list-group-item px-3 py-2">
+                <div class="fw-semibold small"><%=e.title%></div>
+                <div class="d-flex gap-2 small text-muted">
+                  <span><i class="bi bi-calendar3"></i> <%=new Date(e.start_date).toLocaleDateString()%></span>
+                  <%if(e.venue){%><span><i class="bi bi-geo-alt"></i> <%=e.venue%></span><%}%>
+                  <%if(e.field_wide){%><span class="badge bg-warning text-dark">Field-wide</span><%}%>
+                </div>
+              </li>
+              <%})%>
+            </ul>
+            <%}else{%><div class="p-3 text-center text-muted small">No upcoming events.</div><%}%>
+          </div>
+        </div>
+      </div>
+
+      <!-- Announcements -->
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-header fw-bold"><i class="bi bi-megaphone me-2 text-warning"></i>Announcements</div>
+          <div class="card-body p-0">
+            <%if(announcements.length){%>
+            <ul class="list-group list-group-flush">
+              <%announcements.forEach(a=>{%>
+              <li class="list-group-item px-3 py-2">
+                <span class="badge <%=a.priority==='urgent'?'bg-danger':a.priority==='important'?'bg-warning text-dark':'bg-secondary'%> me-1"><%=a.priority%></span>
+                <span class="fw-semibold small"><%=a.title%></span>
+                <p class="small text-muted mb-0 mt-1"><%=a.content.substring(0,100)%>...</p>
+              </li>
+              <%})%>
+            </ul>
+            <%}else{%><div class="p-3 text-center text-muted small">No announcements.</div><%}%>
+          </div>
+        </div>
+      </div>
+
+      <!-- My Tasks -->
+      <%if(myTasks.length){%>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header fw-bold"><i class="bi bi-check2-square me-2 text-success"></i>My Tasks</div>
+          <div class="card-body p-0">
+            <ul class="list-group list-group-flush">
+              <%myTasks.forEach(t=>{%>
+              <li class="list-group-item px-3 py-2">
+                <div class="d-flex justify-content-between">
+                  <span class="fw-semibold small"><%=t.title%></span>
+                  <span class="badge badge-status-<%=t.status%>"><%=t.status.replace('_',' ')%></span>
+                </div>
+                <%if(t.due_date){%><div class="text-muted small"><i class="bi bi-calendar3"></i> Due: <%=new Date(t.due_date).toLocaleDateString()%></div><%}%>
+              </li>
+              <%})%>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <%}%>
+
+      <!-- Prayer Requests -->
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between"><span class="fw-bold"><i class="bi bi-heart me-2 text-danger"></i>Prayer Requests</span>
+            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#prayerModal">+ Add</button>
+          </div>
+          <div class="card-body p-0">
+            <%if(prayerRequests.length){%>
+            <ul class="list-group list-group-flush">
+              <%prayerRequests.forEach(p=>{%>
+              <li class="list-group-item px-3 py-2">
+                <div class="small"><%=p.anonymous?'Anonymous':p.name||'Anonymous'%></div>
+                <p class="small text-muted mb-0"><%=p.request.substring(0,120)%>...</p>
+              </li>
+              <%})%>
+            </ul>
+            <%}else{%><div class="p-3 text-center text-muted small">No prayer requests.</div><%}%>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="modal fade" id="prayerModal" tabindex="-1">
+  <div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header"><h5 class="modal-title">Submit Prayer Request</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <form method="POST" action="/portal/prayer">
+      <div class="modal-body">
+        <div class="mb-3"><label class="form-label">Prayer Request *</label><textarea name="request" class="form-control" rows="4" required placeholder="Share your prayer request..."></textarea></div>
+        <div class="form-check"><input type="checkbox" name="anonymous" class="form-check-input" id="anon"><label for="anon" class="form-check-label">Submit anonymously</label></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-primary">Submit</button><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+    </form>
+  </div></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

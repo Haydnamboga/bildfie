@@ -1,0 +1,77 @@
+<div class="page-header d-flex justify-content-between align-items-start">
+  <div>
+    <nav><ol class="breadcrumb small mb-1"><li class="breadcrumb-item"><a href="/field/projects">Projects</a></li><li class="breadcrumb-item active"><%= project.title %></li></ol></nav>
+    <h1 class="h3 fw-bold mb-0"><%= project.title %></h1>
+    <% if (project.church_name) { %><p class="text-muted small"><i class="bi bi-building"></i> <%= project.church_name %></p><% } else { %><p class="text-warning small"><i class="bi bi-star"></i> Field Project</p><% } %>
+  </div>
+  <div class="d-flex gap-2">
+    <span class="badge badge-status-<%= project.status %> fs-6"><%= project.status.replace('_',' ') %></span>
+    <span class="badge badge-priority-<%= project.priority %> fs-6"><%= project.priority %></span>
+    <a href="/field/projects/<%= project.id %>/edit" class="btn btn-outline-secondary btn-sm"><i class="bi bi-pencil"></i></a>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card mb-3">
+      <div class="card-header">Project Info</div>
+      <div class="card-body small">
+        <% if (project.description) { %><p class="text-muted"><%= project.description %></p><% } %>
+        <div class="mb-2"><span class="text-muted">Category:</span> <strong><%= project.category||'General' %></strong></div>
+        <div class="mb-2"><span class="text-muted">Manager:</span> <strong><%= project.manager_name||'Unassigned' %></strong></div>
+        <div class="mb-2"><span class="text-muted">Start:</span> <%= project.start_date ? new Date(project.start_date).toLocaleDateString() : '—' %></div>
+        <div class="mb-2"><span class="text-muted">End:</span> <%= project.end_date ? new Date(project.end_date).toLocaleDateString() : '—' %></div>
+        <hr>
+        <div class="mb-2"><span class="text-muted">Budget:</span> <strong>KES <%= Number(project.budget||0).toLocaleString() %></strong></div>
+        <div class="mb-2"><span class="text-muted">Spent:</span> <strong>KES <%= Number(project.spent||0).toLocaleString() %></strong></div>
+        <div class="mb-2"><span class="text-muted">Balance:</span> <strong class="<%= (project.budget-project.spent)>=0?'text-success':'text-danger' %>">KES <%= Number((project.budget||0)-(project.spent||0)).toLocaleString() %></strong></div>
+        <div class="mt-2"><span class="text-muted">Progress:</span> <strong><%= project.completion_percent||0 %>%</strong></div>
+        <div class="progress mt-1" style="height:8px"><div class="progress-bar bg-primary" style="width:<%= project.completion_percent||0 %>%"></div></div>
+      </div>
+    </div>
+    <!-- Add Task -->
+    <div class="card">
+      <div class="card-header">Add Task</div>
+      <div class="card-body">
+        <form method="POST" action="/field/projects/<%= project.id %>/tasks">
+          <div class="mb-2"><input name="title" class="form-control form-control-sm" placeholder="Task title *" required></div>
+          <div class="mb-2"><textarea name="description" class="form-control form-control-sm" rows="2" placeholder="Description"></textarea></div>
+          <div class="mb-2"><select name="assigned_to" class="form-select form-select-sm"><option value="">Unassigned</option><%users.forEach(u=>{%><option value="<%= u.id %>"><%= u.name %></option><%})%></select></div>
+          <div class="mb-2"><input name="due_date" type="date" class="form-control form-control-sm"></div>
+          <div class="mb-2"><select name="priority" class="form-select form-select-sm"><%['low','medium','high'].forEach(p=>{%><option value="<%= p %>"><%= p %></option><%})%></select></div>
+          <button class="btn btn-primary btn-sm w-100">Add Task</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">Tasks (<%= tasks.length %>)</div>
+      <div class="card-body p-0">
+        <% if (tasks.length) { %>
+        <ul class="list-group list-group-flush">
+          <% tasks.forEach(t => { %>
+          <li class="list-group-item px-3 py-2">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div class="fw-semibold small"><%= t.title %></div>
+                <% if (t.description) { %><div class="text-muted small"><%= t.description %></div><% } %>
+                <div class="d-flex gap-2 mt-1">
+                  <% if (t.assignee_name) { %><span class="small text-muted"><i class="bi bi-person"></i> <%= t.assignee_name %></span><% } %>
+                  <% if (t.due_date) { %><span class="small text-muted"><i class="bi bi-calendar3"></i> <%= new Date(t.due_date).toLocaleDateString() %></span><% } %>
+                </div>
+              </div>
+              <div class="d-flex gap-1">
+                <span class="badge badge-priority-<%= t.priority %>"><%= t.priority %></span>
+                <span class="badge badge-status-<%= t.status %>"><%= t.status.replace('_',' ') %></span>
+              </div>
+            </div>
+          </li>
+          <% }) %>
+        </ul>
+        <% } else { %><div class="p-4 text-center text-muted">No tasks yet. Add a task to get started.</div><% } %>
+      </div>
+    </div>
+  </div>
+</div>

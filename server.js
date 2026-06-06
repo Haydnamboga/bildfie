@@ -106,9 +106,35 @@ app.use((req, res, next) => {
   next();
 });
 
+/* ── Church system middleware ─────────────────────────────────────────── */
+const { attachUser } = require('./middleware/churchAuth');
+const layoutHelper = require('./middleware/layoutHelper');
+app.use(attachUser);
+app.use(layoutHelper);
+
+/* ── Church System Routes (registered BEFORE static — takes priority) ─── */
+app.use('/auth', require('./routes/churchAuth'));
+app.use('/field/dashboard',       require('./routes/field/dashboard'));
+app.use('/field/churches',        require('./routes/field/churches'));
+app.use('/field/members',         require('./routes/field/members'));
+app.use('/field/projects',        require('./routes/field/projects'));
+app.use('/field/events',          require('./routes/field/events'));
+app.use('/field/reports',         require('./routes/field/reports'));
+app.use('/field/communications',  require('./routes/field/communications'));
+app.use('/church/dashboard',      require('./routes/church/dashboard'));
+app.use('/church/members',        require('./routes/church/members'));
+app.use('/church/services',       require('./routes/church/services'));
+app.use('/church/giving',         require('./routes/church/giving'));
+app.use('/church/departments',    require('./routes/church/departments'));
+app.use('/church/tasks',          require('./routes/church/tasks'));
+app.use('/church/reports',        require('./routes/church/reports'));
+app.use('/portal',                require('./routes/portal'));
+// Public website routes — includes '/' so must come before static
+app.use('/',                      require('./routes/home'));
+
 /* ── Static assets (CSS, JS, images) ────────────────────────────────── */
 app.use(express.static(path.join(__dirname, 'public'), {
-  maxAge: PROD ? '7d' : 0,          // cache static assets for 7 days in prod
+  maxAge: PROD ? '7d' : 0,
 }));
 
 /* ── Uploaded files (avatars, documents) ─────────────────────────────── */
@@ -158,29 +184,8 @@ app.get('/api/setup-admin', async (req, res) => {
   res.json({ message: `✅ ${email} is now an admin. This endpoint is now disabled.` });
 });
 
-/* ── Public pages ────────────────────────────────────────────────────── */
-app.get('/',              (req, res) => res.render('pages/index'));
-app.get('/professionals', (req, res) => res.render('pages/professionals'));
-app.get('/materials',     (req, res) => res.render('pages/materials'));
-app.get('/equipment',     (req, res) => res.render('pages/equipment'));
-app.get('/transport',     (req, res) => res.render('pages/transport'));
-app.get('/facilities',    (req, res) => res.render('pages/facilities'));
-app.get('/projects',      (req, res) => res.render('pages/projects'));
-app.get('/login',           (req, res) => res.render('pages/login'));
-app.get('/register',        (req, res) => res.render('pages/register'));
-app.get('/reset-password',  (req, res) => res.render('pages/reset-password'));
-app.get('/account',         (req, res) => res.render('pages/account'));
-app.get('/profile',       (req, res) => res.render('pages/profile'));
-
-/* ── Dashboard ───────────────────────────────────────────────────────── */
-app.get('/dashboard',             (req, res) => res.render('pages/dashboard/index'));
-app.get('/dashboard/messages',    (req, res) => res.render('pages/dashboard/messages'));
-app.get('/dashboard/invitations', (req, res) => res.render('pages/dashboard/invitations'));
-app.get('/dashboard/invoices',    (req, res) => res.render('pages/dashboard/invoices'));
-
-/* ── Admin ───────────────────────────────────────────────────────────── */
-app.get('/admin',  (req, res) => res.render('pages/admin/index'));
-app.get('/admin/*', (req, res) => res.render('pages/admin/index'));  // SPA-style sub-routes
+/* ── Legacy Public pages ─────────────────────────────────────────────── */
+app.get('/legacy',            (req, res) => res.render('pages/index'));
 
 /* ── Global error handler ────────────────────────────────────────────── */
 // eslint-disable-next-line no-unused-vars
@@ -195,13 +200,13 @@ app.use((err, req, res, next) => {
   if (req.path.startsWith('/api'))
     return res.status(status).json({ error: message });
 
-  res.status(status).render('pages/404');
+  res.status(status).render('error', { title: 'Error', message, user: req.session });
 });
 
 /* ── 404 ─────────────────────────────────────────────────────────────── */
 app.use((req, res) => {
   if (req.path.startsWith('/api')) return res.status(404).json({ error: 'Not found' });
-  res.status(404).render('pages/404');
+  res.status(404).render('error', { title: 'Page Not Found', message: 'The page you requested does not exist.', user: req.session });
 });
 
 /* ── Start ───────────────────────────────────────────────────────────── */

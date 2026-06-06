@@ -1,0 +1,124 @@
+<div class="page-header d-flex justify-content-between align-items-start">
+  <div>
+    <h1 class="h3 fw-bold mb-1"><%= church.name %></h1>
+    <p class="text-muted mb-0"><% if (church.pastor_name) { %>Pastor <%= church.pastor_name %> · <% } %><%= church.sub_county||church.county %></p>
+  </div>
+  <div class="d-flex gap-2">
+    <% if (stats.unreadMessages > 0) { %><a href="/church/messages" class="btn btn-danger btn-sm"><i class="bi bi-envelope"></i> <%= stats.unreadMessages %> New</a><% } %>
+    <a href="/church/members/new" class="btn btn-primary btn-sm"><i class="bi bi-plus"></i> Add Member</a>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-6 col-md-3"><div class="stat-card text-center"><div class="stat-icon mx-auto mb-2" style="background:#d1fae5"><i class="bi bi-people text-success"></i></div><div class="fw-bold fs-3"><%= stats.members %></div><div class="small text-muted">Active Members</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card text-center"><div class="stat-icon mx-auto mb-2" style="background:#fef3c7"><i class="bi bi-check2-square text-warning"></i></div><div class="fw-bold fs-3"><%= stats.activeTasks %></div><div class="small text-muted">Open Tasks</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card text-center"><div class="stat-icon mx-auto mb-2" style="background:#d1fae5"><i class="bi bi-coin text-success"></i></div><div class="fw-bold fs-3 small">KES <%= Number(stats.givingThisMonth||0).toLocaleString() %></div><div class="small text-muted">This Month</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card text-center"><div class="stat-icon mx-auto mb-2" style="background:#dbeafe"><i class="bi bi-diagram-3 text-primary"></i></div><div class="fw-bold fs-3"><%= departments.length %></div><div class="small text-muted">Departments</div></div></div>
+</div>
+
+<div class="row g-3">
+  <!-- Upcoming Events -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between"><span><i class="bi bi-calendar-event me-2"></i>Upcoming Events</span><a href="/church/events" class="btn btn-sm btn-link p-0">All</a></div>
+      <div class="card-body p-0">
+        <% if (upcomingEvents.length) { %>
+        <ul class="list-group list-group-flush">
+          <% upcomingEvents.forEach(e => { %>
+          <li class="list-group-item px-3 py-2">
+            <div class="fw-semibold small"><%= e.title %></div>
+            <div class="text-muted small"><i class="bi bi-calendar3"></i> <%= new Date(e.start_date).toLocaleDateString() %>
+              <% if (e.field_wide) { %><span class="badge bg-warning text-dark ms-1">Field-wide</span><% } %>
+            </div>
+          </li>
+          <% }) %>
+        </ul>
+        <% } else { %><div class="p-3 text-center text-muted small">No upcoming events.</div><% } %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Announcements -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header"><span><i class="bi bi-megaphone me-2"></i>Announcements</span></div>
+      <div class="card-body p-0">
+        <% if (announcements.length) { %>
+        <ul class="list-group list-group-flush">
+          <% announcements.forEach(a => { %>
+          <li class="list-group-item px-3 py-2">
+            <div class="d-flex align-items-start gap-2">
+              <span class="badge <%= a.priority==='urgent'?'bg-danger':a.priority==='important'?'bg-warning text-dark':'bg-secondary' %>"><%= a.priority %></span>
+              <div>
+                <div class="fw-semibold small"><%= a.title %></div>
+                <div class="text-muted small"><%= a.content.substring(0,80)%>...</div>
+              </div>
+              <% if (a.field_wide) { %><span class="badge bg-primary ms-auto">Field</span><% } %>
+            </div>
+          </li>
+          <% }) %>
+        </ul>
+        <% } else { %><div class="p-3 text-center text-muted small">No announcements.</div><% } %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Services -->
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between"><span><i class="bi bi-book me-2"></i>Recent Services</span><a href="/church/services/new" class="btn btn-sm btn-primary">+ Record</a></div>
+      <div class="card-body p-0">
+        <% if (recentServices.length) { %>
+        <table class="table table-sm mb-0">
+          <thead><tr><th>Date</th><th>Service</th><th>Attendance</th></tr></thead>
+          <tbody>
+            <% recentServices.forEach(s => { %>
+            <tr><td class="small"><%= new Date(s.scheduled_at).toLocaleDateString() %></td><td class="small"><a href="/church/services/<%= s.id %>" class="text-decoration-none"><%= s.title %></a></td><td class="small"><%= (s.members_present||0)+(s.visitors_present||0) %></td></tr>
+            <% }) %>
+          </tbody>
+        </table>
+        <% } else { %><div class="p-3 text-center text-muted small">No services recorded yet.</div><% } %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tasks -->
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between"><span><i class="bi bi-check2-square me-2"></i>Open Tasks</span><a href="/church/tasks" class="btn btn-sm btn-link p-0">Manage</a></div>
+      <div class="card-body p-0">
+        <% if (tasks.length) { %>
+        <ul class="list-group list-group-flush">
+          <% tasks.forEach(t => { %>
+          <li class="list-group-item px-3 py-2">
+            <div class="d-flex justify-content-between">
+              <div>
+                <div class="small fw-semibold"><%= t.title %></div>
+                <% if (t.assignee_name) { %><div class="text-muted small"><i class="bi bi-person"></i> <%= t.assignee_name %></div><% } %>
+              </div>
+              <div class="d-flex gap-1"><span class="badge badge-priority-<%= t.priority %>"><%= t.priority %></span><span class="badge badge-status-<%= t.status %>"><%= t.status.replace('_',' ') %></span></div>
+            </div>
+          </li>
+          <% }) %>
+        </ul>
+        <% } else { %><div class="p-3 text-center text-muted small">No open tasks. Great work!</div><% } %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Departments -->
+  <% if (departments.length) { %>
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between"><span><i class="bi bi-diagram-3 me-2"></i>Departments</span><a href="/church/departments" class="btn btn-sm btn-link p-0">Manage</a></div>
+      <div class="card-body">
+        <div class="row g-2">
+          <% departments.forEach(d => { %>
+          <div class="col-md-3 col-6"><div class="border rounded p-2 text-center small"><i class="bi bi-people text-primary d-block fs-5 mb-1"></i><%= d.name %></div></div>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+</div>

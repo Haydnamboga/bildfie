@@ -1,0 +1,121 @@
+<div class="page-header d-flex justify-content-between align-items-start">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb small mb-1"><li class="breadcrumb-item"><a href="/field/churches">Churches</a></li><li class="breadcrumb-item active"><%= church.name %></li></ol></nav>
+    <h1 class="h3 fw-bold mb-0"><%= church.name %></h1>
+    <p class="text-muted small"><%= church.sub_county ? church.sub_county+',' : '' %> <%= church.county %></p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="/field/churches/<%= church.id %>/edit" class="btn btn-outline-primary btn-sm"><i class="bi bi-pencil"></i> Edit</a>
+    <a href="/church/dashboard" class="btn btn-primary btn-sm"><i class="bi bi-speedometer2"></i> Church Portal</a>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-3 col-6"><div class="stat-card text-center"><div class="stat-value"><%= totalMembers %></div><div class="stat-label">Active Members</div></div></div>
+  <div class="col-md-3 col-6"><div class="stat-card text-center"><div class="stat-value"><%= departments.length %></div><div class="stat-label">Departments</div></div></div>
+  <div class="col-md-3 col-6"><div class="stat-card text-center"><div class="stat-value"><%= projects.length %></div><div class="stat-label">Active Projects</div></div></div>
+  <div class="col-md-3 col-6"><div class="stat-card text-center"><div class="stat-value">KES <%= Number(giving90||0).toLocaleString() %></div><div class="stat-label">Giving (90 days)</div></div></div>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">Church Information</div>
+      <div class="card-body small">
+        <% if (church.pastor_name) { %><div class="mb-2"><span class="text-muted">Pastor:</span> <strong><%= church.pastor_name %></strong></div><% } %>
+        <% if (church.pastor_phone) { %><div class="mb-2"><span class="text-muted">Phone:</span> <%= church.pastor_phone %></div><% } %>
+        <% if (church.pastor_email) { %><div class="mb-2"><span class="text-muted">Email:</span> <%= church.pastor_email %></div><% } %>
+        <% if (church.established_date) { %><div class="mb-2"><span class="text-muted">Established:</span> <%= new Date(church.established_date).getFullYear() %></div><% } %>
+        <% if (church.church_type) { %><div class="mb-2"><span class="text-muted">Type:</span> <%= church.church_type %></div><% } %>
+        <% if (church.capacity) { %><div class="mb-2"><span class="text-muted">Capacity:</span> <%= church.capacity %> seats</div><% } %>
+        <% if (church.building_status) { %><div class="mb-2"><span class="text-muted">Building:</span> <%= church.building_status.replace('_',' ') %></div><% } %>
+        <div class="mb-2"><span class="text-muted">Land:</span> <span class="badge <%= church.has_land?'badge-status-active':'badge-status-inactive' %>"><%= church.has_land?'Yes':'No' %></span></div>
+        <div><span class="text-muted">Status:</span> <span class="badge badge-status-<%= church.status %>"><%= church.status %></span></div>
+      </div>
+    </div>
+
+    <!-- Departments -->
+    <div class="card mt-3">
+      <div class="card-header">Departments (<%= departments.length %>)</div>
+      <div class="card-body p-0">
+        <% if (departments.length) { %>
+        <ul class="list-group list-group-flush">
+          <% departments.forEach(d => { %><li class="list-group-item small px-3 py-2"><i class="bi bi-diagram-3 text-primary me-2"></i><%= d.name %></li><% }) %>
+        </ul>
+        <% } else { %><div class="p-3 small text-muted">No departments yet.</div><% } %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <!-- Recent Members -->
+    <div class="card mb-3">
+      <div class="card-header d-flex justify-content-between">
+        <span>Members (showing <%= members.length %>)</span>
+        <a href="/field/members?church_id=<%= church.id %>" class="btn btn-sm btn-link p-0">View All</a>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-sm mb-0">
+            <thead><tr><th>Name</th><th>Phone</th><th>Status</th></tr></thead>
+            <tbody>
+              <% members.forEach(m => { %>
+              <tr><td class="small fw-semibold"><%= m.first_name %> <%= m.last_name %></td><td class="small text-muted"><%= m.phone||'—' %></td><td><span class="badge badge-status-<%= m.membership_status %>"><%= m.membership_status %></span></td></tr>
+              <% }) %>
+              <% if (!members.length) { %><tr><td colspan="3" class="text-center text-muted small py-3">No members found.</td></tr><% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Projects -->
+    <% if (projects.length) { %>
+    <div class="card mb-3">
+      <div class="card-header">Active Projects</div>
+      <div class="card-body p-0">
+        <ul class="list-group list-group-flush">
+          <% projects.forEach(p => { %>
+          <li class="list-group-item px-3 py-2">
+            <div class="d-flex justify-content-between">
+              <div>
+                <a href="/field/projects/<%= p.id %>" class="text-decoration-none fw-semibold small"><%= p.title %></a>
+                <div class="small text-muted"><%= p.category||'General' %> • Budget: KES <%= Number(p.budget||0).toLocaleString() %></div>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge badge-status-<%= p.status %>"><%= p.status.replace('_',' ') %></span>
+                <span class="badge badge-priority-<%= p.priority %>"><%= p.priority %></span>
+              </div>
+            </div>
+            <div class="progress mt-1" style="height:4px"><div class="progress-bar bg-primary" style="width:<%= p.completion_percent||0 %>%"></div></div>
+          </li>
+          <% }) %>
+        </ul>
+      </div>
+    </div>
+    <% } %>
+
+    <!-- Recent Services -->
+    <div class="card">
+      <div class="card-header">Recent Services</div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-sm mb-0">
+            <thead><tr><th>Date</th><th>Title</th><th>Type</th><th>Attendance</th></tr></thead>
+            <tbody>
+              <% recentServices.forEach(s => { %>
+              <tr>
+                <td class="small"><%= new Date(s.scheduled_at).toLocaleDateString() %></td>
+                <td class="small"><%= s.title %></td>
+                <td><span class="badge bg-light text-dark"><%= s.service_type %></span></td>
+                <td class="small"><%= (s.members_present||0)+(s.visitors_present||0) %></td>
+              </tr>
+              <% }) %>
+              <% if (!recentServices.length) { %><tr><td colspan="4" class="text-center text-muted small py-3">No services recorded.</td></tr><% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

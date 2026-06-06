@@ -1,0 +1,61 @@
+<div class="page-header d-flex justify-content-between align-items-center">
+  <div><h1 class="h3 fw-bold mb-1">Tasks</h1><p class="text-muted mb-0">Church task management</p></div>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newTaskModal"><i class="bi bi-plus"></i> New Task</button>
+</div>
+<div class="card mb-3"><div class="card-body py-2">
+  <form class="row g-2">
+    <div class="col-md-4"><select name="status" class="form-select form-select-sm"><option value="">All Status</option><%['pending','in_progress','completed','cancelled'].forEach(s=>{%><option value="<%=s%>" <%=filters.status===s?'selected':''%>><%=s.replace('_',' ')%></option><%})%></select></div>
+    <div class="col-md-4"><select name="assigned_to" class="form-select form-select-sm"><option value="">All Assignees</option><%users.forEach(u=>{%><option value="<%=u.id%>" <%=filters.assigned_to==u.id?'selected':''%>><%=u.name%></option><%})%></select></div>
+    <div class="col-md-2"><button class="btn btn-sm btn-primary w-100">Filter</button></div>
+  </form>
+</div></div>
+<% const groups = {pending: tasks.filter(t=>t.status==='pending'), in_progress: tasks.filter(t=>t.status==='in_progress'), completed: tasks.filter(t=>t.status==='completed')}; %>
+<div class="row g-3">
+  <%[['pending','warning'],['in_progress','primary'],['completed','success']].forEach(([status, color])=>{%>
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-header bg-<%=color%> bg-opacity-10 text-<%=color%>"><span class="fw-bold"><%=status.replace('_',' ').toUpperCase()%></span> <span class="badge bg-<%=color%>"><%=groups[status]?.length||0%></span></div>
+      <div class="card-body p-0">
+        <%const grpTasks = tasks.filter(t=>t.status===status);%>
+        <%if(grpTasks.length){%>
+        <ul class="list-group list-group-flush">
+          <%grpTasks.forEach(t=>{%>
+          <li class="list-group-item px-3 py-2">
+            <div class="fw-semibold small"><%=t.title%></div>
+            <%if(t.assignee_name){%><div class="text-muted small"><i class="bi bi-person"></i> <%=t.assignee_name%></div><%}%>
+            <%if(t.due_date){%><div class="text-muted small"><i class="bi bi-calendar3"></i> <%=new Date(t.due_date).toLocaleDateString()%></div><%}%>
+            <div class="d-flex gap-1 mt-1">
+              <span class="badge badge-priority-<%=t.priority%>"><%=t.priority%></span>
+              <%if(t.project_title){%><span class="badge bg-light text-dark"><%=t.project_title%></span><%}%>
+            </div>
+            <%if(status!=='completed'){%>
+            <form method="POST" action="/church/tasks/<%=t.id%>/status" class="mt-2">
+              <input type="hidden" name="status" value="<%=status==='pending'?'in_progress':'completed'%>">
+              <button class="btn btn-sm btn-outline-<%=color%> w-100"><%=status==='pending'?'Start':'Complete'%></button>
+            </form>
+            <%}%>
+          </li>
+          <%})%>
+        </ul>
+        <%}else{%><div class="p-3 text-center text-muted small">No <%=status.replace('_',' ')%> tasks.</div><%}%>
+      </div>
+    </div>
+  </div>
+  <%})%>
+</div>
+
+<div class="modal fade" id="newTaskModal" tabindex="-1">
+  <div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header"><h5 class="modal-title">New Task</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <form method="POST" action="/church/tasks">
+      <div class="modal-body row g-3">
+        <div class="col-12"><label class="form-label">Title *</label><input name="title" class="form-control" required></div>
+        <div class="col-12"><label class="form-label">Description</label><textarea name="description" class="form-control" rows="2"></textarea></div>
+        <div class="col-md-6"><label class="form-label">Assign To</label><select name="assigned_to" class="form-select"><option value="">Unassigned</option><%users.forEach(u=>{%><option value="<%=u.id%>"><%=u.name%></option><%})%></select></div>
+        <div class="col-md-6"><label class="form-label">Due Date</label><input name="due_date" type="date" class="form-control"></div>
+        <div class="col-md-6"><label class="form-label">Priority</label><select name="priority" class="form-select"><%['low','medium','high'].forEach(p=>{%><option value="<%=p%>"><%=p%></option><%})%></select></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-primary">Create Task</button><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button></div>
+    </form>
+  </div></div>
+</div>

@@ -1,0 +1,29 @@
+<section class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-7">
+        <h1 class="section-title mb-1">Contact Us</h1>
+        <p class="text-muted mb-4">Get in touch with the Nyamira West Field office</p>
+        <% if (locals.sent) { %>
+        <div class="alert alert-success"><i class="bi bi-check-circle"></i> Your message has been sent. We'll respond shortly.</div>
+        <% } %>
+        <% if (locals.error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+        <form method="POST" action="/contact" class="card p-4">
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label">Full Name *</label><input name="name" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Email</label><input name="email" type="email" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Phone</label><input name="phone" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Subject</label><input name="subject" class="form-control"></div>
+            <div class="col-12"><label class="form-label">Message *</label><textarea name="message" class="form-control" rows="5" required></textarea></div>
+            <div class="col-12"><button class="btn btn-primary w-100">Send Message</button></div>
+          </div>
+        </form>
+        <div class="mt-4 row g-3">
+          <div class="col-md-4 text-center"><div class="card p-3"><i class="bi bi-telephone text-primary fs-4 mb-2 d-block"></i><div class="fw-semibold">Phone</div><small class="text-muted">+254 700 000 000</small></div></div>
+          <div class="col-md-4 text-center"><div class="card p-3"><i class="bi bi-envelope text-primary fs-4 mb-2 d-block"></i><div class="fw-semibold">Email</div><small class="text-muted">nyamirawestfield@sda.ke</small></div></div>
+          <div class="col-md-4 text-center"><div class="card p-3"><i class="bi bi-geo-alt text-primary fs-4 mb-2 d-block"></i><div class="fw-semibold">Location</div><small class="text-muted">Nyamira County, Kenya</small></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

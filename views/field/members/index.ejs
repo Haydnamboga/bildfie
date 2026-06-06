@@ -1,0 +1,39 @@
+<div class="page-header d-flex justify-content-between align-items-center">
+  <div><h1 class="h3 fw-bold mb-1">Members Registry</h1><p class="text-muted mb-0">All members across the field</p></div>
+  <span class="badge bg-primary fs-6"><%= members.length %> shown</span>
+</div>
+<div class="card mb-3"><div class="card-body py-2">
+  <form class="row g-2">
+    <div class="col-md-3"><input name="search" class="form-control form-control-sm" placeholder="Search by name/phone/email..." value="<%= filters.search||'' %>"></div>
+    <div class="col-md-3"><select name="church_id" class="form-select form-select-sm"><option value="">All Churches</option><%churches.forEach(c=>{%><option value="<%= c.id %>" <%= filters.church_id==c.id?'selected':'' %>><%= c.name %></option><%})%></select></div>
+    <div class="col-md-2"><select name="gender" class="form-select form-select-sm"><option value="">Any Gender</option><option value="male" <%=filters.gender==='male'?'selected':''%>>Male</option><option value="female" <%=filters.gender==='female'?'selected':''%>>Female</option></select></div>
+    <div class="col-md-2"><select name="status" class="form-select form-select-sm"><option value="">Any Status</option><%['active','inactive','transferred','deceased'].forEach(s=>{%><option value="<%= s %>" <%=filters.status===s?'selected':''%>><%= s %></option><%})%></select></div>
+    <div class="col-md-2"><button class="btn btn-sm btn-primary w-100">Search</button></div>
+  </form>
+</div></div>
+<div class="card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead><tr><th>Name</th><th>Church</th><th>Phone</th><th>Gender</th><th>Status</th><th>Baptized</th><th></th></tr></thead>
+        <tbody>
+          <% members.forEach(m => { %>
+          <tr>
+            <td><div class="d-flex align-items-center gap-2">
+              <div class="avatar" style="background:var(--field-primary);font-size:.75rem"><%= m.first_name.charAt(0) %><%= m.last_name.charAt(0) %></div>
+              <span class="fw-semibold small"><%= m.first_name %> <%= m.last_name %></span>
+            </div></td>
+            <td class="small text-muted"><%= m.church_name %></td>
+            <td class="small"><%= m.phone||'—' %></td>
+            <td class="small"><%= m.gender||'—' %></td>
+            <td><span class="badge badge-status-<%= m.membership_status %>"><%= m.membership_status %></span></td>
+            <td class="small"><%= m.baptism_date?'✓ '+new Date(m.baptism_date).getFullYear():'—' %></td>
+            <td><a href="/field/members/<%= m.id %>" class="btn btn-sm btn-link p-0">View</a></td>
+          </tr>
+          <% }) %>
+          <% if (!members.length) { %><tr><td colspan="7" class="text-center py-4 text-muted">No members found.</td></tr><% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

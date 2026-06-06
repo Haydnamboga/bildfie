@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | <%= locals.currentChurch?.name || 'Church Admin' %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    :root { --church-primary: #2d6a4f; --church-accent: #52b788; --church-light: #f0faf5; }
+    body { font-family: 'Inter', sans-serif; background: var(--church-light); }
+    .sidebar { width: 250px; min-height: 100vh; background: var(--church-primary); position: fixed; left: 0; top: 0; z-index: 1000; overflow-y: auto; }
+    .sidebar-logo { padding: 1.25rem; border-bottom: 1px solid rgba(255,255,255,.1); }
+    .sidebar-logo .church-name { color: #fff; font-weight: 700; font-size: .9rem; line-height: 1.3; }
+    .sidebar-logo .church-sub { color: var(--church-accent); font-size: .7rem; }
+    .sidebar .nav-link { color: rgba(255,255,255,.75); padding: .55rem 1.25rem; font-size: .85rem; transition: all .2s; }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active { color: #fff; background: rgba(255,255,255,.1); border-left: 3px solid var(--church-accent); }
+    .sidebar .nav-section { color: rgba(255,255,255,.4); font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; padding: .9rem 1.25rem .25rem; }
+    .sidebar .nav-link i { width: 20px; }
+    .main-content { margin-left: 250px; min-height: 100vh; }
+    .topbar { background: #fff; border-bottom: 1px solid #e2e8f0; padding: .7rem 1.25rem; position: sticky; top: 0; z-index: 100; }
+    .stat-card { background: #fff; border-radius: 10px; padding: 1.1rem; border: 1px solid #d1fae5; }
+    .stat-card .stat-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+    .card { border: 1px solid #d1fae5; border-radius: 10px; }
+    .card-header { background: #fff; border-bottom: 1px solid #d1fae5; font-weight: 600; }
+    .btn-primary { background: var(--church-primary); border-color: var(--church-primary); }
+    .btn-primary:hover { background: #1b4332; border-color: #1b4332; }
+    .table th { font-size: .78rem; text-transform: uppercase; color: #64748b; }
+    .badge-active { background: #d1fae5; color: #065f46; }
+    .badge-inactive { background: #fee2e2; color: #991b1b; }
+    .page-header { background: #fff; border-bottom: 1px solid #d1fae5; padding: 1.25rem; margin-bottom: 1.25rem; }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="d-flex align-items-center gap-2">
+        <span style="font-size:1.75rem;color:var(--church-accent)">✝</span>
+        <div>
+          <div class="church-name"><%= locals.currentChurch?.name || 'Church Admin' %></div>
+          <div class="church-sub">Church Management Portal</div>
+        </div>
+      </div>
+    </div>
+    <ul class="nav flex-column mt-1">
+      <li class="nav-section">Overview</li>
+      <li class="nav-item"><a href="/church/dashboard" class="nav-link"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+
+      <li class="nav-section">Congregation</li>
+      <li class="nav-item"><a href="/church/members" class="nav-link"><i class="bi bi-people"></i> Members</a></li>
+      <li class="nav-item"><a href="/church/departments" class="nav-link"><i class="bi bi-diagram-3"></i> Departments</a></li>
+
+      <li class="nav-section">Worship</li>
+      <li class="nav-item"><a href="/church/services" class="nav-link"><i class="bi bi-book"></i> Services</a></li>
+      <li class="nav-item"><a href="/church/sermons" class="nav-link"><i class="bi bi-mic"></i> Sermons</a></li>
+
+      <li class="nav-section">Finance</li>
+      <li class="nav-item"><a href="/church/giving" class="nav-link"><i class="bi bi-coin"></i> Giving</a></li>
+      <li class="nav-item"><a href="/church/giving/summary" class="nav-link"><i class="bi bi-pie-chart"></i> Financial Summary</a></li>
+
+      <li class="nav-section">Operations</li>
+      <li class="nav-item"><a href="/church/tasks" class="nav-link"><i class="bi bi-check2-square"></i> Tasks</a></li>
+      <li class="nav-item"><a href="/church/events" class="nav-link"><i class="bi bi-calendar-event"></i> Events</a></li>
+      <li class="nav-item"><a href="/church/prayer" class="nav-link"><i class="bi bi-heart"></i> Prayer Requests</a></li>
+
+      <li class="nav-section">Reports</li>
+      <li class="nav-item"><a href="/church/reports" class="nav-link"><i class="bi bi-file-earmark-bar-graph"></i> Reports</a></li>
+      <li class="nav-item"><a href="/church/reports/submit" class="nav-link"><i class="bi bi-send"></i> Submit to Field</a></li>
+
+      <li class="nav-section">Communications</li>
+      <li class="nav-item">
+        <a href="/church/messages" class="nav-link">
+          <i class="bi bi-envelope"></i> Field Messages
+          <% if (locals.unreadMessages > 0) { %><span class="badge bg-danger ms-auto"><%= locals.unreadMessages %></span><% } %>
+        </a>
+      </li>
+
+      <li class="nav-section">Links</li>
+      <li class="nav-item"><a href="/" class="nav-link"><i class="bi bi-globe"></i> Public Site</a></li>
+      <li class="nav-item pb-3"><a href="/auth/logout" class="nav-link text-danger"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
+    </ul>
+  </nav>
+
+  <div class="main-content">
+    <div class="topbar d-flex align-items-center justify-content-between">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 small">
+          <li class="breadcrumb-item"><a href="/church/dashboard" class="text-decoration-none">Church</a></li>
+          <li class="breadcrumb-item active"><%= title %></li>
+        </ol>
+      </nav>
+      <div class="d-flex align-items-center gap-2">
+        <span class="badge bg-success">Church Admin</span>
+        <span class="text-muted small"><%= locals.currentUser?.name || session?.userName %></span>
+      </div>
+    </div>
+    <div class="p-3"><%- body %></div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

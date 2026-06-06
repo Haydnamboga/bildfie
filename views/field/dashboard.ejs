@@ -1,0 +1,158 @@
+<div class="page-header d-flex justify-content-between align-items-start">
+  <div>
+    <h1 class="h3 fw-bold mb-1">Field Dashboard</h1>
+    <p class="text-muted mb-0">Nyamira West Field — CRM Overview</p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="/field/churches/new" class="btn btn-primary btn-sm"><i class="bi bi-plus"></i> Add Church</a>
+    <a href="/field/reports/generate" class="btn btn-outline-secondary btn-sm"><i class="bi bi-bar-chart"></i> Reports</a>
+  </div>
+</div>
+
+<!-- KPI Stats -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3 col-6">
+    <div class="stat-card">
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <div class="stat-icon" style="background:#dbeafe"><i class="bi bi-building text-primary"></i></div>
+        <span class="badge bg-primary bg-opacity-10 text-primary">Active</span>
+      </div>
+      <div class="stat-value"><%= stats.churches %></div>
+      <div class="stat-label">Churches</div>
+    </div>
+  </div>
+  <div class="col-md-3 col-6">
+    <div class="stat-card">
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <div class="stat-icon" style="background:#d1fae5"><i class="bi bi-people text-success"></i></div>
+        <span class="badge bg-success bg-opacity-10 text-success">Active</span>
+      </div>
+      <div class="stat-value"><%= stats.members.toLocaleString() %></div>
+      <div class="stat-label">Members</div>
+    </div>
+  </div>
+  <div class="col-md-3 col-6">
+    <div class="stat-card">
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <div class="stat-icon" style="background:#fef3c7"><i class="bi bi-kanban text-warning"></i></div>
+      </div>
+      <div class="stat-value"><%= stats.projectsActive %></div>
+      <div class="stat-label">Active Projects</div>
+    </div>
+  </div>
+  <div class="col-md-3 col-6">
+    <div class="stat-card">
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <div class="stat-icon" style="background:#f0fdf4"><i class="bi bi-coin text-success"></i></div>
+      </div>
+      <div class="stat-value">KES <%= Number(stats.givingThisMonth||0).toLocaleString() %></div>
+      <div class="stat-label">This Month's Giving</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <!-- Churches list -->
+  <div class="col-lg-7">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-building me-2 text-primary"></i>Affiliated Churches</span>
+        <a href="/field/churches" class="btn btn-sm btn-outline-primary">View All</a>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead><tr><th>Church</th><th>Location</th><th>Pastor</th><th></th></tr></thead>
+            <tbody>
+              <% churchList.forEach(c => { %>
+              <tr>
+                <td><div class="d-flex align-items-center gap-2"><div class="avatar"><%= c.name.charAt(0) %></div><span class="fw-semibold small"><%= c.name %></span></div></td>
+                <td class="small text-muted"><%= c.sub_county || '—' %></td>
+                <td class="small"><%= c.pastor_name || '—' %></td>
+                <td><a href="/field/churches/<%= c.id %>" class="btn btn-sm btn-link p-0">View</a></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right column -->
+  <div class="col-lg-5">
+    <!-- Announcements -->
+    <div class="card mb-3">
+      <div class="card-header d-flex justify-content-between">
+        <span><i class="bi bi-megaphone me-2 text-warning"></i>Announcements</span>
+        <a href="/field/announcements" class="btn btn-sm btn-link p-0">Manage</a>
+      </div>
+      <div class="card-body p-0">
+        <% if (announcements.length) { %>
+        <ul class="list-group list-group-flush">
+          <% announcements.forEach(a => { %>
+          <li class="list-group-item px-3 py-2">
+            <span class="badge <%= a.priority==='urgent'?'bg-danger':a.priority==='important'?'bg-warning text-dark':'bg-secondary' %> me-1"><%= a.priority %></span>
+            <span class="small fw-semibold"><%= a.title %></span>
+          </li>
+          <% }) %>
+        </ul>
+        <% } else { %>
+        <div class="text-center py-3 text-muted small">No active announcements</div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Recent Tasks -->
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+        <span><i class="bi bi-check2-square me-2 text-info"></i>Recent Tasks</span>
+        <a href="/field/projects" class="btn btn-sm btn-link p-0">View Projects</a>
+      </div>
+      <div class="card-body p-0">
+        <% if (recentTasks.length) { %>
+        <ul class="list-group list-group-flush">
+          <% recentTasks.slice(0,5).forEach(t => { %>
+          <li class="list-group-item px-3 py-2">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div class="small fw-semibold"><%= t.title %></div>
+                <% if (t.assignee_name) { %><div class="text-muted" style="font-size:.72rem">→ <%= t.assignee_name %></div><% } %>
+              </div>
+              <span class="badge badge-status-<%= t.status %> ms-2"><%= t.status.replace('_',' ') %></span>
+            </div>
+          </li>
+          <% }) %>
+        </ul>
+        <% } else { %>
+        <div class="text-center py-3 text-muted small">No tasks</div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Upcoming Events -->
+<% if (events.length) { %>
+<div class="mt-3">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between">
+      <span><i class="bi bi-calendar-event me-2 text-primary"></i>Upcoming Events</span>
+      <a href="/field/events" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    <div class="card-body">
+      <div class="row g-2">
+        <% events.forEach(e => { %>
+        <div class="col-md-4 col-lg-3">
+          <div class="border rounded p-2">
+            <div class="small text-muted mb-1"><%= new Date(e.start_date).toLocaleDateString() %></div>
+            <div class="fw-semibold small"><%= e.title %></div>
+            <% if (e.venue) { %><div class="text-muted" style="font-size:.72rem"><i class="bi bi-geo-alt"></i> <%= e.venue %></div><% } %>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>
