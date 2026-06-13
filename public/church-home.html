@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seventh-day Adventist Church — Home</title>
+
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+  <!-- AOS (Animate on Scroll) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+
+  <!-- Google Fonts fallback (similar to Advent Sans) -->
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet" />
+
+  <!-- Advent Sans via adventist.design (official) -->
+  <style>
+    @font-face {
+      font-family: 'Advent Sans';
+      src: url('https://www.adventist.design/assets/fonts/AdventSans-Regular.woff2') format('woff2'),
+           url('https://www.adventist.design/assets/fonts/AdventSans-Regular.woff') format('woff');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Advent Sans';
+      src: url('https://www.adventist.design/assets/fonts/AdventSans-Bold.woff2') format('woff2'),
+           url('https://www.adventist.design/assets/fonts/AdventSans-Bold.woff') format('woff');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Advent Sans';
+      src: url('https://www.adventist.design/assets/fonts/AdventSans-Light.woff2') format('woff2'),
+           url('https://www.adventist.design/assets/fonts/AdventSans-Light.woff') format('woff');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* ============================================================
+       DESIGN TOKENS — SDA Official Brand
+    ============================================================ */
+    :root {
+      --sda-navy:      #003F87;
+      --sda-blue:      #0073CF;
+      --sda-sky:       #00AEEF;
+      --sda-gold:      #F4A623;
+      --sda-gold-dark: #C8841A;
+      --sda-light:     #F4F7FC;
+      --sda-white:     #FFFFFF;
+      --sda-text:      #1A1A2E;
+      --sda-muted:     #6B7280;
+      --sda-border:    #D6E4F7;
+      --font-primary: 'Advent Sans', 'Source Sans 3', 'Segoe UI', Arial, sans-serif;
+      --transition: .3s ease;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(0,63,135,.10);
+      --shadow-lg: 0 12px 40px rgba(0,63,135,.18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-primary);
+      color: var(--sda-text);
+      background: var(--sda-white);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    h1,h2,h3,h4,h5,h6 { font-family: var(--font-primary); font-weight: 700; }
+
+    a { color: var(--sda-blue); text-decoration: none; transition: color var(--transition); }
+    a:hover { color: var(--sda-navy); }
+
+    .btn-sda-primary {
+      background: var(--sda-blue);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: .65rem 2rem;
+      font-weight: 700;
+      letter-spacing: .5px;
+      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+    }
+    .btn-sda-primary:hover {
+      background: var(--sda-navy);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,63,135,.3);
+    }
+
+    .btn-sda-outline {
+      background: transparent;
+      color: #fff;
+      border: 2px solid #fff;
+      border-radius: 50px;
+      padding: .65rem 2rem;
+      font-weight: 700;
+      letter-spacing: .5px;
+      transition: all var(--transition);
+    }
+    .btn-sda-outline:hover {
+      background: #fff;
+      color: var(--sda-navy);
+      transform: translateY(-2px);
+    }
+
+    .btn-sda-gold {
+      background: var(--sda-gold);
+      color: var(--sda-navy);
+      border: none;
+      border-radius: 50px;
+      padding: .65rem 2rem;
+      font-weight: 700;
+      letter-spacing: .5px;
+      transition: all var(--transition);
+    }
+    .btn-sda-gold:hover {
+      background: var(--sda-gold-dark);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(244,166,35,.4);
+    }
+
+    .section-label {
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--sda-blue);
+      display: inline-block;
+      margin-bottom: .5rem;
+    }
+
+    .divider-gold {
+      width: 56px;
+      height: 4px;
+      background: var(--sda-gold);
+      border-radius: 2px;
+      margin: 1rem 0 1.5rem;
+    }
+    .divider-gold.centered { margin: 1rem auto 1.5rem; }
+
+    /* ============================================================
+       TOP BAR
+    ============================================================ */
+    #topbar {
+      background: var(--sda-navy);
+      color: rgba(255,255,255,.85);
+      font-size: .8rem;
+      padding: .45rem 0;
+    }
+    #topbar a { color: rgba(255,255,255,.85); }
+    #topbar a:hover { color: var(--sda-gold); }
+    #topbar .bi { margin-right: .3rem; }
+
+    /* ============================================================
+       NAVBAR
+    ============================================================ */
+    #mainNav {
+      background: var(--sda-white);
+      box-shadow: 0 2px 20px rgba(0,0,0,.08);
+      padding: .75rem 0;
+      transition: all var(--transition);
+    }
+    #mainNav.scrolled {
+      padding: .4rem 0;
+      box-shadow: 0 4px 30px rgba(0,63,135,.15);
+    }
+    #mainNav .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+    #mainNav .brand-logo {
+      height: 52px;
+      width: auto;
+    }
+    #mainNav .brand-text {
+      line-height: 1.15;
+    }
+    #mainNav .brand-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--sda-navy);
+      display: block;
+    }
+    #mainNav .brand-tagline {
+      font-size: .72rem;
+      color: var(--sda-muted);
+      font-weight: 400;
+      letter-spacing: .3px;
+    }
+    #mainNav .nav-link {
+      color: var(--sda-text);
+      font-weight: 600;
+      font-size: .9rem;
+      padding: .4rem .9rem !important;
+      border-radius: 6px;
+      transition: all var(--transition);
+    }
+    #mainNav .nav-link:hover,
+    #mainNav .nav-link.active {
+      color: var(--sda-blue);
+      background: rgba(0,115,207,.07);
+    }
+    #mainNav .dropdown-menu {
+      border: none;
+      box-shadow: var(--shadow-lg);
+      border-radius: var(--radius);
+      padding: .5rem;
+    }
+    #mainNav .dropdown-item {
+      border-radius: 8px;
+      font-size: .9rem;
+      padding: .5rem .9rem;
+      color: var(--sda-text);
+      font-weight: 500;
+    }
+    #mainNav .dropdown-item:hover {
+      background: var(--sda-light);
+      color: var(--sda-blue);
+    }
+    #mainNav .nav-give {
+      background: var(--sda-gold);
+      color: var(--sda-navy) !important;
+      border-radius: 50px !important;
+      padding: .4rem 1.2rem !important;
+    }
+    #mainNav .nav-give:hover {
+      background: var(--sda-gold-dark);
+      color: #fff !important;
+    }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--sda-navy) 0%, #00275A 50%, #001A3D 100%);
+    }
+    #hero .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        url('https://images.unsplash.com/photo-1545987796-200677ee1011?w=1920&q=80') center/cover no-repeat;
+      opacity: .13;
+      z-index: 0;
+    }
+    /* Geometric overlay */
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: -10%;
+      right: -8%;
+      width: 60vw;
+      height: 120%;
+      background: radial-gradient(ellipse at center, rgba(0,115,207,.25) 0%, transparent 70%);
+      z-index: 0;
+    }
+    #hero .hero-cross {
+      position: absolute;
+      right: 5%;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: .06;
+      font-size: 32rem;
+      color: #fff;
+      z-index: 0;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+    #hero .container { position: relative; z-index: 2; }
+    #hero .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: rgba(244,166,35,.15);
+      border: 1px solid rgba(244,166,35,.4);
+      color: var(--sda-gold);
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      border-radius: 50px;
+      padding: .35rem 1rem;
+      margin-bottom: 1.5rem;
+    }
+    #hero h1 {
+      font-size: clamp(2.4rem, 5vw, 4.2rem);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+    }
+    #hero h1 span { color: var(--sda-gold); }
+    #hero .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: rgba(255,255,255,.82);
+      max-width: 600px;
+      margin-bottom: 2rem;
+      font-weight: 300;
+      line-height: 1.8;
+    }
+    #hero .hero-verse {
+      background: rgba(255,255,255,.07);
+      border-left: 4px solid var(--sda-gold);
+      border-radius: 0 8px 8px 0;
+      padding: 1rem 1.4rem;
+      color: rgba(255,255,255,.9);
+      font-style: italic;
+      font-size: .95rem;
+      margin-top: 2.5rem;
+      max-width: 500px;
+    }
+    #hero .hero-verse cite {
+      display: block;
+      font-style: normal;
+      font-weight: 700;
+      color: var(--sda-gold);
+      margin-top: .5rem;
+      font-size: .85rem;
+    }
+    #hero .hero-stats {
+      display: flex;
+      gap: 2rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+    }
+    #hero .hero-stat-item {
+      text-align: center;
+    }
+    #hero .hero-stat-num {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--sda-gold);
+      line-height: 1;
+    }
+    #hero .hero-stat-label {
+      font-size: .75rem;
+      color: rgba(255,255,255,.65);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: .25rem;
+    }
+    /* Live badge */
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: #E53E3E;
+      color: #fff;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-radius: 50px;
+      padding: .3rem .9rem;
+      animation: pulseLive 2s infinite;
+    }
+    .live-badge .dot {
+      width: 8px;
+      height: 8px;
+      background: #fff;
+      border-radius: 50%;
+    }
+    @keyframes pulseLive {
+      0%,100% { opacity: 1; }
+      50% { opacity: .75; }
+    }
+
+    /* ============================================================
+       WELCOME / WRAPPER
+    ============================================================ */
+    #welcome {
+      background: var(--sda-light);
+      padding: 5rem 0;
+    }
+    #welcome .welcome-icon-box {
+      background: var(--sda-white);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      box-shadow: var(--shadow);
+      text-align: center;
+      transition: all var(--transition);
+      height: 100%;
+      border-bottom: 3px solid transparent;
+    }
+    #welcome .welcome-icon-box:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+      border-bottom-color: var(--sda-blue);
+    }
+    #welcome .welcome-icon-box .icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--sda-blue), var(--sda-navy));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+      font-size: 1.6rem;
+      color: #fff;
+    }
+    #welcome .welcome-icon-box h5 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--sda-navy);
+      margin-bottom: .5rem;
+    }
+    #welcome .welcome-icon-box p {
+      font-size: .88rem;
+      color: var(--sda-muted);
+      margin: 0;
+    }
+
+    /* ============================================================
+       SABBATH PROGRAM & ANNOUNCEMENTS
+    ============================================================ */
+    #sabbath-section {
+      padding: 5rem 0;
+      background: var(--sda-white);
+    }
+
+    /* Programme card */
+    .programme-card {
+      background: var(--sda-white);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      height: 100%;
+    }
+    .programme-card .card-head {
+      background: linear-gradient(135deg, var(--sda-navy), var(--sda-blue));
+      padding: 1.5rem 1.75rem;
+      color: #fff;
+    }
+    .programme-card .card-head .date-badge {
+      background: rgba(244,166,35,.2);
+      border: 1px solid rgba(244,166,35,.5);
+      color: var(--sda-gold);
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-radius: 50px;
+      padding: .25rem .8rem;
+      display: inline-block;
+      margin-bottom: .75rem;
+    }
+    .programme-card .card-head h4 {
+      font-size: 1.25rem;
+      margin: 0;
+      font-weight: 700;
+    }
+    .programme-card .card-head p {
+      font-size: .85rem;
+      opacity: .8;
+      margin: .4rem 0 0;
+    }
+    .programme-card .card-body-inner {
+      padding: 1.25rem 1.75rem 1.75rem;
+    }
+    .programme-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: .85rem 0;
+      border-bottom: 1px solid var(--sda-border);
+    }
+    .programme-item:last-child { border-bottom: none; }
+    .programme-time {
+      min-width: 70px;
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--sda-blue);
+      background: rgba(0,115,207,.08);
+      border-radius: 6px;
+      padding: .3rem .5rem;
+      text-align: center;
+      line-height: 1.3;
+    }
+    .programme-detail h6 {
+      font-size: .92rem;
+      font-weight: 700;
+      color: var(--sda-text);
+      margin: 0 0 .2rem;
+    }
+    .programme-detail span {
+      font-size: .8rem;
+      color: var(--sda-muted);
+    }
+    .programme-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--sda-gold);
+      border-radius: 50%;
+      margin-top: .4rem;
+      flex-shrink: 0;
+    }
+
+    /* Announcements card */
+    .announcements-card {
+      background: var(--sda-white);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      height: 100%;
+    }
+    .announcements-card .card-head {
+      background: linear-gradient(135deg, var(--sda-gold-dark), var(--sda-gold));
+      padding: 1.5rem 1.75rem;
+      color: var(--sda-navy);
+    }
+    .announcements-card .card-head .badge-pill {
+      background: rgba(0,0,0,.15);
+      color: var(--sda-navy);
+      font-size: .75rem;
+      font-weight: 700;
+      border-radius: 50px;
+      padding: .2rem .7rem;
+      display: inline-block;
+      margin-bottom: .75rem;
+    }
+    .announcements-card .card-head h4 {
+      font-size: 1.25rem;
+      margin: 0;
+      font-weight: 700;
+      color: var(--sda-navy);
+    }
+    .announcements-card .card-body-inner {
+      padding: 1.25rem 1.75rem 1.75rem;
+    }
+    .announcement-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--sda-border);
+      align-items: flex-start;
+    }
+    .announcement-item:last-child { border-bottom: none; }
+    .announcement-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .announcement-item h6 {
+      font-size: .92rem;
+      font-weight: 700;
+      color: var(--sda-text);
+      margin: 0 0 .25rem;
+    }
+    .announcement-item p {
+      font-size: .82rem;
+      color: var(--sda-muted);
+      margin: 0 0 .3rem;
+      line-height: 1.5;
+    }
+    .announcement-item .ann-meta {
+      font-size: .75rem;
+      color: var(--sda-blue);
+      font-weight: 600;
+    }
+
+    /* ============================================================
+       DIGITAL EVANGELISM
+    ============================================================ */
+    #digital-evangelism {
+      background: linear-gradient(160deg, var(--sda-navy) 0%, #00275A 60%, #001A3D 100%);
+      padding: 6rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    #digital-evangelism::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1920&q=60') center/cover no-repeat;
+      opacity: .05;
+    }
+    #digital-evangelism .container { position: relative; z-index: 2; }
+    #digital-evangelism .section-label { color: var(--sda-gold); }
+    #digital-evangelism h2 { color: #fff; }
+    #digital-evangelism .lead { color: rgba(255,255,255,.75); }
+
+    .evangelism-card {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: all var(--transition);
+      height: 100%;
+      backdrop-filter: blur(8px);
+    }
+    .evangelism-card:hover {
+      background: rgba(255,255,255,.13);
+      border-color: rgba(244,166,35,.4);
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(0,0,0,.3);
+    }
+    .evangelism-card .ev-icon {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, var(--sda-gold), var(--sda-gold-dark));
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: var(--sda-navy);
+      margin: 0 auto 1.25rem;
+    }
+    .evangelism-card h5 {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: .65rem;
+    }
+    .evangelism-card p {
+      color: rgba(255,255,255,.7);
+      font-size: .88rem;
+      margin: 0 0 1.25rem;
+    }
+    .evangelism-card a {
+      color: var(--sda-gold);
+      font-size: .85rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+    }
+    .evangelism-card a:hover { color: #fff; }
+
+    /* Live stream banner */
+    .livestream-banner {
+      background: rgba(229,62,62,.12);
+      border: 1px solid rgba(229,62,62,.35);
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 3rem;
+    }
+    .livestream-banner h5 {
+      color: #fff;
+      margin: 0 0 .25rem;
+      font-size: 1.1rem;
+    }
+    .livestream-banner p {
+      color: rgba(255,255,255,.7);
+      margin: 0;
+      font-size: .88rem;
+    }
+
+    /* ============================================================
+       SERMONS
+    ============================================================ */
+    #sermons {
+      padding: 5rem 0;
+      background: var(--sda-light);
+    }
+    .sermon-card {
+      background: var(--sda-white);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: all var(--transition);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .sermon-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+    }
+    .sermon-thumb {
+      position: relative;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--sda-navy), var(--sda-blue));
+    }
+    .sermon-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: .8;
+      transition: transform .5s ease;
+    }
+    .sermon-card:hover .sermon-thumb img { transform: scale(1.06); }
+    .sermon-thumb .play-btn {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .play-circle {
+      width: 54px;
+      height: 54px;
+      background: rgba(255,255,255,.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      color: var(--sda-navy);
+      transition: all var(--transition);
+      box-shadow: 0 4px 20px rgba(0,0,0,.3);
+    }
+    .sermon-card:hover .play-circle {
+      background: var(--sda-gold);
+      color: var(--sda-navy);
+      transform: scale(1.1);
+    }
+    .sermon-duration {
+      position: absolute;
+      bottom: .6rem;
+      right: .6rem;
+      background: rgba(0,0,0,.7);
+      color: #fff;
+      font-size: .72rem;
+      font-weight: 600;
+      border-radius: 4px;
+      padding: .15rem .4rem;
+    }
+    .sermon-card .card-body {
+      padding: 1.25rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .sermon-category {
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--sda-blue);
+      margin-bottom: .5rem;
+    }
+    .sermon-card h5 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--sda-text);
+      margin-bottom: .5rem;
+      line-height: 1.4;
+      flex: 1;
+    }
+    .sermon-meta {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      flex-wrap: wrap;
+      margin-top: .75rem;
+    }
+    .sermon-meta span {
+      font-size: .78rem;
+      color: var(--sda-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+    }
+
+    /* ============================================================
+       EVENTS
+    ============================================================ */
+    #events {
+      padding: 5rem 0;
+      background: var(--sda-white);
+    }
+    .event-item {
+      display: flex;
+      gap: 1.25rem;
+      padding: 1.25rem;
+      border-radius: var(--radius);
+      background: var(--sda-white);
+      box-shadow: var(--shadow);
+      transition: all var(--transition);
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    .event-item:hover {
+      transform: translateX(4px);
+      box-shadow: var(--shadow-lg);
+      border-left: 4px solid var(--sda-blue);
+    }
+    .event-date-box {
+      min-width: 60px;
+      text-align: center;
+      background: linear-gradient(135deg, var(--sda-blue), var(--sda-navy));
+      border-radius: 10px;
+      padding: .6rem .4rem;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .event-date-box .day {
+      font-size: 1.5rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .event-date-box .month {
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      opacity: .85;
+    }
+    .event-info h5 {
+      font-size: .98rem;
+      font-weight: 700;
+      color: var(--sda-text);
+      margin: 0 0 .3rem;
+    }
+    .event-info p {
+      font-size: .82rem;
+      color: var(--sda-muted);
+      margin: 0 0 .4rem;
+      line-height: 1.5;
+    }
+    .event-info .event-meta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .event-info .event-meta span {
+      font-size: .78rem;
+      color: var(--sda-blue);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: .25rem;
+    }
+    .event-tag {
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      border-radius: 50px;
+      padding: .15rem .6rem;
+      margin-left: auto;
+      white-space: nowrap;
+      align-self: flex-start;
+      flex-shrink: 0;
+    }
+
+    /* ============================================================
+       MINISTRIES
+    ============================================================ */
+    #ministries {
+      padding: 5rem 0;
+      background: var(--sda-light);
+    }
+    .ministry-card {
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      aspect-ratio: 3/4;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+    .ministry-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .5s ease;
+    }
+    .ministry-card:hover img { transform: scale(1.08); }
+    .ministry-card .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,20,60,.9) 0%, rgba(0,20,60,.3) 50%, transparent 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.5rem 1.25rem;
+      transition: all var(--transition);
+    }
+    .ministry-card:hover .overlay { background: linear-gradient(to top, rgba(0,63,135,.95) 0%, rgba(0,63,135,.5) 60%, transparent 100%); }
+    .ministry-card .overlay .icon {
+      font-size: 1.5rem;
+      color: var(--sda-gold);
+      margin-bottom: .5rem;
+    }
+    .ministry-card .overlay h5 {
+      color: #fff;
+      font-size: 1rem;
+      margin: 0 0 .3rem;
+    }
+    .ministry-card .overlay p {
+      color: rgba(255,255,255,.75);
+      font-size: .8rem;
+      margin: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .4s ease, opacity .4s ease;
+      opacity: 0;
+    }
+    .ministry-card:hover .overlay p {
+      max-height: 80px;
+      opacity: 1;
+    }
+
+    /* ============================================================
+       CONNECT / CTA
+    ============================================================ */
+    #connect {
+      background: linear-gradient(135deg, var(--sda-gold-dark) 0%, var(--sda-gold) 100%);
+      padding: 5rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    #connect::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -10%;
+      width: 60%;
+      height: 200%;
+      background: rgba(255,255,255,.08);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    #connect .container { position: relative; z-index: 2; }
+    #connect h2 { color: var(--sda-navy); }
+    #connect p { color: rgba(0,30,70,.75); }
+    .connect-form .form-control {
+      border-radius: 50px;
+      padding: .75rem 1.25rem;
+      border: 2px solid rgba(0,63,135,.2);
+      font-family: var(--font-primary);
+      font-size: .9rem;
+    }
+    .connect-form .form-control:focus {
+      border-color: var(--sda-navy);
+      box-shadow: 0 0 0 3px rgba(0,63,135,.1);
+    }
+
+    /* ============================================================
+       DEVOTIONAL TICKER
+    ============================================================ */
+    #devotional-ticker {
+      background: var(--sda-navy);
+      padding: .6rem 0;
+      overflow: hidden;
+    }
+    .ticker-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .ticker-label {
+      background: var(--sda-gold);
+      color: var(--sda-navy);
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: .2rem .75rem;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .ticker-content {
+      color: rgba(255,255,255,.85);
+      font-size: .85rem;
+      overflow: hidden;
+      flex: 1;
+    }
+    .ticker-inner {
+      display: inline-block;
+      animation: ticker 30s linear infinite;
+      white-space: nowrap;
+    }
+    .ticker-inner span { margin-right: 5rem; }
+    @keyframes ticker {
+      0% { transform: translateX(100vw); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    #footer {
+      background: #001229;
+      color: rgba(255,255,255,.75);
+      padding: 4.5rem 0 0;
+    }
+    #footer .footer-brand img.brand-logo { height: 48px; filter: brightness(0) invert(1); margin-bottom: 1rem; }
+    #footer .footer-brand p {
+      font-size: .88rem;
+      line-height: 1.75;
+      color: rgba(255,255,255,.6);
+      margin-bottom: 1.5rem;
+    }
+    #footer .footer-heading {
+      font-size: .78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--sda-gold);
+      margin-bottom: 1.25rem;
+    }
+    #footer ul { list-style: none; padding: 0; margin: 0; }
+    #footer ul li { margin-bottom: .6rem; }
+    #footer ul li a {
+      color: rgba(255,255,255,.65);
+      font-size: .88rem;
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      transition: color var(--transition);
+    }
+    #footer ul li a:hover { color: var(--sda-gold); }
+    #footer .social-links {
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+      margin-top: .5rem;
+    }
+    #footer .social-links a {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: rgba(255,255,255,.65);
+      transition: all var(--transition);
+    }
+    #footer .social-links a:hover {
+      background: var(--sda-gold);
+      border-color: var(--sda-gold);
+      color: var(--sda-navy);
+    }
+    #footer .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding: 1.25rem 0;
+      margin-top: 3rem;
+    }
+    #footer .footer-bottom p {
+      font-size: .8rem;
+      color: rgba(255,255,255,.4);
+      margin: 0;
+    }
+
+    /* ============================================================
+       SCROLL TO TOP
+    ============================================================ */
+    #scrollTop {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 44px;
+      height: 44px;
+      background: var(--sda-blue);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      cursor: pointer;
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,115,207,.4);
+      transition: all var(--transition);
+    }
+    #scrollTop:hover { background: var(--sda-navy); transform: translateY(-2px); }
+    #scrollTop.show { display: flex; }
+
+    /* ============================================================
+       UTILITIES
+    ============================================================ */
+    .text-gold { color: var(--sda-gold) !important; }
+    .text-sda-blue { color: var(--sda-blue) !important; }
+    .text-sda-navy { color: var(--sda-navy) !important; }
+    .bg-sda-light { background: var(--sda-light); }
+
+    @media (max-width: 991px) {
+      #hero { min-height: 90vh; padding: 7rem 0 4rem; }
+      #hero .hero-cross { display: none; }
+      .ministry-card { aspect-ratio: 4/5; }
+    }
+    @media (max-width: 767px) {
+      #hero { min-height: 80vh; padding: 6rem 0 3rem; }
+      #hero .hero-stats { gap: 1.25rem; }
+      .programme-card, .announcements-card { margin-bottom: 1.5rem; }
+      .livestream-banner { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===================== TOP BAR ===================== -->
+<div id="topbar">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <div class="d-flex gap-3 flex-wrap">
+        <span><i class="bi bi-clock"></i> Sabbath Services: 9:30 AM &amp; 11:00 AM</span>
+        <span class="d-none d-md-inline"><i class="bi bi-geo-alt"></i> 12 Faith Avenue, Maranatha, Region</span>
+      </div>
+      <div class="d-flex gap-3 align-items-center">
+        <a href="tel:+1234567890"><i class="bi bi-telephone"></i> +1 234 567 890</a>
+        <a href="#"><i class="bi bi-youtube"></i></a>
+        <a href="#"><i class="bi bi-facebook"></i></a>
+        <a href="#"><i class="bi bi-instagram"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav id="mainNav" class="navbar navbar-expand-lg sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <!-- Official SDA Logo (cross + flame) -->
+      <img
+        src="https://www.adventist.org/wp-content/themes/adventist-org-theme/dist/images/logo-sda-blue.png"
+        alt="Seventh-day Adventist Church Logo"
+        class="brand-logo"
+        onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';"
+      />
+      <!-- Inline SVG fallback logo -->
+      <span id="logo-fallback" style="display:none; align-items:center; justify-content:center; width:52px; height:52px;">
+        <svg viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg" width="40">
+          <path d="M27 0 C27 0 18 12 18 24 C18 30 22 36 27 38 L27 80 L33 80 L33 38 C38 36 42 30 42 24 C42 12 33 0 33 0 Z" fill="#F4A623"/>
+          <rect x="10" y="44" width="40" height="6" rx="3" fill="#003F87"/>
+        </svg>
+      </span>
+      <div class="brand-text ms-2">
+        <span class="brand-name">Maranatha SDA Church</span>
+        <span class="brand-tagline">Seventh-day Adventist · Est. 1968</span>
+      </div>
+    </a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto align-items-center gap-1">
+        <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">About</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#"><i class="bi bi-house-heart me-2 text-sda-blue"></i>Our Church</a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-people me-2 text-sda-blue"></i>Leadership</a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-book me-2 text-sda-blue"></i>Our Beliefs</a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-clock-history me-2 text-sda-blue"></i>History</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Worship</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#sermons"><i class="bi bi-play-circle me-2 text-sda-blue"></i>Sermons</a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-music-note me-2 text-sda-blue"></i>Music Ministry</a></li>
+            <li><a class="dropdown-item" href="#sabbath-section"><i class="bi bi-calendar3 me-2 text-sda-blue"></i>Sabbath Program</a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-camera-video me-2 text-sda-blue"></i>Live Stream</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="#ministries">Ministries</a></li>
+        <li class="nav-item"><a class="nav-link" href="#events">Events</a></li>
+        <li class="nav-item"><a class="nav-link" href="#digital-evangelism">Evangelism</a></li>
+        <li class="nav-item"><a class="nav-link" href="#connect">Contact</a></li>
+        <li class="nav-item ms-lg-2">
+          <a class="nav-link nav-give" href="#">
+            <i class="bi bi-heart-fill me-1"></i> Give
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-cross">✝</div>
+  <div class="container">
+    <div class="row align-items-center min-vh-100 py-5">
+      <div class="col-lg-7" data-aos="fade-right" data-aos-duration="900">
+        <div class="hero-badge">
+          <i class="bi bi-broadcast-pin"></i>
+          <span>Live — Sabbath Worship · 11:00 AM</span>
+          <span class="live-badge ms-1"><span class="dot"></span>LIVE</span>
+        </div>
+        <h1>
+          Come. Worship.<br/>
+          <span>Be Transformed.</span>
+        </h1>
+        <p class="hero-sub">
+          A community rooted in Scripture, committed to hope, and called to share the
+          everlasting gospel to every nation, kindred, tongue, and people.
+        </p>
+        <div class="d-flex gap-3 flex-wrap">
+          <a href="#" class="btn-sda-primary btn">
+            <i class="bi bi-camera-video me-2"></i>Watch Live
+          </a>
+          <a href="#connect" class="btn-sda-outline btn">
+            <i class="bi bi-person-plus me-2"></i>Plan Your Visit
+          </a>
+        </div>
+        <blockquote class="hero-verse">
+          "And this gospel of the kingdom will be proclaimed throughout the whole world as a testimony
+          to all nations, and then the end will come."
+          <cite>— Matthew 24:14 (ESV)</cite>
+        </blockquote>
+        <div class="hero-stats">
+          <div class="hero-stat-item">
+            <div class="hero-stat-num">850+</div>
+            <div class="hero-stat-label">Members</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hero-stat-num">12</div>
+            <div class="hero-stat-label">Ministries</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hero-stat-num">56yr</div>
+            <div class="hero-stat-label">Established</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hero-stat-num">24/7</div>
+            <div class="hero-stat-label">Prayer Line</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DEVOTIONAL TICKER ===================== -->
+<div id="devotional-ticker">
+  <div class="container">
+    <div class="ticker-wrap">
+      <span class="ticker-label"><i class="bi bi-book-half me-1"></i> Today's Word</span>
+      <div class="ticker-content">
+        <div class="ticker-inner">
+          <span>"Fear not, for I am with you; be not dismayed, for I am your God." — Isaiah 41:10</span>
+          <span>📅 Upcoming: Week of Prayer · June 20–27 · All are welcome</span>
+          <span>"The Lord is my shepherd; I shall not want." — Psalm 23:1</span>
+          <span>🎵 Choir Rehearsal every Thursday at 6:30 PM · All voices welcome!</span>
+          <span>"Come to me, all who labour and are heavy laden, and I will give you rest." — Matthew 11:28</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== WELCOME SECTION ===================== -->
+<section id="welcome">
+  <div class="container">
+    <div class="row justify-content-center text-center mb-5">
+      <div class="col-lg-7" data-aos="fade-up">
+        <span class="section-label">Welcome Home</span>
+        <div class="divider-gold centered"></div>
+        <h2 class="h1 mb-3">You Are Welcome <span class="text-sda-blue">Here</span></h2>
+        <p class="lead text-muted">
+          Whether you're joining us for the first time or returning home — this is a place of grace,
+          truth, and belonging. We are a family united by faith in Jesus Christ and the
+          blessed hope of His soon return.
+        </p>
+      </div>
+    </div>
+    <div class="row g-4">
+      <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="0">
+        <div class="welcome-icon-box">
+          <div class="icon"><i class="bi bi-heart-pulse"></i></div>
+          <h5>Sabbath Worship</h5>
+          <p>Join us every Saturday for uplifting, Scripture-centered worship services.</p>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+        <div class="welcome-icon-box">
+          <div class="icon"><i class="bi bi-book-open"></i></div>
+          <h5>Bible Study</h5>
+          <p>Deepen your knowledge through our weekly Sabbath School and midweek studies.</p>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+        <div class="welcome-icon-box">
+          <div class="icon"><i class="bi bi-people-fill"></i></div>
+          <h5>Community</h5>
+          <p>A caring, multi-generational family committed to loving God and neighbour.</p>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+        <div class="welcome-icon-box">
+          <div class="icon"><i class="bi bi-globe2"></i></div>
+          <h5>Global Mission</h5>
+          <p>Part of a worldwide movement sharing the three angels' messages to all nations.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SABBATH PROGRAM + ANNOUNCEMENTS ===================== -->
+<section id="sabbath-section">
+  <div class="container">
+    <div class="row justify-content-center text-center mb-5">
+      <div class="col-lg-8" data-aos="fade-up">
+        <span class="section-label">This Week at Church</span>
+        <div class="divider-gold centered"></div>
+        <h2 class="h1">Sabbath Programme &amp; <span class="text-sda-blue">Announcements</span></h2>
+      </div>
+    </div>
+    <div class="row g-4 align-items-start">
+
+      <!-- LEFT: Sabbath Programme -->
+      <div class="col-lg-6" data-aos="fade-right">
+        <div class="programme-card">
+          <div class="card-head">
+            <span class="date-badge"><i class="bi bi-calendar3 me-1"></i> Saturday, 14 June 2026</span>
+            <h4><i class="bi bi-sunrise me-2"></i>This Sabbath's Programme</h4>
+            <p>Theme: "Be Still and Know" — Psalm 46:10</p>
+          </div>
+          <div class="card-body-inner">
+            <div class="programme-item">
+              <div class="programme-time">9:30<br/>AM</div>
+              <div class="programme-dot mt-1"></div>
+              <div class="programme-detail">
+                <h6>Sabbath School</h6>
+                <span>Adult &amp; Youth Classes · Q2 2026 Lesson Study</span>
+              </div>
+            </div>
+            <div class="programme-item">
+              <div class="programme-time">10:45<br/>AM</div>
+              <div class="programme-dot mt-1"></div>
+              <div class="programme-detail">
+                <h6>Divine Service — Praise &amp; Worship</h6>
+                <span>Maranatha Praise Team</span>
+              </div>
+            </div>
+            <div class="programme-item">
+              <div class="programme-time">11:00<br/>AM</div>
+              <div class="programme-dot mt-1"></div>
+              <div class="programme-detail">
+                <h6>Scripture Reading &amp; Prayer</h6>
+                <span>Elder James Mokoena · Psalm 46:1–11</span>
+              </div>
+            </div>
+            <div class="programme-item">
+              <div class="programme-time">11:20<br/>AM</div>
+              <div class="programme-dot mt-1"></div>
+              <div class="programme-detail">
+                <h6>Special Music</h6>
+                <span>Junior Choir — "Great is Thy Faithfulness"</span>
+              </div>
+            </div>
+            <div class="programme-item">
+              <div class="programme-time">11:35<br/>AM</div>
+              <div class="programme-dot mt-1"></div>
+              <div class="programme-detail">
+                <h6>Sermon</h6>
+                <span>Pastor David Nkosi · "Anchored in the Storm"</span>
+              </div>
+            </div>
+            <div class="programme-item">
+              <div class="programme-time">12:20<br/>PM</div>
+              <div class="programme-dot mt-1"></div>
+              <div class="programme-detail">
+                <h6>Tithe &amp; Offering</h6>
+                <span>Finance Team</span>
+              </div>
+            </div>
+            <div class="programme-item">
+              <div class="programme-time">12:30<br/>PM</div>
+              <div class="programme-dot mt-1"></div>
+              <div class="programme-detail">
+                <h6>Fellowship &amp; Lunch</h6>
+                <span>All are welcome · Community Hall</span>
+              </div>
+            </div>
+            <div class="mt-3 pt-1">
+              <a href="#" class="btn btn-sda-primary btn-sm">
+                <i class="bi bi-download me-1"></i> Download Full Order of Service
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Announcements -->
+      <div class="col-lg-6" data-aos="fade-left">
+        <div class="announcements-card">
+          <div class="card-head">
+            <span class="badge-pill">📢 This Week's Notices</span>
+            <h4>Church Announcements</h4>
+          </div>
+          <div class="card-body-inner">
+            <div class="announcement-item">
+              <div class="announcement-icon" style="background:rgba(0,115,207,.1); color:var(--sda-blue);">
+                <i class="bi bi-broadcast-pin"></i>
+              </div>
+              <div>
+                <h6>Week of Prayer — June 20–27</h6>
+                <p>Join us each evening at 7:00 PM for prayer, testimony, and the Word. Speaker: Pastor Grace Dube.</p>
+                <span class="ann-meta"><i class="bi bi-calendar-event me-1"></i>Jun 20 – 27 · 7:00 PM Nightly</span>
+              </div>
+            </div>
+            <div class="announcement-item">
+              <div class="announcement-icon" style="background:rgba(244,166,35,.15); color:var(--sda-gold-dark);">
+                <i class="bi bi-mortarboard"></i>
+              </div>
+              <div>
+                <h6>Youth Congress Registration Open</h6>
+                <p>Regional Youth Congress · July 4–6. Register by 30 June. Subsidies available for students.</p>
+                <span class="ann-meta"><i class="bi bi-person-check me-1"></i>Register at the deacons' desk</span>
+              </div>
+            </div>
+            <div class="announcement-item">
+              <div class="announcement-icon" style="background:rgba(72,187,120,.12); color:#2F855A;">
+                <i class="bi bi-heart-pulse"></i>
+              </div>
+              <div>
+                <h6>Health Expo — Free Screening</h6>
+                <p>Free blood pressure, glucose &amp; BMI checks. Community health clinic. All welcome!</p>
+                <span class="ann-meta"><i class="bi bi-geo-alt me-1"></i>Sat 21 June · 10 AM – 2 PM · Church Hall</span>
+              </div>
+            </div>
+            <div class="announcement-item">
+              <div class="announcement-icon" style="background:rgba(159,122,234,.12); color:#6B46C1;">
+                <i class="bi bi-people"></i>
+              </div>
+              <div>
+                <h6>Pathfinder Investiture</h6>
+                <p>Congratulate our young Pathfinders as they receive their awards this Sabbath afternoon.</p>
+                <span class="ann-meta"><i class="bi bi-clock me-1"></i>Today · 2:30 PM · Main Sanctuary</span>
+              </div>
+            </div>
+            <div class="announcement-item">
+              <div class="announcement-icon" style="background:rgba(229,62,62,.1); color:#C53030;">
+                <i class="bi bi-book-half"></i>
+              </div>
+              <div>
+                <h6>Bible Correspondence Course</h6>
+                <p>Enrol in our free online Bible course. Learn at your own pace. Certificate awarded on completion.</p>
+                <span class="ann-meta"><i class="bi bi-globe me-1"></i>Online · Enrol via church website</span>
+              </div>
+            </div>
+            <div class="mt-3 pt-1">
+              <a href="#" class="btn btn-sda-gold btn-sm">
+                <i class="bi bi-bell me-1"></i> View All Announcements
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DIGITAL EVANGELISM ===================== -->
+<section id="digital-evangelism">
+  <div class="container">
+    <div class="row justify-content-center text-center mb-5">
+      <div class="col-lg-8" data-aos="fade-up">
+        <span class="section-label"><i class="bi bi-globe2 me-1"></i> Digital Evangelism</span>
+        <div class="divider-gold centered"></div>
+        <h2 class="h1 text-white">Reaching the World<br/><span class="text-gold">From One Screen</span></h2>
+        <p class="lead" style="color:rgba(255,255,255,.75);">
+          The gospel knows no borders. Through technology, we bring hope, healing, and the
+          three angels' messages to hearts everywhere — in every language, at any hour.
+        </p>
+      </div>
+    </div>
+    <div class="row g-4">
+      <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="0">
+        <div class="evangelism-card">
+          <div class="ev-icon"><i class="bi bi-camera-video-fill"></i></div>
+          <h5>Live Streaming</h5>
+          <p>Watch our Sabbath services, prayer meetings, and special programmes live — anywhere in the world.</p>
+          <a href="#">Watch Now <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+        <div class="evangelism-card">
+          <div class="ev-icon"><i class="bi bi-mic-fill"></i></div>
+          <h5>Sermon Podcast</h5>
+          <p>Subscribe to our podcast and receive weekly sermons and devotionals direct to your device.</p>
+          <a href="#">Listen &amp; Subscribe <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+        <div class="evangelism-card">
+          <div class="ev-icon"><i class="bi bi-journal-bookmark-fill"></i></div>
+          <h5>Online Bible Study</h5>
+          <p>Enrol in free, guided Bible studies. One-on-one sessions available with trained Bible workers.</p>
+          <a href="#">Enrol Free <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+        <div class="evangelism-card">
+          <div class="ev-icon"><i class="bi bi-telephone-fill"></i></div>
+          <h5>24/7 Prayer Line</h5>
+          <p>Call or message our prayer team any time. Real people, real prayer — because God never sleeps.</p>
+          <a href="#">Call Now <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="50">
+        <div class="evangelism-card">
+          <div class="ev-icon"><i class="bi bi-share-fill"></i></div>
+          <h5>Social Media</h5>
+          <p>Follow, share, and spread the gospel message on YouTube, Facebook, Instagram, and TikTok.</p>
+          <a href="#">Follow Us <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="150">
+        <div class="evangelism-card">
+          <div class="ev-icon"><i class="bi bi-envelope-open-fill"></i></div>
+          <h5>E-Devotionals</h5>
+          <p>Receive a fresh devotional in your inbox every morning. Start each day in the Word.</p>
+          <a href="#">Subscribe <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="250">
+        <div class="evangelism-card">
+          <div class="ev-icon"><i class="bi bi-collection-play-fill"></i></div>
+          <h5>Evangelistic Series</h5>
+          <p>Access our archive of full prophecy seminars, evangelistic meetings, and health programmes.</p>
+          <a href="#">Browse Archive <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="350">
+        <div class="evangelism-card">
+          <div class="ev-icon"><i class="bi bi-chat-dots-fill"></i></div>
+          <h5>WhatsApp Ministry</h5>
+          <p>Join our WhatsApp broadcast for daily Bible texts, prayer points, and church updates.</p>
+          <a href="#">Join Group <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+    <!-- Live Stream Banner -->
+    <div class="livestream-banner" data-aos="fade-up" data-aos-delay="100">
+      <span class="live-badge flex-shrink-0"><span class="dot"></span>LIVE NOW</span>
+      <div class="flex-grow-1">
+        <h5>Sabbath Divine Service — "Anchored in the Storm"</h5>
+        <p>Pastor David Nkosi · Main Sanctuary · Streaming now on YouTube &amp; Facebook</p>
+      </div>
+      <a href="#" class="btn btn-sda-gold flex-shrink-0">
+        <i class="bi bi-play-circle me-2"></i>Join Stream
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== RECENT SERMONS ===================== -->
+<section id="sermons">
+  <div class="container">
+    <div class="row justify-content-between align-items-end mb-5">
+      <div class="col-lg-7" data-aos="fade-up">
+        <span class="section-label">Messages from the Word</span>
+        <div class="divider-gold"></div>
+        <h2 class="h1">Recent <span class="text-sda-blue">Sermons</span></h2>
+      </div>
+      <div class="col-lg-auto" data-aos="fade-up">
+        <a href="#" class="btn btn-sda-primary">View All Sermons <i class="bi bi-arrow-right ms-1"></i></a>
+      </div>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="sermon-card">
+          <div class="sermon-thumb">
+            <img src="https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=600&q=70" alt="Sermon" />
+            <div class="play-btn"><div class="play-circle"><i class="bi bi-play-fill"></i></div></div>
+            <span class="sermon-duration">42:17</span>
+          </div>
+          <div class="card-body">
+            <div class="sermon-category">Evangelism Series</div>
+            <h5>Anchored in the Storm — Finding Peace in Troubled Times</h5>
+            <div class="sermon-meta">
+              <span><i class="bi bi-person"></i> Pastor David Nkosi</span>
+              <span><i class="bi bi-calendar3"></i> 7 Jun 2026</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="sermon-card">
+          <div class="sermon-thumb">
+            <img src="https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=600&q=70" alt="Sermon" />
+            <div class="play-btn"><div class="play-circle"><i class="bi bi-play-fill"></i></div></div>
+            <span class="sermon-duration">38:54</span>
+          </div>
+          <div class="card-body">
+            <div class="sermon-category">Prophecy Seminar</div>
+            <h5>Daniel's Vision: Understanding the Times We Live In</h5>
+            <div class="sermon-meta">
+              <span><i class="bi bi-person"></i> Elder Grace Dube</span>
+              <span><i class="bi bi-calendar3"></i> 31 May 2026</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="sermon-card">
+          <div class="sermon-thumb">
+            <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=600&q=70" alt="Sermon" />
+            <div class="play-btn"><div class="play-circle"><i class="bi bi-play-fill"></i></div></div>
+            <span class="sermon-duration">51:03</span>
+          </div>
+          <div class="card-body">
+            <div class="sermon-category">Health Ministry</div>
+            <h5>Your Body is a Temple — God's Design for Whole-Person Wellness</h5>
+            <div class="sermon-meta">
+              <span><i class="bi bi-person"></i> Dr. Esther Sithole</span>
+              <span><i class="bi bi-calendar3"></i> 24 May 2026</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== EVENTS ===================== -->
+<section id="events">
+  <div class="container">
+    <div class="row justify-content-between align-items-end mb-5">
+      <div class="col-lg-7" data-aos="fade-up">
+        <span class="section-label">What's Coming Up</span>
+        <div class="divider-gold"></div>
+        <h2 class="h1">Upcoming <span class="text-sda-blue">Events</span></h2>
+      </div>
+      <div class="col-lg-auto" data-aos="fade-up">
+        <a href="#" class="btn btn-sda-primary">Full Calendar <i class="bi bi-calendar3 ms-1"></i></a>
+      </div>
+    </div>
+    <div class="row g-4">
+      <div class="col-lg-6" data-aos="fade-up">
+        <div class="event-item">
+          <div class="event-date-box"><div class="day">20</div><div class="month">Jun</div></div>
+          <div class="event-info">
+            <h5>Week of Prayer — "Revival &amp; Reformation"</h5>
+            <p>Seven evenings of prayer, testimony, and Spirit-led worship. Speaker: Pastor Grace Dube.</p>
+            <div class="event-meta">
+              <span><i class="bi bi-clock"></i> 7:00 PM Nightly</span>
+              <span><i class="bi bi-geo-alt"></i> Main Sanctuary</span>
+            </div>
+          </div>
+          <span class="event-tag bg-primary text-white">Prayer</span>
+        </div>
+        <div class="event-item">
+          <div class="event-date-box"><div class="day">21</div><div class="month">Jun</div></div>
+          <div class="event-info">
+            <h5>Free Community Health Expo</h5>
+            <p>Blood pressure, glucose &amp; BMI screening, health talks, and cooking demos.</p>
+            <div class="event-meta">
+              <span><i class="bi bi-clock"></i> 10:00 AM – 2:00 PM</span>
+              <span><i class="bi bi-geo-alt"></i> Community Hall</span>
+            </div>
+          </div>
+          <span class="event-tag" style="background:#D1FAE5;color:#065F46;">Health</span>
+        </div>
+        <div class="event-item">
+          <div class="event-date-box" style="background:linear-gradient(135deg,var(--sda-gold-dark),var(--sda-gold));"><div class="day">4</div><div class="month">Jul</div></div>
+          <div class="event-info">
+            <h5>Regional Youth Congress 2026</h5>
+            <p>Three days of worship, training, and fellowship for young people across the region.</p>
+            <div class="event-meta">
+              <span><i class="bi bi-clock"></i> Jul 4–6 · All Day</span>
+              <span><i class="bi bi-geo-alt"></i> Conference Centre</span>
+            </div>
+          </div>
+          <span class="event-tag" style="background:#EDE9FE;color:#6D28D9;">Youth</span>
+        </div>
+      </div>
+      <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+        <div class="event-item">
+          <div class="event-date-box"><div class="day">28</div><div class="month">Jun</div></div>
+          <div class="event-info">
+            <h5>Evangelistic Outreach — City Centre</h5>
+            <p>Literature distribution, singing, and open-air testimonies. All members are invited.</p>
+            <div class="event-meta">
+              <span><i class="bi bi-clock"></i> 9:00 AM</span>
+              <span><i class="bi bi-geo-alt"></i> City Centre Square</span>
+            </div>
+          </div>
+          <span class="event-tag" style="background:#FEF3C7;color:#92400E;">Outreach</span>
+        </div>
+        <div class="event-item">
+          <div class="event-date-box"><div class="day">12</div><div class="month">Jul</div></div>
+          <div class="event-info">
+            <h5>Baptism Service</h5>
+            <p>Celebrating new life in Christ. Come rejoice with those taking their stand for Jesus.</p>
+            <div class="event-meta">
+              <span><i class="bi bi-clock"></i> 2:00 PM</span>
+              <span><i class="bi bi-geo-alt"></i> Main Sanctuary</span>
+            </div>
+          </div>
+          <span class="event-tag bg-info text-white">Baptism</span>
+        </div>
+        <div class="event-item">
+          <div class="event-date-box"><div class="day">19</div><div class="month">Jul</div></div>
+          <div class="event-info">
+            <h5>Prophecy Seminar — "End-Time Truths"</h5>
+            <p>A three-week deep-dive into Daniel, Revelation, and the signs of the times.</p>
+            <div class="event-meta">
+              <span><i class="bi bi-clock"></i> 7:00 PM Nightly</span>
+              <span><i class="bi bi-geo-alt"></i> Community Hall</span>
+            </div>
+          </div>
+          <span class="event-tag" style="background:#FEE2E2;color:#991B1B;">Evangelism</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MINISTRIES ===================== -->
+<section id="ministries">
+  <div class="container">
+    <div class="row justify-content-center text-center mb-5">
+      <div class="col-lg-7" data-aos="fade-up">
+        <span class="section-label">Our Ministries</span>
+        <div class="divider-gold centered"></div>
+        <h2 class="h1">Find Your <span class="text-sda-blue">Place to Serve</span></h2>
+        <p class="text-muted">Every member is a minister. Discover the ministry that aligns with your calling.</p>
+      </div>
+    </div>
+    <div class="row g-3">
+      <div class="col-6 col-md-4 col-lg-2" data-aos="zoom-in" data-aos-delay="0">
+        <div class="ministry-card">
+          <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?w=400&q=70" alt="Youth Ministry" />
+          <div class="overlay">
+            <i class="bi bi-lightning-fill icon"></i>
+            <h5>Youth &amp; Young Adults</h5>
+            <p>Empowering the next generation through faith, fellowship, and service.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2" data-aos="zoom-in" data-aos-delay="60">
+        <div class="ministry-card">
+          <img src="https://images.unsplash.com/photo-1560807707-8cc77767d783?w=400&q=70" alt="Children's Ministry" />
+          <div class="overlay">
+            <i class="bi bi-stars icon"></i>
+            <h5>Children's Ministry</h5>
+            <p>Nurturing little hearts to love Jesus from a young age.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2" data-aos="zoom-in" data-aos-delay="120">
+        <div class="ministry-card">
+          <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=400&q=70" alt="Music Ministry" />
+          <div class="overlay">
+            <i class="bi bi-music-note-beamed icon"></i>
+            <h5>Music Ministry</h5>
+            <p>Worshipping God through song, instruments, and creative expression.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2" data-aos="zoom-in" data-aos-delay="180">
+        <div class="ministry-card">
+          <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=400&q=70" alt="Health Ministry" />
+          <div class="overlay">
+            <i class="bi bi-heart-pulse-fill icon"></i>
+            <h5>Health &amp; Wellness</h5>
+            <p>Promoting total health of body, mind, and spirit in the community.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2" data-aos="zoom-in" data-aos-delay="240">
+        <div class="ministry-card">
+          <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=400&q=70" alt="Community Service" />
+          <div class="overlay">
+            <i class="bi bi-hand-thumbs-up-fill icon"></i>
+            <h5>Community Service</h5>
+            <p>Serving the vulnerable with food, clothing, and compassion.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2" data-aos="zoom-in" data-aos-delay="300">
+        <div class="ministry-card">
+          <img src="https://images.unsplash.com/photo-1591522811280-a8759970b03f?w=400&q=70" alt="Prayer Ministry" />
+          <div class="overlay">
+            <i class="bi bi-brightness-high-fill icon"></i>
+            <h5>Prayer Ministry</h5>
+            <p>Interceding for our church, community, and world — day and night.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-4" data-aos="fade-up">
+      <a href="#" class="btn btn-sda-primary">Explore All Ministries <i class="bi bi-arrow-right ms-1"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA / CONNECT ===================== -->
+<section id="connect">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6" data-aos="fade-right">
+        <span class="section-label" style="color:var(--sda-navy);">Get Connected</span>
+        <div class="divider-gold"></div>
+        <h2 class="h1" style="color:var(--sda-navy);">We'd Love to<br/>Hear From You</h2>
+        <p style="color:rgba(0,30,70,.75);">
+          Whether you want to plan your first visit, request prayer, enrol in Bible studies,
+          or simply say hello — our door (and inbox) is always open.
+        </p>
+        <ul class="list-unstyled mt-4">
+          <li class="d-flex align-items-center gap-2 mb-3" style="color:var(--sda-navy);">
+            <i class="bi bi-clock-fill fs-5"></i>
+            <div><strong>Sabbath Services</strong><br/><small>9:30 AM (Sabbath School) · 11:00 AM (Divine Service)</small></div>
+          </li>
+          <li class="d-flex align-items-center gap-2 mb-3" style="color:var(--sda-navy);">
+            <i class="bi bi-geo-alt-fill fs-5"></i>
+            <div><strong>Location</strong><br/><small>12 Faith Avenue, Maranatha · Region 1200</small></div>
+          </li>
+          <li class="d-flex align-items-center gap-2" style="color:var(--sda-navy);">
+            <i class="bi bi-telephone-fill fs-5"></i>
+            <div><strong>Phone / WhatsApp</strong><br/><small>+1 234 567 890</small></div>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-6" data-aos="fade-left">
+        <div class="bg-white rounded-4 p-4 p-md-5 shadow-lg">
+          <h4 class="text-sda-navy mb-4">Send Us a Message</h4>
+          <form class="connect-form">
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <input type="text" class="form-control" placeholder="First Name" />
+              </div>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" placeholder="Last Name" />
+              </div>
+              <div class="col-12">
+                <input type="email" class="form-control" placeholder="Email Address" />
+              </div>
+              <div class="col-12">
+                <input type="tel" class="form-control" placeholder="Phone Number (optional)" />
+              </div>
+              <div class="col-12">
+                <select class="form-select" style="border-radius:50px;padding:.75rem 1.25rem;border:2px solid rgba(0,63,135,.2);font-family:var(--font-primary);">
+                  <option value="">I'd like to...</option>
+                  <option>Plan my first visit</option>
+                  <option>Request prayer</option>
+                  <option>Enrol in Bible studies</option>
+                  <option>Learn about membership</option>
+                  <option>Get more information</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <textarea class="form-control" rows="3" placeholder="Your message..." style="border-radius:16px;padding:.75rem 1.25rem;border:2px solid rgba(0,63,135,.2);font-family:var(--font-primary);resize:none;"></textarea>
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn btn-sda-primary w-100 py-3">
+                  <i class="bi bi-send me-2"></i>Send Message
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer id="footer">
+  <div class="container">
+    <div class="row g-5">
+      <!-- Brand -->
+      <div class="col-lg-4">
+        <div class="footer-brand">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <svg viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg" width="36">
+              <path d="M27 0 C27 0 18 12 18 24 C18 30 22 36 27 38 L27 80 L33 80 L33 38 C38 36 42 30 42 24 C42 12 33 0 33 0 Z" fill="#F4A623"/>
+              <rect x="10" y="44" width="40" height="6" rx="3" fill="white"/>
+            </svg>
+            <div>
+              <div style="color:#fff;font-weight:700;font-size:1rem;line-height:1.2;">Maranatha SDA Church</div>
+              <div style="color:rgba(255,255,255,.5);font-size:.72rem;">Seventh-day Adventist · Est. 1968</div>
+            </div>
+          </div>
+          <p>A community proclaiming the everlasting gospel and preparing a people for the soon return of Jesus Christ.</p>
+          <div class="social-links">
+            <a href="#" title="YouTube"><i class="bi bi-youtube"></i></a>
+            <a href="#" title="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="#" title="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="#" title="Twitter/X"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" title="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+            <a href="#" title="Spotify Podcast"><i class="bi bi-spotify"></i></a>
+          </div>
+        </div>
+      </div>
+      <!-- Quick Links -->
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Quick Links</div>
+        <ul>
+          <li><a href="#"><i class="bi bi-chevron-right"></i>Home</a></li>
+          <li><a href="#"><i class="bi bi-chevron-right"></i>About Us</a></li>
+          <li><a href="#"><i class="bi bi-chevron-right"></i>Sermons</a></li>
+          <li><a href="#"><i class="bi bi-chevron-right"></i>Events</a></li>
+          <li><a href="#"><i class="bi bi-chevron-right"></i>Ministries</a></li>
+          <li><a href="#"><i class="bi bi-chevron-right"></i>Give Online</a></li>
+        </ul>
+      </div>
+      <!-- Resources -->
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Resources</div>
+        <ul>
+          <li><a href="#"><i class="bi bi-chevron-right"></i>Bible Study</a></li>
+          <li><a href="#"><i class="bi bi-chevron-right"></i>Sabbath School</a></li>
+          <li><a href="#"><i class="bi bi-chevron-right"></i>Devotionals</a></li>
+          <li><a href="#"><i class="bi bi-chevron-right"></i>Prayer Requests</a></li>
+          <li><a href="#"><i class="bi bi-chevron-right"></i>Pathfinders</a></li>
+          <li><a href="#"><i class="bi bi-chevron-right"></i>Our Beliefs</a></li>
+        </ul>
+      </div>
+      <!-- Contact -->
+      <div class="col-lg-4">
+        <div class="footer-heading">Service Times</div>
+        <ul>
+          <li style="color:rgba(255,255,255,.65);font-size:.88rem;margin-bottom:.75rem;">
+            <i class="bi bi-calendar3 text-gold me-2"></i><strong style="color:#fff;">Sabbath School</strong><br/>
+            <span style="padding-left:1.5rem;">Every Saturday · 9:30 AM</span>
+          </li>
+          <li style="color:rgba(255,255,255,.65);font-size:.88rem;margin-bottom:.75rem;">
+            <i class="bi bi-mic text-gold me-2"></i><strong style="color:#fff;">Divine Service</strong><br/>
+            <span style="padding-left:1.5rem;">Every Saturday · 11:00 AM</span>
+          </li>
+          <li style="color:rgba(255,255,255,.65);font-size:.88rem;margin-bottom:.75rem;">
+            <i class="bi bi-moon-stars text-gold me-2"></i><strong style="color:#fff;">Prayer Meeting</strong><br/>
+            <span style="padding-left:1.5rem;">Every Wednesday · 6:30 PM</span>
+          </li>
+          <li style="color:rgba(255,255,255,.65);font-size:.88rem;">
+            <i class="bi bi-telephone text-gold me-2"></i><strong style="color:#fff;">24/7 Prayer Line</strong><br/>
+            <span style="padding-left:1.5rem;">+1 234 567 890</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <p>© 2026 Maranatha Seventh-day Adventist Church. Part of the <a href="https://www.adventist.org" style="color:rgba(255,255,255,.5);">General Conference of Seventh-day Adventists</a>.</p>
+        </div>
+        <div class="col-md-6 text-md-end mt-2 mt-md-0">
+          <p>
+            <a href="#" style="color:rgba(255,255,255,.4);font-size:.78rem;">Privacy Policy</a>
+            &nbsp;·&nbsp;
+            <a href="#" style="color:rgba(255,255,255,.4);font-size:.78rem;">Terms of Use</a>
+            &nbsp;·&nbsp;
+            <a href="#" style="color:rgba(255,255,255,.4);font-size:.78rem;">Accessibility</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Scroll to Top -->
+<button id="scrollTop" title="Back to top"><i class="bi bi-arrow-up"></i></button>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- AOS JS -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+<script>
+  // AOS init
+  AOS.init({ once: true, duration: 750, easing: 'ease-out-cubic' });
+
+  // Navbar scroll effect
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // Scroll to top button
+  const scrollTopBtn = document.getElementById('scrollTop');
+  window.addEventListener('scroll', () => {
+    scrollTopBtn.classList.toggle('show', window.scrollY > 400);
+  });
+  scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // Smooth nav link scrolling
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        const offset = document.getElementById('mainNav').offsetHeight + 10;
+        window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
+        // Close mobile menu
+        const menu = document.getElementById('navMenu');
+        if (menu.classList.contains('show')) {
+          new bootstrap.Collapse(menu).hide();
+        }
+      }
+    });
+  });
+
+  // Active nav link on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('#mainNav .nav-link');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => {
+          l.classList.remove('active');
+          if (l.getAttribute('href') === '#' + entry.target.id) l.classList.add('active');
+        });
+      }
+    });
+  }, { threshold: 0.3, rootMargin: '-80px 0px 0px 0px' });
+  sections.forEach(s => observer.observe(s));
+
+  // Connect form submit (demo)
+  document.querySelector('.connect-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type=submit]');
+    btn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Message Sent! God bless you.';
+    btn.disabled = true;
+    btn.style.background = 'var(--sda-navy)';
+    setTimeout(() => {
+      btn.innerHTML = '<i class="bi bi-send me-2"></i>Send Message';
+      btn.disabled = false;
+      btn.style.background = '';
+      e.target.reset();
+    }, 4000);
+  });
+</script>
+</body>
+</html>
