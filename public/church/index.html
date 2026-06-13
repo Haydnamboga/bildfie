@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grace Adventist Church — Welcome Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:        #0A587F;
+      --blue-dark:   #073d58;
+      --blue-light:  #e6f2f8;
+      --orange:      #ED904A;
+      --orange-dark: #d97a35;
+      --aqua:        #0FA5A5;
+      --white:       #FFFFFF;
+      --gray-50:     #f9fafb;
+      --gray-100:    #f3f4f6;
+      --gray-200:    #e5e7eb;
+      --gray-400:    #9ca3af;
+      --gray-600:    #4b5563;
+      --gray-800:    #1f2937;
+      --gray-900:    #111827;
+      --font-body:   'Noto Sans', 'Inter', sans-serif;
+      --font-display:'Inter', sans-serif;
+      --shadow-sm:   0 1px 2px rgba(0,0,0,.06);
+      --shadow-md:   0 4px 16px rgba(0,0,0,.10);
+      --shadow-lg:   0 12px 40px rgba(0,0,0,.15);
+      --radius:      12px;
+      --transition:  0.25s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--gray-800);
+      background: var(--white);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+
+    /* ── Utility ── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .section { padding: 6rem 0; }
+    .section-sm { padding: 3.5rem 0; }
+
+    .badge {
+      display: inline-block;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 1rem;
+    }
+    .badge::before { content: '—  '; }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 4vw, 2.75rem);
+      font-weight: 800;
+      color: var(--gray-900);
+      line-height: 1.15;
+    }
+    .section-title span { color: var(--blue); }
+
+    .section-sub {
+      margin-top: .75rem;
+      font-size: 1.05rem;
+      color: var(--gray-600);
+      max-width: 560px;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .8rem 1.75rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: .95rem;
+      cursor: pointer;
+      border: none;
+      transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-primary { background: var(--orange); color: var(--white); }
+    .btn-primary:hover { background: var(--orange-dark); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 2px solid rgba(255,255,255,.6);
+    }
+    .btn-outline:hover { border-color: var(--white); background: rgba(255,255,255,.1); }
+
+    .btn-blue { background: var(--blue); color: var(--white); }
+    .btn-blue:hover { background: var(--blue-dark); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--blue);
+      border: 2px solid var(--blue);
+    }
+    .btn-ghost:hover { background: var(--blue); color: var(--white); }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 999;
+      transition: background var(--transition), box-shadow var(--transition), padding var(--transition);
+      padding: 1.25rem 0;
+    }
+    .nav.scrolled {
+      background: var(--white);
+      box-shadow: var(--shadow-md);
+      padding: .75rem 0;
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--white);
+      transition: color var(--transition);
+    }
+    .nav.scrolled .nav-logo { color: var(--blue); }
+
+    .nav-logo-icon {
+      width: 40px; height: 40px;
+      background: var(--orange);
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .nav-logo-icon svg { width: 22px; height: 22px; fill: white; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: .25rem;
+    }
+    .nav-links a {
+      padding: .5rem .85rem;
+      border-radius: 8px;
+      font-size: .9rem;
+      font-weight: 500;
+      color: rgba(255,255,255,.85);
+      transition: color var(--transition), background var(--transition);
+    }
+    .nav.scrolled .nav-links a { color: var(--gray-600); }
+    .nav-links a:hover {
+      color: var(--white);
+      background: rgba(255,255,255,.15);
+    }
+    .nav.scrolled .nav-links a:hover {
+      color: var(--blue);
+      background: var(--blue-light);
+    }
+
+    .nav-cta { margin-left: .5rem; }
+
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: .5rem;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: background var(--transition);
+    }
+    .nav.scrolled .nav-hamburger span { background: var(--gray-800); }
+
+    /* mobile nav */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--blue-dark);
+      z-index: 998;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--white);
+      opacity: .85;
+      transition: opacity var(--transition);
+    }
+    .mobile-menu a:hover { opacity: 1; }
+    .mobile-menu-close {
+      position: absolute;
+      top: 1.5rem; right: 1.5rem;
+      background: none; border: none;
+      color: var(--white);
+      font-size: 2rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background: var(--blue-dark);
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(7,61,88,.93) 0%, rgba(10,88,127,.78) 50%, rgba(15,165,165,.35) 100%),
+        url('https://images.unsplash.com/photo-1438032005730-c779502df39b?w=1600&q=80') center/cover no-repeat;
+    }
+    .hero-shapes {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .hero-shapes::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(237,144,74,.18) 0%, transparent 70%);
+      right: -100px; top: -100px;
+    }
+    .hero-shapes::after {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(15,165,165,.15) 0%, transparent 70%);
+      left: -50px; bottom: -50px;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      color: var(--white);
+      max-width: 700px;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .8rem;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 30px; height: 2px;
+      background: var(--orange);
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+    }
+    .hero-title em {
+      font-style: normal;
+      color: var(--orange);
+    }
+    .hero-desc {
+      font-size: 1.1rem;
+      line-height: 1.75;
+      color: rgba(255,255,255,.82);
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 3.5rem;
+    }
+    .hero-service-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .service-item {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      color: rgba(255,255,255,.75);
+      font-size: .9rem;
+    }
+    .service-item-icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.12);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .service-item-icon svg { width: 16px; height: 16px; stroke: var(--orange); fill: none; stroke-width: 2; }
+    .service-item strong { display: block; color: var(--white); font-size: .95rem; }
+
+    /* scroll indicator */
+    .hero-scroll {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .4rem;
+      color: rgba(255,255,255,.5);
+      font-size: .7rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+    .hero-scroll svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+    @keyframes bounce {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      background: var(--blue);
+      padding: 2rem 0;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      text-align: center;
+    }
+    .stat-item { color: var(--white); }
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .stat-number span { color: var(--orange); }
+    .stat-label {
+      font-size: .8rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.65);
+      margin-top: .25rem;
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .about-image-stack {
+      position: relative;
+      height: 480px;
+    }
+    .about-img-main {
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .about-img-main img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .about-img-accent {
+      position: absolute;
+      bottom: -1.5rem;
+      right: -1.5rem;
+      width: 200px; height: 160px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 4px solid var(--white);
+      box-shadow: var(--shadow-lg);
+    }
+    .about-img-accent img { width: 100%; height: 100%; object-fit: cover; }
+    .about-badge-card {
+      position: absolute;
+      top: -1rem;
+      left: -1rem;
+      background: var(--orange);
+      color: var(--white);
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+    .about-badge-card strong { display: block; font-size: 1.6rem; font-weight: 800; line-height: 1; }
+    .about-badge-card span { font-size: .75rem; opacity: .9; }
+
+    .about-features { margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+    .about-feature {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .about-feature-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: var(--blue-light);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .about-feature-icon svg { width: 20px; height: 20px; stroke: var(--blue); fill: none; stroke-width: 2; }
+    .about-feature h4 { font-weight: 700; margin-bottom: .15rem; }
+    .about-feature p { font-size: .9rem; color: var(--gray-600); }
+
+    /* ── SERVICES ── */
+    .services-bg { background: var(--gray-50); }
+    .services-header { text-align: center; margin-bottom: 3.5rem; }
+    .services-header .section-sub { margin: .75rem auto 0; }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .service-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+      transition: transform var(--transition), box-shadow var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--blue);
+      transform: scaleX(0);
+      transition: transform var(--transition);
+      transform-origin: left;
+    }
+    .service-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .service-card:hover::before { transform: scaleX(1); }
+
+    .service-card-icon {
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 1.25rem;
+    }
+    .service-card-icon svg { width: 24px; height: 24px; fill: none; stroke-width: 2; }
+    .service-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
+    .service-card p { font-size: .9rem; color: var(--gray-600); line-height: 1.65; }
+    .service-card-time {
+      display: inline-block;
+      margin-top: 1rem;
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--blue);
+      background: var(--blue-light);
+      padding: .25rem .75rem;
+      border-radius: 50px;
+    }
+
+    /* ── SERMON ── */
+    .sermon-section { background: var(--white); }
+    .sermon-inner {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .sermon-video-wrap {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      aspect-ratio: 16/9;
+      background: var(--gray-900);
+      cursor: pointer;
+    }
+    .sermon-video-wrap img { width: 100%; height: 100%; object-fit: cover; opacity: .75; }
+    .sermon-play-btn {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: var(--orange);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 0 0 12px rgba(237,144,74,.2);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .sermon-video-wrap:hover .sermon-play-btn {
+      transform: translate(-50%, -50%) scale(1.08);
+      box-shadow: 0 0 0 16px rgba(237,144,74,.2);
+    }
+    .sermon-play-btn svg { width: 28px; height: 28px; fill: white; margin-left: 4px; }
+    .sermon-tag {
+      display: inline-block;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--white);
+      background: var(--blue);
+      padding: .3rem .9rem;
+      border-radius: 50px;
+      margin-bottom: 1.25rem;
+    }
+    .sermon-title-text {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: .75rem;
+      color: var(--gray-900);
+    }
+    .sermon-meta { font-size: .875rem; color: var(--gray-400); margin-bottom: 1.25rem; }
+    .sermon-meta span { color: var(--gray-600); }
+    .sermon-excerpt { color: var(--gray-600); font-size: .95rem; line-height: 1.75; margin-bottom: 2rem; }
+    .sermon-series {
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--gray-200);
+    }
+    .sermon-series-label { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--gray-400); }
+    .sermon-series-list { display: flex; gap: .75rem; flex-wrap: wrap; }
+    .sermon-series-item {
+      background: var(--gray-100);
+      border-radius: 8px;
+      padding: .5rem 1rem;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+    }
+    .sermon-series-item:hover, .sermon-series-item.active {
+      background: var(--blue);
+      color: var(--white);
+    }
+
+    /* ── EVENTS ── */
+    .events-bg { background: var(--gray-50); }
+    .events-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem; }
+    .events-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .event-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+      display: flex;
+      flex-direction: column;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .event-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .event-img {
+      width: 100%; height: 180px;
+      object-fit: cover;
+    }
+    .event-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
+    .event-date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--orange);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: .6rem;
+    }
+    .event-date-badge svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .event-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: .4rem; }
+    .event-card p { font-size: .875rem; color: var(--gray-600); line-height: 1.6; flex: 1; }
+    .event-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--gray-100);
+    }
+    .event-location { font-size: .8rem; color: var(--gray-400); display: flex; align-items: center; gap: .35rem; }
+    .event-location svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .event-register {
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--blue);
+      display: flex; align-items: center; gap: .3rem;
+    }
+    .event-register svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+    /* ── MINISTRIES ── */
+    .ministries-header { text-align: center; margin-bottom: 3.5rem; }
+    .ministries-header .section-sub { margin: .75rem auto 0; }
+    .ministries-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+    }
+    .ministry-card {
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+      aspect-ratio: 3/4;
+      cursor: pointer;
+    }
+    .ministry-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .4s ease;
+    }
+    .ministry-card:hover img { transform: scale(1.06); }
+    .ministry-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(7,61,88,.9) 0%, rgba(7,61,88,.3) 50%, transparent 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.5rem;
+      color: var(--white);
+    }
+    .ministry-icon {
+      width: 40px; height: 40px;
+      border-radius: 8px;
+      background: var(--orange);
+      display: grid;
+      place-items: center;
+      margin-bottom: .75rem;
+    }
+    .ministry-icon svg { width: 18px; height: 18px; stroke: white; fill: none; stroke-width: 2; }
+    .ministry-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: .25rem; }
+    .ministry-card p { font-size: .8rem; opacity: .8; line-height: 1.5; }
+
+    /* ── GIVE ── */
+    .give-section {
+      background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 60%, var(--aqua) 100%);
+      color: var(--white);
+      text-align: center;
+      padding: 6rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .give-section::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.04);
+      top: -150px; right: -150px;
+    }
+    .give-section::after {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: rgba(237,144,74,.1);
+      bottom: -100px; left: -100px;
+    }
+    .give-content { position: relative; z-index: 2; }
+    .give-section .section-title { color: var(--white); margin-bottom: .75rem; }
+    .give-section .section-title span { color: var(--orange); }
+    .give-section .section-sub { color: rgba(255,255,255,.75); margin: 0 auto 2.5rem; }
+    .give-options {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .give-option {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 50px;
+      padding: .5rem 1.5rem;
+      color: var(--white);
+      font-size: .9rem;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .give-option:hover, .give-option.active { background: var(--orange); border-color: var(--orange); }
+
+    /* ── CONNECT ── */
+    .connect-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .connect-form {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--gray-200);
+    }
+    .connect-form h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: .5rem;
+    }
+    .connect-form p { font-size: .9rem; color: var(--gray-600); margin-bottom: 1.75rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label {
+      display: block;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      margin-bottom: .4rem;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: .75rem 1rem;
+      border-radius: 8px;
+      border: 1.5px solid var(--gray-200);
+      font-family: var(--font-body);
+      font-size: .9rem;
+      color: var(--gray-800);
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+      background: var(--white);
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(10,88,127,.1);
+    }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+
+    .connect-info { display: flex; flex-direction: column; gap: 1.5rem; }
+    .connect-info-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .connect-info-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: var(--blue-light);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .connect-info-icon svg { width: 22px; height: 22px; stroke: var(--blue); fill: none; stroke-width: 2; }
+    .connect-info-item h4 { font-weight: 700; margin-bottom: .15rem; }
+    .connect-info-item p { font-size: .9rem; color: var(--gray-600); }
+
+    /* ── NEW HERE BANNER ── */
+    .new-here {
+      background: var(--orange);
+      padding: 3rem 0;
+    }
+    .new-here-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .new-here-text h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 800;
+      color: var(--white);
+    }
+    .new-here-text p { color: rgba(255,255,255,.85); margin-top: .25rem; }
+    .btn-white { background: var(--white); color: var(--orange); font-weight: 700; }
+    .btn-white:hover { background: var(--gray-100); }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: var(--gray-900);
+      color: rgba(255,255,255,.7);
+      padding: 4rem 0 2rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+    .footer-brand-name {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      margin-bottom: 1rem;
+    }
+    .footer-brand-name .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); }
+    .footer-desc { font-size: .875rem; line-height: 1.75; margin-bottom: 1.5rem; }
+    .footer-socials { display: flex; gap: .6rem; }
+    .footer-social {
+      width: 38px; height: 38px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.08);
+      display: grid;
+      place-items: center;
+      transition: background var(--transition);
+    }
+    .footer-social:hover { background: var(--blue); }
+    .footer-social svg { width: 16px; height: 16px; stroke: white; fill: none; stroke-width: 2; }
+
+    .footer-col h4 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 1.25rem;
+      font-size: .95rem;
+    }
+    .footer-links { display: flex; flex-direction: column; gap: .6rem; }
+    .footer-links a {
+      font-size: .875rem;
+      color: rgba(255,255,255,.6);
+      transition: color var(--transition);
+    }
+    .footer-links a:hover { color: var(--orange); }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: .8rem;
+    }
+    .footer-bottom a { color: rgba(255,255,255,.5); transition: color var(--transition); }
+    .footer-bottom a:hover { color: var(--orange); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .nav-links, .nav-cta { display: none; }
+      .nav-hamburger { display: flex; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .about-grid { grid-template-columns: 1fr; }
+      .about-image-stack { height: 320px; }
+      .services-grid { grid-template-columns: 1fr 1fr; }
+      .sermon-inner { grid-template-columns: 1fr; }
+      .events-grid { grid-template-columns: 1fr 1fr; }
+      .ministries-grid { grid-template-columns: 1fr 1fr; }
+      .connect-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .new-here-inner { flex-direction: column; text-align: center; }
+    }
+
+    @media (max-width: 580px) {
+      .services-grid { grid-template-columns: 1fr; }
+      .events-grid { grid-template-columns: 1fr; }
+      .ministries-grid { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .hero-actions { flex-direction: column; }
+    }
+
+    /* ── ANIMATE ON SCROLL ── */
+    .aos {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .aos.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .aos-delay-1 { transition-delay: .1s; }
+    .aos-delay-2 { transition-delay: .2s; }
+    .aos-delay-3 { transition-delay: .3s; }
+    .aos-delay-4 { transition-delay: .4s; }
+  </style>
+</head>
+<body>
+
+<!-- ══ MOBILE MENU ══ -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" id="mobileClose">&#215;</button>
+  <a href="#about" onclick="closeMobile()">About Us</a>
+  <a href="#worship" onclick="closeMobile()">Worship</a>
+  <a href="#sermons" onclick="closeMobile()">Sermons</a>
+  <a href="#events" onclick="closeMobile()">Events</a>
+  <a href="#ministries" onclick="closeMobile()">Ministries</a>
+  <a href="#connect" onclick="closeMobile()">Connect</a>
+  <a href="#give" class="btn btn-primary" onclick="closeMobile()" style="margin-top:1rem">Give Online</a>
+</div>
+
+<!-- ══ NAVIGATION ══ -->
+<nav class="nav" id="mainNav">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-icon">
+          <!-- Flame / Cross Symbol -->
+          <svg viewBox="0 0 22 22"><path d="M11 2C11 2 6 7 6 12a5 5 0 0010 0c0-5-5-10-5-10z"/><line x1="11" y1="17" x2="11" y2="20" stroke="white" stroke-width="1.5"/></svg>
+        </div>
+        Grace Adventist Church
+      </a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#worship">Worship</a></li>
+        <li><a href="#sermons">Sermons</a></li>
+        <li><a href="#events">Events</a></li>
+        <li><a href="#ministries">Ministries</a></li>
+        <li><a href="#connect">Connect</a></li>
+      </ul>
+      <a href="#give" class="btn btn-primary nav-cta">Give Online</a>
+      <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-shapes"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Seventh-day Adventist Church</div>
+      <h1 class="hero-title">
+        A Place to<br><em>Belong,</em> Grow<br>&amp; Serve
+      </h1>
+      <p class="hero-desc">
+        We are a community rooted in hope, grace, and the love of God. Join us every Sabbath as we worship, learn, and build a life of purpose together.
+      </p>
+      <div class="hero-actions">
+        <a href="#connect" class="btn btn-primary">Plan a Visit</a>
+        <a href="#sermons" class="btn btn-outline">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Watch Latest Sermon
+        </a>
+      </div>
+      <div class="hero-service-strip">
+        <div class="service-item">
+          <div class="service-item-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <strong>Sabbath School</strong>
+            9:30 AM
+          </div>
+        </div>
+        <div class="service-item">
+          <div class="service-item-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/></svg>
+          </div>
+          <div>
+            <strong>Divine Service</strong>
+            11:00 AM
+          </div>
+        </div>
+        <div class="service-item">
+          <div class="service-item-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div>
+            <strong>Every Saturday</strong>
+            All Welcome
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+</section>
+
+<!-- ══ STATS BAR ══ -->
+<div class="stats-bar">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item aos">
+        <div class="stat-number"><span>22</span>M+</div>
+        <div class="stat-label">Members Worldwide</div>
+      </div>
+      <div class="stat-item aos aos-delay-1">
+        <div class="stat-number"><span>200</span>+</div>
+        <div class="stat-label">Countries Reached</div>
+      </div>
+      <div class="stat-item aos aos-delay-2">
+        <div class="stat-number"><span>13</span></div>
+        <div class="stat-label">World Divisions</div>
+      </div>
+      <div class="stat-item aos aos-delay-3">
+        <div class="stat-number"><span>50</span>+</div>
+        <div class="stat-label">Years of Local Ministry</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ABOUT ══ -->
+<section class="section about-section" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-image-stack aos">
+        <div class="about-img-main">
+          <img src="https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=800&q=80" alt="Church congregation worshipping" loading="lazy" />
+        </div>
+        <div class="about-badge-card">
+          <strong>1874</strong>
+          <span>Est. Worldwide</span>
+        </div>
+        <div class="about-img-accent">
+          <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=400&q=80" alt="Community fellowship" loading="lazy" />
+        </div>
+      </div>
+      <div class="aos aos-delay-1">
+        <div class="badge">Who We Are</div>
+        <h2 class="section-title">More Than a Church —<br>A <span>Global Family</span></h2>
+        <p class="section-sub">
+          The Seventh-day Adventist Church is one of the world's fastest-growing Christian denominations, united by a common faith and a shared mission to proclaim the everlasting gospel to every nation, kindred, tongue, and people.
+        </p>
+        <div class="about-features">
+          <div class="about-feature">
+            <div class="about-feature-icon">
+              <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            </div>
+            <div>
+              <h4>Christ-Centered Worship</h4>
+              <p>Every service is designed to draw us closer to Jesus through prayer, Scripture, and Spirit-filled praise.</p>
+            </div>
+          </div>
+          <div class="about-feature">
+            <div class="about-feature-icon">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <div>
+              <h4>Wholistic Community</h4>
+              <p>We care for the whole person — spiritual, physical, and social — through health, education, and social outreach.</p>
+            </div>
+          </div>
+          <div class="about-feature">
+            <div class="about-feature-icon">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+            </div>
+            <div>
+              <h4>Global Mission</h4>
+              <p>Operating in over 200 countries, we work together to share hope with communities in every corner of the earth.</p>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:2rem; display:flex; gap:1rem; flex-wrap:wrap;">
+          <a href="#connect" class="btn btn-blue">Plan a Visit</a>
+          <a href="#about" class="btn btn-ghost">Our Beliefs</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WORSHIP SERVICES ══ -->
+<section class="section services-bg section" id="worship">
+  <div class="container">
+    <div class="services-header aos">
+      <div class="badge">Join Us</div>
+      <h2 class="section-title">Worship <span>Services</span></h2>
+      <p class="section-sub">Every Sabbath we gather to worship, study, and encourage one another. There's a place for everyone.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card aos">
+        <div class="service-card-icon" style="background:#e6f2f8">
+          <svg viewBox="0 0 24 24" stroke="var(--blue)"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        </div>
+        <h3>Sabbath School</h3>
+        <p>An interactive Bible study for all ages — children, youth, and adults — exploring the Scriptures together in small groups.</p>
+        <span class="service-card-time">Saturdays · 9:30 AM</span>
+      </div>
+      <div class="service-card aos aos-delay-1">
+        <div class="service-card-icon" style="background:#fff3e8">
+          <svg viewBox="0 0 24 24" stroke="var(--orange)"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/></svg>
+        </div>
+        <h3>Divine Worship Service</h3>
+        <p>Our main Sabbath celebration featuring uplifting music, passionate preaching, and a spirit-filled atmosphere for the whole family.</p>
+        <span class="service-card-time">Saturdays · 11:00 AM</span>
+      </div>
+      <div class="service-card aos aos-delay-2">
+        <div class="service-card-icon" style="background:#e6f8f8">
+          <svg viewBox="0 0 24 24" stroke="var(--aqua)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <h3>Wednesday Prayer Meeting</h3>
+        <p>A midweek gathering for prayer, testimony, and encouragement. Come with your burdens and leave with renewed faith.</p>
+        <span class="service-card-time">Wednesdays · 6:30 PM</span>
+      </div>
+      <div class="service-card aos">
+        <div class="service-card-icon" style="background:#e6f2f8">
+          <svg viewBox="0 0 24 24" stroke="var(--blue)"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        </div>
+        <h3>Youth Programme (AYS)</h3>
+        <p>Adventist Youth Society meets every Friday evening for fellowship, music, testimonies, and mission-focused activities.</p>
+        <span class="service-card-time">Fridays · 5:30 PM</span>
+      </div>
+      <div class="service-card aos aos-delay-1">
+        <div class="service-card-icon" style="background:#fff3e8">
+          <svg viewBox="0 0 24 24" stroke="var(--orange)"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </div>
+        <h3>Children's Division</h3>
+        <p>Age-appropriate, Bible-based programmes that make faith fun and foundational for our youngest members and visitors.</p>
+        <span class="service-card-time">Every Sabbath · 9:30 AM</span>
+      </div>
+      <div class="service-card aos aos-delay-2">
+        <div class="service-card-icon" style="background:#e6f8f8">
+          <svg viewBox="0 0 24 24" stroke="var(--aqua)"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h3>Online Livestream</h3>
+        <p>Can't make it in person? Watch our Sabbath services live on YouTube and join the community from anywhere in the world.</p>
+        <span class="service-card-time">Saturdays · 11:00 AM Live</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LATEST SERMON ══ -->
+<section class="section sermon-section" id="sermons">
+  <div class="container">
+    <div class="sermon-inner">
+      <div class="aos">
+        <div class="sermon-video-wrap">
+          <img src="https://images.unsplash.com/photo-1542435503-956c469947f6?w=800&q=80" alt="Latest sermon thumbnail" loading="lazy" />
+          <div class="sermon-play-btn">
+            <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+        </div>
+        <div class="sermon-series" style="margin-top:1.5rem">
+          <div class="sermon-series-label">Browse Series</div>
+          <div class="sermon-series-list">
+            <span class="sermon-series-item active">Hope in Crisis</span>
+            <span class="sermon-series-item">Daniel & Revelation</span>
+            <span class="sermon-series-item">Foundations</span>
+            <span class="sermon-series-item">Healing</span>
+          </div>
+        </div>
+      </div>
+      <div class="aos aos-delay-1">
+        <div class="badge">Latest Message</div>
+        <div class="sermon-tag">LIVE THIS SABBATH</div>
+        <h2 class="sermon-title-text">"When God Seems Silent: Faith in the Waiting"</h2>
+        <div class="sermon-meta">
+          <span>Pastor Emmanuel Osei</span> · June 7, 2025 · 42 min
+        </div>
+        <p class="sermon-excerpt">
+          In seasons of silence, God is not absent — He is working. This message explores the life of Elijah under the juniper tree and what it means to trust God's timing even when the heavens seem closed.
+        </p>
+        <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+          <a href="#" class="btn btn-blue">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Watch Now
+          </a>
+          <a href="#" class="btn btn-ghost">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+            Listen / Download
+          </a>
+        </div>
+        <p style="margin-top:1.5rem; font-size:.85rem; color:var(--gray-400)">
+          📖 Scripture: 1 Kings 19:1–18 &nbsp;·&nbsp; 🎵 Hymns used this week available in bulletin
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ EVENTS ══ -->
+<section class="section events-bg" id="events">
+  <div class="container">
+    <div class="events-header">
+      <div class="aos">
+        <div class="badge">What's Happening</div>
+        <h2 class="section-title">Upcoming <span>Events</span></h2>
+      </div>
+      <a href="#" class="btn btn-ghost aos">View All Events</a>
+    </div>
+    <div class="events-grid">
+      <div class="event-card aos">
+        <img class="event-img" src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80" alt="Community health expo" loading="lazy" />
+        <div class="event-body">
+          <div class="event-date-badge">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            June 21, 2025
+          </div>
+          <h3>Community Health &amp; Wellness Expo</h3>
+          <p>Free health screenings, nutrition consultations, and wellness talks — open to the entire community. Bringing hope through wholistic health.</p>
+          <div class="event-card-footer">
+            <div class="event-location">
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Church Grounds
+            </div>
+            <a href="#" class="event-register">Register Free
+              <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="event-card aos aos-delay-1">
+        <img class="event-img" src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=600&q=80" alt="Youth camp" loading="lazy" />
+        <div class="event-body">
+          <div class="event-date-badge">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            July 4–7, 2025
+          </div>
+          <h3>Youth Camp Meeting — "Ignite 2025"</h3>
+          <p>Four days of worship, adventure, discipleship, and connection for young people ages 13–30. Powerful speakers, live music, and outdoor activities.</p>
+          <div class="event-card-footer">
+            <div class="event-location">
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Camp Adventist
+            </div>
+            <a href="#" class="event-register">Register Now
+              <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="event-card aos aos-delay-2">
+        <img class="event-img" src="https://images.unsplash.com/photo-1455849318743-b2233052fcff?w=600&q=80" alt="Evangelism series" loading="lazy" />
+        <div class="event-body">
+          <div class="event-date-badge">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Aug 10–24, 2025
+          </div>
+          <h3>Prophecy Seminar — "Hope for Tomorrow"</h3>
+          <p>A powerful two-week evangelistic series exploring Bible prophecy, end-time events, and the eternal hope found in Jesus Christ. Everyone welcome.</p>
+          <div class="event-card-footer">
+            <div class="event-location">
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Main Sanctuary
+            </div>
+            <a href="#" class="event-register">Learn More
+              <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MINISTRIES ══ -->
+<section class="section" id="ministries">
+  <div class="container">
+    <div class="ministries-header aos">
+      <div class="badge">Get Involved</div>
+      <h2 class="section-title">Our <span>Ministries</span></h2>
+      <p class="section-sub">Find your place in the body of Christ. Every ministry is a door to serve, grow, and make a difference.</p>
+    </div>
+    <div class="ministries-grid">
+      <div class="ministry-card aos">
+        <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80" alt="Youth Ministry" loading="lazy" />
+        <div class="ministry-overlay">
+          <div class="ministry-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          </div>
+          <h3>Youth Ministry (AYS)</h3>
+          <p>Empowering young believers to lead, serve, and shine.</p>
+        </div>
+      </div>
+      <div class="ministry-card aos aos-delay-1">
+        <img src="https://images.unsplash.com/photo-1609220136736-443140cffec6?w=600&q=80" alt="Women's Ministry" loading="lazy" />
+        <div class="ministry-overlay">
+          <div class="ministry-icon">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          </div>
+          <h3>Women's Ministry</h3>
+          <p>Nurturing, equipping, and celebrating women of faith.</p>
+        </div>
+      </div>
+      <div class="ministry-card aos aos-delay-2">
+        <img src="https://images.unsplash.com/photo-1536640712-4d4c36ff0e4e?w=600&q=80" alt="Children's Ministry" loading="lazy" />
+        <div class="ministry-overlay">
+          <div class="ministry-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 018 0v2"/></svg>
+          </div>
+          <h3>Children's Ministry</h3>
+          <p>Planting seeds of faith in the hearts of the next generation.</p>
+        </div>
+      </div>
+      <div class="ministry-card aos aos-delay-3">
+        <img src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=600&q=80" alt="Community Outreach" loading="lazy" />
+        <div class="ministry-overlay">
+          <div class="ministry-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          </div>
+          <h3>Community Outreach</h3>
+          <p>Extending the love of Christ beyond our walls into the community.</p>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:2.5rem;">
+      <a href="#" class="btn btn-blue aos">View All Ministries</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ GIVE ══ -->
+<section class="give-section" id="give">
+  <div class="container">
+    <div class="give-content">
+      <div class="badge" style="color:var(--orange)">Support the Mission</div>
+      <h2 class="section-title">Your Generosity <span>Changes Lives</span></h2>
+      <p class="section-sub">
+        Every gift advances the gospel, supports local ministry, and reaches communities around the globe. Give today and be part of something eternal.
+      </p>
+      <div class="give-options">
+        <span class="give-option active">Tithe</span>
+        <span class="give-option">Local Church Budget</span>
+        <span class="give-option">World Mission</span>
+        <span class="give-option">ADRA / Relief</span>
+      </div>
+      <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+        <a href="#" class="btn btn-primary">Give Online Now</a>
+        <a href="#" class="btn btn-outline">Learn About Stewardship</a>
+      </div>
+      <p style="margin-top:1.5rem; font-size:.85rem; color:rgba(255,255,255,.5)">
+        Secure giving powered by SSL encryption · Tax receipts available
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ NEW HERE BANNER ══ -->
+<section class="new-here">
+  <div class="container">
+    <div class="new-here-inner">
+      <div class="new-here-text">
+        <h2>Visiting for the first time?</h2>
+        <p>We'd love to welcome you. Let us know you're coming and we'll make sure you feel at home.</p>
+      </div>
+      <a href="#connect" class="btn btn-white">Plan My First Visit →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONNECT ══ -->
+<section class="section" id="connect">
+  <div class="container">
+    <div class="connect-grid">
+      <div class="aos">
+        <div class="badge">Get In Touch</div>
+        <h2 class="section-title">We'd Love to<br><span>Hear From You</span></h2>
+        <p class="section-sub" style="max-width:100%">
+          Whether you're new in town, searching for a church home, or just have questions — reach out. Our team is here for you.
+        </p>
+        <div class="connect-info" style="margin-top:2.5rem">
+          <div class="connect-info-item">
+            <div class="connect-info-icon">
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div>
+              <h4>Location</h4>
+              <p>123 Adventist Way, Nairobi, Kenya<br>East-Central Africa Division</p>
+            </div>
+          </div>
+          <div class="connect-info-item">
+            <div class="connect-info-icon">
+              <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 12a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1.22h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 9A16 16 0 0015 17.91l1.14-1.14a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+            </div>
+            <div>
+              <h4>Phone</h4>
+              <p>+254 700 000 000<br>Mon–Fri, 8:00 AM – 5:00 PM</p>
+            </div>
+          </div>
+          <div class="connect-info-item">
+            <div class="connect-info-icon">
+              <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div>
+              <h4>Email</h4>
+              <p>hello@graceadventist.org<br>We reply within 24 hours</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="connect-form aos aos-delay-1">
+        <h3>Send Us a Message</h3>
+        <p>Fill in the form and someone from our team will get back to you shortly.</p>
+        <form onsubmit="handleFormSubmit(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" placeholder="John" required />
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" placeholder="Doe" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" placeholder="john@example.com" required />
+          </div>
+          <div class="form-group">
+            <label>I'm Interested In...</label>
+            <select>
+              <option value="">Select a topic</option>
+              <option>Planning my first visit</option>
+              <option>Joining a ministry</option>
+              <option>Baptism / Bible studies</option>
+              <option>Prayer request</option>
+              <option>General enquiry</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea placeholder="How can we help you?"></textarea>
+          </div>
+          <button type="submit" class="btn btn-blue" style="width:100%; justify-content:center;">
+            Send Message
+          </button>
+        </form>
+        <div id="formSuccess" style="display:none; margin-top:1rem; padding:.75rem 1rem; background:#e6f8f0; border-radius:8px; color:#0a7a4a; font-size:.9rem; font-weight:600;">
+          ✓ Message sent! We'll be in touch within 24 hours.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-name">
+          <div class="dot"></div>
+          Grace Adventist Church
+        </div>
+        <p class="footer-desc">
+          A Seventh-day Adventist Church community committed to worship, fellowship, and sharing the everlasting gospel with the world. Part of the global SDA family in 200+ countries.
+        </p>
+        <div class="footer-socials">
+          <!-- Facebook -->
+          <a href="#" class="footer-social" aria-label="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+          </a>
+          <!-- YouTube -->
+          <a href="#" class="footer-social" aria-label="YouTube">
+            <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.97C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white" stroke="none"/></svg>
+          </a>
+          <!-- Instagram -->
+          <a href="#" class="footer-social" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <!-- WhatsApp -->
+          <a href="#" class="footer-social" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#worship">Service Times</a></li>
+          <li><a href="#sermons">Sermons</a></li>
+          <li><a href="#events">Events</a></li>
+          <li><a href="#ministries">Ministries</a></li>
+          <li><a href="#give">Give Online</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Beliefs &amp; Resources</h4>
+        <ul class="footer-links">
+          <li><a href="#">28 Fundamental Beliefs</a></li>
+          <li><a href="#">Bible Studies</a></li>
+          <li><a href="#">Ellen G. White Writings</a></li>
+          <li><a href="#">Adventist Review</a></li>
+          <li><a href="#">Hope Channel</a></li>
+          <li><a href="#">ADRA International</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>SDA Network</h4>
+        <ul class="footer-links">
+          <li><a href="#">Adventist.org (GC)</a></li>
+          <li><a href="#">ECD — Africa</a></li>
+          <li><a href="#">NAD — North America</a></li>
+          <li><a href="#">TED — Europe</a></li>
+          <li><a href="#">SUD — South Asia</a></li>
+          <li><a href="#">Find a Church Near You</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Grace Adventist Church. All rights reserved.</span>
+      <div style="display:flex; gap:1.5rem;">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Statement of Faith</a>
+        <a href="#">Site Map</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── Sticky Nav ── */
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  /* ── Mobile Menu ── */
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const mobileClose = document.getElementById('mobileClose');
+
+  hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
+  mobileClose.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  function closeMobile() { mobileMenu.classList.remove('open'); }
+
+  /* ── Animate on Scroll ── */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.aos').forEach(el => observer.observe(el));
+
+  /* ── Series Toggle ── */
+  document.querySelectorAll('.sermon-series-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.sermon-series-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+
+  /* ── Give Options ── */
+  document.querySelectorAll('.give-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('.give-option').forEach(o => o.classList.remove('active'));
+      opt.classList.add('active');
+    });
+  });
+
+  /* ── Form Submit ── */
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    document.getElementById('formSuccess').style.display = 'block';
+    e.target.reset();
+    setTimeout(() => document.getElementById('formSuccess').style.display = 'none', 5000);
+  }
+</script>
+</body>
+</html>
