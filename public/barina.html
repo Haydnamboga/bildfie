@@ -1,1082 +1,1111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Barina Community — Own Your Place in Kenya's Future</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Barina Community — Nakuru, Kenya | Premium Planned Settlement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <style>
-/* ════════════════════════════════════════════════
-   BARINA COMMUNITY — design system
-   Theme: deep navy + royal blue (+ gold on CTAs only)
-════════════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#0f1b33;background:#fff;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-img{display:block;max-width:100%}
-a{text-decoration:none;color:inherit}
-button{font-family:inherit;cursor:pointer;border:none;background:none}
-ul{list-style:none}
-
 :root{
-  --ink:#081538;        /* deepest navy */
-  --navy:#0b2350;       /* primary navy */
-  --navy-2:#102d63;
-  --blue:#2563eb;       /* royal/action blue */
-  --blue-2:#3b82f6;
-  --blue-soft:#dbe7fe;
-  --sky:#eef3fc;        /* light tint bg */
-  --sky-2:#f6f9fd;
-  --gold:#d9920a;       /* CTA gold */
-  --gold-2:#eea920;
-  --gold-soft:#fcefcf;
-  --line:#e4eaf3;
-  --line-2:#eef2f8;
-  --muted:#5e6b85;
-  --muted-2:#8896ad;
-  --text:#0f1b33;
-
-  --r-xs:8px; --r-sm:12px; --r:16px; --r-lg:22px; --r-xl:30px; --pill:999px;
-
-  --sh-sm:0 1px 2px rgba(13,30,68,.06),0 2px 6px rgba(13,30,68,.05);
-  --sh-md:0 4px 10px -2px rgba(13,30,68,.08),0 10px 24px -6px rgba(13,30,68,.10);
+  --ink:#081538;--navy:#0b2350;--navy-2:#102d63;--navy-3:#0d1f4f;
+  --blue:#2563eb;--blue-2:#3b82f6;--blue-soft:#dbe7fe;--sky:#eef3fc;
+  --gold:#d9920a;--gold-2:#eea920;--gold-soft:#fcefcf;--gold-3:#b8780a;
+  --line:#e4eaf3;--muted:#5e6b85;--muted-2:#8896ad;
+  --white:#ffffff;
   --sh-lg:0 12px 28px -8px rgba(13,30,68,.16),0 30px 60px -20px rgba(13,30,68,.18);
   --sh-blue:0 16px 40px -10px rgba(37,99,235,.45);
-  --sh-gold:0 12px 30px -8px rgba(217,146,10,.5);
-
-  --ease:cubic-bezier(.4,0,.2,1);
+  --sh-gold:0 8px 24px -6px rgba(217,146,10,.4);
+  --r:12px;--r-lg:20px;--r-xl:28px;
 }
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:#fff;overflow-x:hidden}
 
-/* ── layout helpers ─────────────────────────────── */
-.wrap{width:100%;max-width:1240px;margin:0 auto;padding:0 28px}
-.section{padding:120px 0}
-.eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:.74rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
-.eyebrow::before{content:'';width:26px;height:2px;border-radius:2px;background:var(--blue)}
-.eyebrow.on-dark{color:var(--blue-2)}
-.eyebrow.on-dark::before{background:var(--blue-2)}
-h2.h{font-size:clamp(2.1rem,3.6vw,3.1rem);font-weight:800;line-height:1.12;letter-spacing:-.025em;color:var(--navy)}
-.lead{font-size:1.06rem;line-height:1.75;color:var(--muted);max-width:520px}
-.on-dark h2.h{color:#fff}
-.on-dark .lead{color:rgba(255,255,255,.62)}
+/* ── NAV ── */
+#nav{position:fixed;top:0;left:0;right:0;z-index:900;transition:background .35s,box-shadow .35s,padding .3s;padding:0 2rem}
+#nav.solid{background:#fff;box-shadow:0 1px 0 var(--line),0 4px 20px rgba(11,35,80,.08)}
+.nav-inner{max-width:1320px;margin:0 auto;display:flex;align-items:center;height:68px;gap:1.5rem}
+.nav-logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;flex-shrink:0}
+.nav-logo-mark{width:36px;height:36px;background:linear-gradient(135deg,var(--blue),var(--navy));border-radius:8px;display:flex;align-items:center;justify-content:center}
+.nav-logo-mark svg{width:20px;height:20px;fill:#fff}
+.nav-logo-text{font-weight:800;font-size:1.15rem;letter-spacing:-.02em;color:#fff;transition:color .3s}
+#nav.solid .nav-logo-text{color:var(--navy)}
+.nav-links{display:flex;align-items:center;gap:.25rem;margin-left:.5rem}
+.nav-links a{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.82);text-decoration:none;padding:.45rem .75rem;border-radius:6px;transition:color .2s,background .2s;white-space:nowrap}
+#nav.solid .nav-links a{color:var(--muted)}
+.nav-links a:hover{color:#fff;background:rgba(255,255,255,.12)}
+#nav.solid .nav-links a:hover{color:var(--navy);background:var(--sky)}
+.nav-links .active{color:#fff!important}
+#nav.solid .nav-links .active{color:var(--blue)!important}
+.nav-spacer{flex:1}
+.nav-actions{display:flex;align-items:center;gap:.5rem}
+.nav-icon-btn{width:38px;height:38px;border:none;background:rgba(255,255,255,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,.85);font-size:.88rem;transition:background .2s,color .2s;position:relative}
+#nav.solid .nav-icon-btn{background:var(--sky);color:var(--navy)}
+.nav-icon-btn:hover{background:rgba(255,255,255,.22);color:#fff}
+#nav.solid .nav-icon-btn:hover{background:var(--blue-soft);color:var(--blue)}
+.nav-notif-dot{position:absolute;top:7px;right:8px;width:7px;height:7px;background:#ef4444;border-radius:50%;border:1.5px solid #fff}
+.nav-account{display:flex;align-items:center;gap:.5rem;border:none;background:rgba(255,255,255,.12);padding:.4rem .9rem .4rem .5rem;border-radius:999px;cursor:pointer;color:rgba(255,255,255,.88);font-family:inherit;font-size:.8rem;font-weight:600;transition:background .2s;position:relative}
+#nav.solid .nav-account{background:var(--sky);color:var(--navy)}
+.nav-account:hover{background:rgba(255,255,255,.22)}
+#nav.solid .nav-account:hover{background:var(--blue-soft)}
+.nav-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-2));display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff}
+.nav-account-menu{position:absolute;top:calc(100% + 10px);right:0;background:#fff;border-radius:var(--r);box-shadow:var(--sh-lg);border:1px solid var(--line);min-width:190px;overflow:hidden;opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .2s,transform .2s;z-index:999}
+.nav-account:focus-within .nav-account-menu,.nav-account:hover .nav-account-menu{opacity:1;pointer-events:all;transform:none}
+.nav-account-menu a{display:flex;align-items:center;gap:.7rem;padding:.65rem 1rem;font-size:.82rem;color:var(--ink);text-decoration:none;transition:background .15s}
+.nav-account-menu a:hover{background:var(--sky)}
+.nav-account-menu a i{width:14px;color:var(--muted)}
+.nav-account-divider{height:1px;background:var(--line);margin:.25rem 0}
+.nav-reserve{background:var(--gold);color:#fff;border:none;padding:.45rem 1.1rem;border-radius:999px;font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;transition:background .2s,box-shadow .2s;white-space:nowrap}
+.nav-reserve:hover{background:var(--gold-3);box-shadow:var(--sh-gold)}
 
-/* ── buttons ────────────────────────────────────── */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-weight:700;font-size:.92rem;padding:14px 28px;border-radius:var(--pill);transition:all .25s var(--ease);white-space:nowrap}
-.btn i{font-size:.85em}
-.btn-gold{background:var(--gold);color:#fff;box-shadow:var(--sh-gold)}
-.btn-gold:hover{background:var(--gold-2);transform:translateY(-2px)}
-.btn-navy{background:var(--navy);color:#fff}
-.btn-navy:hover{background:var(--navy-2);transform:translateY(-2px);box-shadow:var(--sh-lg)}
-.btn-blue{background:var(--blue);color:#fff;box-shadow:var(--sh-blue)}
-.btn-blue:hover{background:var(--blue-2);transform:translateY(-2px)}
-.btn-line{background:#fff;color:var(--navy);border:1.5px solid var(--line)}
-.btn-line:hover{border-color:var(--navy);background:var(--sky-2)}
-.btn-glass{background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.28);backdrop-filter:blur(10px)}
-.btn-glass:hover{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.55)}
+/* ── SEARCH OVERLAY ── */
+#search-overlay{position:fixed;inset:0;background:rgba(8,21,56,.75);z-index:1000;display:flex;align-items:flex-start;justify-content:center;padding-top:120px;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(4px)}
+#search-overlay.open{opacity:1;pointer-events:all}
+.search-box{background:#fff;border-radius:var(--r-lg);padding:1.5rem;width:100%;max-width:640px;margin:0 1rem;box-shadow:var(--sh-lg)}
+.search-box input{width:100%;border:2px solid var(--line);border-radius:var(--r);padding:.75rem 1rem;font-family:inherit;font-size:1rem;color:var(--ink);outline:none;transition:border-color .2s}
+.search-box input:focus{border-color:var(--blue)}
+.search-pills{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+.search-pill{background:var(--sky);border:1px solid var(--line);border-radius:999px;padding:.3rem .8rem;font-size:.78rem;font-weight:600;color:var(--navy);cursor:pointer;transition:background .2s}
+.search-pill:hover{background:var(--blue-soft)}
+.search-close{float:right;background:none;border:none;font-size:1.2rem;color:var(--muted);cursor:pointer;margin-bottom:.5rem}
 
-/* ── reveal on scroll ───────────────────────────── */
-.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
-.reveal.in{opacity:1;transform:none}
+/* ── HERO ── */
+#hero{min-height:100vh;background:linear-gradient(160deg,#071230 0%,#0d2259 45%,#0b2350 70%,#071a42 100%);position:relative;overflow:hidden;display:flex;align-items:center}
+.hero-bg-img{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=1600&q=80') center/cover no-repeat;opacity:.12}
+.hero-bg-pattern{position:absolute;inset:0;background-image:radial-gradient(rgba(37,99,235,.08) 1px,transparent 1px);background-size:32px 32px;opacity:.6}
+.hero-glow-1{position:absolute;top:-120px;right:10%;width:500px;height:500px;background:radial-gradient(circle,rgba(37,99,235,.18) 0%,transparent 70%);pointer-events:none}
+.hero-glow-2{position:absolute;bottom:0;left:5%;width:400px;height:400px;background:radial-gradient(circle,rgba(217,146,10,.1) 0%,transparent 70%);pointer-events:none}
+.hero-container{max-width:1320px;margin:0 auto;padding:120px 2rem 80px;width:100%;display:grid;grid-template-columns:1fr 480px;gap:4rem;align-items:center;position:relative;z-index:1}
+.hero-location-bar{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:1.25rem}
+.hero-chip{display:inline-flex;align-items:center;gap:.35rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:.3rem .75rem;font-size:.75rem;font-weight:600;color:rgba(255,255,255,.88);backdrop-filter:blur(6px)}
+.hero-chip i{font-size:.7rem;color:var(--gold-2)}
+.hero-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(217,146,10,.15);border:1px solid rgba(217,146,10,.3);border-radius:999px;padding:.28rem .8rem;font-size:.72rem;font-weight:700;color:var(--gold-2);text-transform:uppercase;letter-spacing:.05em}
+.hero-h1{font-size:clamp(2.2rem,4.5vw,3.6rem);font-weight:800;line-height:1.1;letter-spacing:-.03em;color:#fff;margin-bottom:1rem}
+.hero-h1 span{background:linear-gradient(90deg,var(--gold-2),#f5c842);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:1rem;line-height:1.7;color:rgba(255,255,255,.68);max-width:520px;margin-bottom:1.75rem}
+.hero-search{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-lg);padding:1.25rem;backdrop-filter:blur(12px)}
+.hero-tabs{display:flex;gap:.25rem;margin-bottom:1rem}
+.hero-tab{background:none;border:none;padding:.4rem .9rem;border-radius:8px;font-family:inherit;font-size:.8rem;font-weight:600;color:rgba(255,255,255,.55);cursor:pointer;transition:background .2s,color .2s}
+.hero-tab.active{background:rgba(255,255,255,.12);color:#fff}
+.hero-search-row{display:flex;gap:.5rem}
+.hero-search-input{flex:1;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:10px;padding:.7rem 1rem;font-family:inherit;font-size:.88rem;color:#fff;outline:none;transition:border-color .2s}
+.hero-search-input::placeholder{color:rgba(255,255,255,.4)}
+.hero-search-input:focus{border-color:rgba(255,255,255,.4)}
+.hero-search-select{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:10px;padding:.7rem .8rem;font-family:inherit;font-size:.82rem;color:rgba(255,255,255,.75);outline:none;cursor:pointer;-webkit-appearance:none}
+.hero-search-select option{background:var(--navy);color:#fff}
+.hero-search-btn{background:var(--gold);border:none;border-radius:10px;padding:.7rem 1.2rem;color:#fff;font-family:inherit;font-weight:700;font-size:.88rem;cursor:pointer;display:flex;align-items:center;gap:.4rem;transition:background .2s;white-space:nowrap}
+.hero-search-btn:hover{background:var(--gold-3)}
+.hero-highlights{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.25rem}
+.hero-hl{display:inline-flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:600;color:rgba(255,255,255,.7)}
+.hero-hl::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--blue-2);flex-shrink:0}
+.hero-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-top:1.5rem}
+.hero-stat{text-align:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);padding:.85rem .5rem}
+.hero-stat-num{font-size:1.4rem;font-weight:800;color:#fff;letter-spacing:-.03em;line-height:1}
+.hero-stat-label{font-size:.68rem;font-weight:600;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em;margin-top:.25rem}
+/* hero right */
+.hero-visual{position:relative;height:540px}
+.hero-photo-main{width:100%;height:340px;object-fit:cover;border-radius:var(--r-xl);box-shadow:0 24px 60px -12px rgba(0,0,0,.5)}
+.hero-photo-inset{position:absolute;bottom:100px;left:-40px;width:200px;height:140px;object-fit:cover;border-radius:var(--r);border:3px solid rgba(255,255,255,.15);box-shadow:var(--sh-lg)}
+.hero-float-card{position:absolute;background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-radius:var(--r);padding:.9rem 1.1rem;box-shadow:var(--sh-lg)}
+.hero-float-1{top:16px;right:-20px}
+.hero-float-2{bottom:60px;right:10px}
+.hero-float-price{font-size:1.05rem;font-weight:800;color:var(--navy);letter-spacing:-.02em}
+.hero-float-sub{font-size:.7rem;font-weight:600;color:var(--muted);margin-top:.1rem}
+.hero-float-badge{display:inline-block;background:linear-gradient(90deg,var(--blue),var(--blue-2));color:#fff;font-size:.65rem;font-weight:700;padding:.25rem .6rem;border-radius:999px;text-transform:uppercase;letter-spacing:.04em}
+.hero-float-avail{display:flex;align-items:center;gap:.4rem;margin-top:.4rem}
+.hero-float-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;box-shadow:0 0 0 3px rgba(34,197,94,.2)}
+.hero-float-avail span{font-size:.72rem;font-weight:600;color:var(--navy)}
+.hero-lake-badge{position:absolute;bottom:0px;left:50%;transform:translateX(-50%);background:rgba(11,35,80,.9);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:.65rem 1rem;display:flex;align-items:center;gap:.6rem;min-width:220px}
+.hero-lake-img{width:36px;height:36px;border-radius:8px;object-fit:cover;flex-shrink:0}
+.hero-lake-text{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.9);line-height:1.4}
+.hero-lake-text strong{display:block;color:#fff;font-size:.78rem}
 
-/* ════════════════════════════════════════════════
-   NAVBAR
-════════════════════════════════════════════════ */
-.nav{position:fixed;inset:0 0 auto 0;z-index:1000;transition:.35s var(--ease)}
-.nav-row{display:flex;align-items:center;height:76px;gap:36px}
-.brand{display:flex;align-items:center;gap:11px}
-.brand-mark{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--blue),var(--navy));display:grid;place-items:center;box-shadow:var(--sh-blue);transition:.35s}
-.brand-mark i{color:#fff;font-size:1.05rem}
-.brand-name{font-weight:800;font-size:1.18rem;letter-spacing:-.02em;color:#fff;transition:.35s}
-.brand-name b{font-weight:800}
-.brand-name .c{color:var(--blue-2);font-weight:600;font-size:.74rem;letter-spacing:.18em;display:block;margin-top:-3px}
-.nav-menu{display:flex;align-items:center;gap:4px;margin-left:auto}
-.nav-menu a{font-size:.9rem;font-weight:600;color:rgba(255,255,255,.78);padding:9px 15px;border-radius:var(--r-xs);transition:.2s}
-.nav-menu a:hover{color:#fff;background:rgba(255,255,255,.12)}
-.nav-act{display:flex;align-items:center;gap:12px;margin-left:18px}
-.nav-login{font-size:.9rem;font-weight:700;color:#fff;padding:10px 18px;border-radius:var(--pill);border:1.5px solid rgba(255,255,255,.3);transition:.2s}
-.nav-login:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.6)}
-.nav-cta{font-size:.9rem;font-weight:700;color:#fff;background:var(--gold);padding:11px 22px;border-radius:var(--pill);box-shadow:var(--sh-gold);transition:.25s}
-.nav-cta:hover{background:var(--gold-2);transform:translateY(-1px)}
-.nav-burger{display:none;font-size:1.3rem;color:#fff;margin-left:auto}
+/* ── 4 FEATURE CARDS ── */
+#features{background:#fff}
+.features-wrap{max-width:1320px;margin:0 auto;padding:5rem 2rem}
+.section-eyebrow{display:inline-flex;align-items:center;gap:.4rem;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);margin-bottom:.75rem}
+.section-eyebrow::before{content:'';display:block;width:18px;height:2px;background:var(--blue);border-radius:1px}
+.section-title{font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;letter-spacing:-.03em;color:var(--navy);line-height:1.15}
+.section-sub{font-size:.95rem;color:var(--muted);margin-top:.6rem;max-width:560px;line-height:1.6}
+.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;margin-top:2.5rem}
+.feat-card{border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--line);position:relative;cursor:pointer;transition:transform .25s,box-shadow .25s;background:#fff}
+.feat-card:hover{transform:translateY(-4px);box-shadow:var(--sh-lg)}
+.feat-card-img{height:180px;object-fit:cover;width:100%;display:block}
+.feat-card-body{padding:1.25rem}
+.feat-card-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.95rem;margin-bottom:.75rem}
+.feat-card-h{font-size:.95rem;font-weight:700;color:var(--navy);margin-bottom:.4rem}
+.feat-card-p{font-size:.8rem;line-height:1.6;color:var(--muted)}
+.feat-card-tag{display:inline-block;margin-top:.75rem;font-size:.7rem;font-weight:700;color:var(--blue);background:var(--blue-soft);border-radius:999px;padding:.25rem .75rem}
 
-/* scrolled state */
-.nav.solid{background:rgba(255,255,255,.88);backdrop-filter:blur(16px) saturate(140%);box-shadow:0 1px 0 var(--line),0 8px 30px -16px rgba(13,30,68,.25)}
-.nav.solid .brand-name{color:var(--navy)}
-.nav.solid .nav-menu a{color:var(--muted)}
-.nav.solid .nav-menu a:hover{color:var(--navy);background:var(--sky)}
-.nav.solid .nav-login{color:var(--navy);border-color:var(--line)}
-.nav.solid .nav-login:hover{background:var(--sky)}
-.nav.solid .nav-burger{color:var(--navy)}
+/* ── PROPERTIES ── */
+#properties{background:var(--sky);padding:5rem 2rem}
+.prop-inner{max-width:1320px;margin:0 auto}
+.prop-header{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2rem}
+.prop-filters{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+.prop-filter{background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:.38rem .9rem;font-family:inherit;font-size:.78rem;font-weight:600;color:var(--muted);cursor:pointer;transition:border-color .2s,color .2s,background .2s}
+.prop-filter.on,.prop-filter:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-soft)}
+.prop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.prop-card{background:#fff;border-radius:var(--r-lg);overflow:hidden;box-shadow:0 2px 12px rgba(11,35,80,.07);border:1px solid var(--line);transition:transform .25s,box-shadow .25s}
+.prop-card:hover{transform:translateY(-3px);box-shadow:var(--sh-lg)}
+.prop-card-img-wrap{position:relative;height:200px;overflow:hidden}
+.prop-card-img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.prop-card:hover .prop-card-img{transform:scale(1.04)}
+.prop-card-badges{position:absolute;top:.75rem;left:.75rem;display:flex;gap:.4rem}
+.badge{display:inline-block;font-size:.65rem;font-weight:700;border-radius:6px;padding:.22rem .55rem;text-transform:uppercase;letter-spacing:.04em}
+.badge-blue{background:var(--blue);color:#fff}
+.badge-gold{background:var(--gold);color:#fff}
+.badge-green{background:#16a34a;color:#fff}
+.prop-card-save{position:absolute;top:.75rem;right:.75rem;width:32px;height:32px;background:#fff;border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:.82rem;transition:color .2s}
+.prop-card-save:hover{color:#ef4444}
+.prop-card-body{padding:1.1rem 1.25rem}
+.prop-price{font-size:1.2rem;font-weight:800;color:var(--navy);letter-spacing:-.02em}
+.prop-price span{font-size:.72rem;font-weight:500;color:var(--muted);margin-left:.25rem}
+.prop-name{font-size:.9rem;font-weight:600;color:var(--ink);margin:.3rem 0}
+.prop-loc{font-size:.78rem;color:var(--muted);display:flex;align-items:center;gap:.3rem;margin-bottom:.75rem}
+.prop-loc i{font-size:.7rem;color:var(--blue)}
+.prop-specs{display:flex;gap:1rem;padding:.75rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.prop-spec{font-size:.75rem;color:var(--muted);display:flex;align-items:center;gap:.3rem}
+.prop-spec strong{color:var(--ink);font-weight:700}
+.prop-spec i{font-size:.7rem;color:var(--blue-2)}
+.prop-cta{width:100%;margin-top:.9rem;padding:.6rem;border:1.5px solid var(--blue);background:transparent;border-radius:8px;font-family:inherit;font-size:.8rem;font-weight:700;color:var(--blue);cursor:pointer;transition:background .2s,color .2s}
+.prop-cta:hover{background:var(--blue);color:#fff}
+.prop-view-all{text-align:center;margin-top:2.5rem}
+.btn-outline-navy{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.75rem;border:2px solid var(--navy);border-radius:999px;font-family:inherit;font-size:.88rem;font-weight:700;color:var(--navy);background:transparent;cursor:pointer;transition:background .2s,color .2s}
+.btn-outline-navy:hover{background:var(--navy);color:#fff}
 
-/* ════════════════════════════════════════════════
-   HERO
-════════════════════════════════════════════════ */
-.hero{position:relative;padding:184px 0 210px;overflow:hidden;isolation:isolate}
-.hero-bg{position:absolute;inset:0;z-index:-3;background:url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1900&q=85') center/cover no-repeat;transform:scale(1.06)}
-.hero-grad{position:absolute;inset:0;z-index:-2;background:
-  linear-gradient(108deg,rgba(8,18,46,.96) 0%,rgba(11,35,84,.9) 38%,rgba(21,58,150,.66) 70%,rgba(37,99,235,.42) 100%)}
-.hero-glow{position:absolute;z-index:-1;width:680px;height:680px;border-radius:50%;
-  background:radial-gradient(circle,rgba(59,130,246,.4) 0%,transparent 65%);
-  top:-220px;right:-160px;filter:blur(20px);pointer-events:none}
-.hero-glow.b{width:480px;height:480px;background:radial-gradient(circle,rgba(217,146,10,.18) 0%,transparent 65%);bottom:-160px;left:-120px;top:auto;right:auto}
+/* ── ABOUT ── */
+#about{background:#fff;padding:5rem 2rem}
+.about-inner{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.about-visual{position:relative}
+.about-main-img{width:100%;height:420px;object-fit:cover;border-radius:var(--r-xl);display:block}
+.about-inset{position:absolute;bottom:-24px;right:-24px;width:220px;height:160px;object-fit:cover;border-radius:var(--r-lg);border:4px solid #fff;box-shadow:var(--sh-lg)}
+.about-stat-card{position:absolute;top:24px;left:-24px;background:#fff;border-radius:var(--r);padding:.9rem 1.1rem;box-shadow:var(--sh-lg);border:1px solid var(--line);min-width:150px}
+.asc-num{font-size:1.6rem;font-weight:800;color:var(--blue);letter-spacing:-.03em;line-height:1}
+.asc-label{font-size:.72rem;font-weight:600;color:var(--muted);margin-top:.2rem}
+.about-body-text{font-size:.93rem;line-height:1.8;color:var(--muted);margin-top:1.25rem}
+.about-climate{display:flex;gap:1rem;margin-top:1.5rem;flex-wrap:wrap}
+.climate-pill{display:flex;align-items:center;gap:.4rem;background:var(--gold-soft);border:1px solid rgba(217,146,10,.2);border-radius:999px;padding:.4rem .9rem;font-size:.78rem;font-weight:600;color:var(--gold-3)}
+.climate-pill i{font-size:.75rem}
+.about-facts{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2rem}
+.af-item{background:var(--sky);border-radius:var(--r);padding:1rem;border-left:3px solid var(--blue)}
+.af-item h4{font-size:.82rem;font-weight:700;color:var(--navy);margin-bottom:.25rem}
+.af-item p{font-size:.78rem;line-height:1.6;color:var(--muted)}
 
-.hero-inner{max-width:780px}
-.hero-chip{display:inline-flex;align-items:center;gap:9px;padding:8px 17px;border-radius:var(--pill);
-  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(8px);
-  font-size:.78rem;font-weight:600;color:#fff;letter-spacing:.02em;margin-bottom:28px}
-.hero-chip i{color:var(--gold-2)}
-.hero h1{font-size:clamp(2.9rem,6.2vw,5.2rem);font-weight:800;line-height:1.04;letter-spacing:-.035em;color:#fff;margin-bottom:22px}
-.hero h1 em{font-style:normal;background:linear-gradient(100deg,var(--blue-2),#9cc2ff);-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero-lead{font-size:1.16rem;line-height:1.7;color:rgba(255,255,255,.7);max-width:560px;margin-bottom:38px}
+/* ── LIFESTYLE ── */
+#lifestyle{background:var(--navy);padding:5rem 2rem;position:relative;overflow:hidden}
+.lifestyle-inner{max-width:1320px;margin:0 auto;position:relative;z-index:1}
+.lifestyle-header{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;margin-bottom:3rem}
+.lifestyle-eyebrow{color:var(--gold-2)}
+.lifestyle-title{color:#fff}
+.lifestyle-tagline{font-size:1.05rem;font-weight:600;color:rgba(255,255,255,.75);line-height:1.7;margin-top:.5rem}
+.lifestyle-amens{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1.5rem}
+.amen-item{display:flex;align-items:flex-start;gap:.75rem;padding:.85rem 1rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:var(--r)}
+.amen-icon{width:36px;height:36px;background:rgba(37,99,235,.25);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;color:var(--blue-2);flex-shrink:0}
+.amen-body h4{font-size:.82rem;font-weight:700;color:#fff;margin-bottom:.2rem}
+.amen-body p{font-size:.73rem;line-height:1.5;color:rgba(255,255,255,.5)}
+.lifestyle-mosaic{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:240px 240px;gap:1rem}
+.mosaic-item{border-radius:var(--r-lg);overflow:hidden;position:relative}
+.mosaic-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.mosaic-item:hover img{transform:scale(1.06)}
+.mosaic-item-1{grid-row:1/3}
+.mosaic-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,21,56,.7) 0%,transparent 60%);display:flex;align-items:flex-end;padding:1rem}
+.mosaic-label{font-size:.78rem;font-weight:700;color:#fff}
 
-/* glass search */
-.hero-search{max-width:680px}
-.hs-tabs{display:inline-flex;gap:6px;padding:5px;border-radius:var(--pill);
-  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(10px);margin-bottom:14px}
-.hs-tab{padding:8px 20px;border-radius:var(--pill);font-size:.84rem;font-weight:700;color:rgba(255,255,255,.72);transition:.22s}
-.hs-tab.on{background:#fff;color:var(--navy);box-shadow:var(--sh-sm)}
-.hs-bar{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:0;
-  background:rgba(255,255,255,.97);backdrop-filter:blur(14px);border-radius:var(--r);box-shadow:var(--sh-lg);overflow:hidden}
-.hs-cell{position:relative;padding:13px 18px;border-right:1px solid var(--line)}
-.hs-cell label{display:block;font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-2);margin-bottom:3px}
-.hs-cell select{width:100%;border:none;outline:none;background:none;font-family:inherit;font-size:.92rem;font-weight:600;color:var(--text);appearance:none;cursor:pointer}
-.hs-go{margin:8px;border-radius:var(--r-xs);background:var(--navy);color:#fff;font-weight:700;font-size:.92rem;padding:0 26px;display:flex;align-items:center;gap:9px;transition:.22s}
-.hs-go:hover{background:var(--blue)}
+/* ── INTERNATIONAL ── */
+#international{background:#fff;padding:5rem 2rem}
+.intl-inner{max-width:1320px;margin:0 auto}
+.intl-hero-row{display:grid;grid-template-columns:1fr 420px;gap:4rem;align-items:start;margin-bottom:4rem}
+.intl-intro{font-size:1rem;line-height:1.8;color:var(--muted);margin-top:1rem;max-width:560px}
+.intl-why{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:2rem}
+.intl-why-card{border-radius:var(--r);border:1px solid var(--line);padding:1.25rem;transition:box-shadow .2s}
+.intl-why-card:hover{box-shadow:var(--sh-lg)}
+.intl-why-card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-bottom:.75rem}
+.intl-why-card h4{font-size:.88rem;font-weight:700;color:var(--navy);margin-bottom:.35rem}
+.intl-why-card p{font-size:.78rem;line-height:1.6;color:var(--muted)}
+.intl-compare{background:var(--navy);border-radius:var(--r-xl);padding:1.75rem;color:#fff}
+.intl-compare h3{font-size:1rem;font-weight:700;margin-bottom:.25rem}
+.intl-compare p{font-size:.78rem;color:rgba(255,255,255,.55);margin-bottom:1.25rem}
+.compare-row{display:flex;justify-content:space-between;align-items:center;padding:.65rem 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.compare-row:last-child{border:none}
+.compare-country{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.75)}
+.compare-val{font-size:.82rem;font-weight:700;color:#fff}
+.compare-highlight{color:var(--gold-2)}
+.compare-note{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:.75rem;font-style:italic}
+.intl-countries{margin-top:3rem}
+.country-chips{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}
+.country-chip{display:flex;align-items:center;gap:.5rem;background:var(--sky);border:1px solid var(--line);border-radius:999px;padding:.4rem .9rem;font-size:.8rem;font-weight:600;color:var(--navy);cursor:pointer;transition:background .2s,border-color .2s}
+.country-chip:hover{background:var(--blue-soft);border-color:var(--blue-2)}
+.country-chip .flag{font-size:1rem}
+.intl-steps{margin-top:3rem}
+.steps-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:1.5rem;position:relative}
+.steps-grid::before{content:'';position:absolute;top:28px;left:10%;right:10%;height:2px;background:linear-gradient(90deg,var(--blue),var(--blue-soft));z-index:0}
+.step-item{text-align:center;position:relative;z-index:1}
+.step-num{width:56px;height:56px;background:linear-gradient(135deg,var(--blue),var(--navy));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;color:#fff;margin:0 auto 1rem;box-shadow:var(--sh-blue)}
+.step-h{font-size:.8rem;font-weight:700;color:var(--navy);margin-bottom:.3rem}
+.step-p{font-size:.72rem;color:var(--muted);line-height:1.5}
+.intl-visa{background:linear-gradient(135deg,#eef7ff,#e5effd);border:1px solid #c3d9fb;border-radius:var(--r);padding:1.25rem 1.5rem;margin-top:1.25rem;display:flex;gap:1rem;align-items:flex-start}
+.intl-visa i{font-size:1.2rem;color:var(--blue);margin-top:.1rem;flex-shrink:0}
+.intl-visa-text h4{font-size:.88rem;font-weight:700;color:var(--navy);margin-bottom:.3rem}
+.intl-visa-text p{font-size:.8rem;color:var(--muted);line-height:1.6}
 
-.hero-trust{display:flex;align-items:center;gap:14px;margin-top:30px}
-.trust-avatars{display:flex}
-.trust-avatars img{width:38px;height:38px;border-radius:50%;border:2.5px solid rgba(255,255,255,.85);object-fit:cover;margin-left:-12px}
-.trust-avatars img:first-child{margin-left:0}
-.trust-text{font-size:.86rem;color:rgba(255,255,255,.7)}
-.trust-text b{color:#fff;font-weight:700}
-.trust-text .stars{color:var(--gold-2);font-size:.78rem;margin-right:5px}
+/* ── ROADMAP ── */
+#roadmap{background:var(--sky);padding:5rem 2rem}
+.roadmap-inner{max-width:1320px;margin:0 auto}
+.rm-timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-top:2.5rem;position:relative}
+.rm-timeline::before{content:'';position:absolute;top:32px;left:5%;right:5%;height:3px;background:linear-gradient(90deg,var(--blue) 0%,var(--blue-2) 60%,var(--line) 60%);border-radius:2px;z-index:0}
+.rm-node{position:relative;z-index:1}
+.rm-dot{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:1rem;transition:transform .2s}
+.rm-dot.done{background:linear-gradient(135deg,var(--blue),var(--navy));color:#fff;box-shadow:var(--sh-blue)}
+.rm-dot.active{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#fff;box-shadow:var(--sh-gold)}
+.rm-dot.future{background:#fff;border:2.5px solid var(--line);color:var(--muted-2)}
+.rm-node:hover .rm-dot{transform:scale(1.08)}
+.rm-card{background:#fff;border-radius:var(--r-lg);padding:1.25rem;border:1px solid var(--line);box-shadow:0 2px 8px rgba(11,35,80,.06)}
+.rm-phase{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted-2);margin-bottom:.3rem}
+.rm-phase.active-text{color:var(--gold)}
+.rm-title{font-size:.9rem;font-weight:700;color:var(--navy);margin-bottom:.4rem}
+.rm-date{font-size:.75rem;font-weight:600;color:var(--blue);margin-bottom:.5rem}
+.rm-bullets{list-style:none;padding:0}
+.rm-bullets li{font-size:.75rem;color:var(--muted);padding:.2rem 0;display:flex;align-items:center;gap:.4rem}
+.rm-bullets li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--blue-2);flex-shrink:0}
+.rm-progress-bar{margin-top:2.5rem;background:#fff;border-radius:var(--r);padding:1.25rem 1.5rem;border:1px solid var(--line)}
+.rm-progress-label{display:flex;justify-content:space-between;font-size:.8rem;font-weight:600;color:var(--navy);margin-bottom:.75rem}
+.rm-track{height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.rm-track-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--blue-2));width:0;transition:width 1.2s ease}
 
-/* ════════════════════════════════════════════════
-   OVERLAPPING PANELS
-════════════════════════════════════════════════ */
-.panels{position:relative;z-index:5;margin-top:-150px}
-.panels-grid{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:22px;align-items:stretch}
-.panel{background:#fff;border-radius:var(--r-lg);box-shadow:var(--sh-lg);padding:30px;border:1px solid var(--line-2)}
-.panel-label{display:flex;align-items:center;gap:9px;font-size:.72rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:16px}
-.panel-label .dot{width:30px;height:30px;border-radius:9px;background:var(--sky);display:grid;place-items:center;color:var(--blue);font-size:.82rem}
-.panel h3{font-size:1.22rem;font-weight:800;letter-spacing:-.02em;color:var(--navy);margin-bottom:11px}
-.panel p{font-size:.92rem;line-height:1.7;color:var(--muted)}
-.panel-link{display:inline-flex;align-items:center;gap:8px;margin-top:18px;font-size:.88rem;font-weight:700;color:var(--blue);transition:.2s}
-.panel-link:hover{gap:12px}
+/* ── CTA ── */
+#cta{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-2) 100%);padding:4rem 2rem;text-align:center}
+.cta-inner{max-width:700px;margin:0 auto}
+.cta-tag{display:inline-block;background:rgba(217,146,10,.15);border:1px solid rgba(217,146,10,.3);border-radius:999px;padding:.3rem .9rem;font-size:.72rem;font-weight:700;color:var(--gold-2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1.25rem}
+.cta-h{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:.75rem}
+.cta-sub{font-size:.9rem;color:rgba(255,255,255,.6);margin-bottom:2rem;line-height:1.6}
+.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-gold{display:inline-flex;align-items:center;gap:.5rem;background:var(--gold);color:#fff;border:none;padding:.8rem 2rem;border-radius:999px;font-family:inherit;font-size:.9rem;font-weight:700;cursor:pointer;transition:background .2s,box-shadow .2s}
+.btn-gold:hover{background:var(--gold-3);box-shadow:var(--sh-gold)}
+.btn-white-outline{display:inline-flex;align-items:center;gap:.5rem;background:transparent;color:#fff;border:2px solid rgba(255,255,255,.35);padding:.78rem 1.75rem;border-radius:999px;font-family:inherit;font-size:.9rem;font-weight:700;cursor:pointer;transition:border-color .2s,background .2s}
+.btn-white-outline:hover{border-color:#fff;background:rgba(255,255,255,.08)}
+.cta-trust{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:1.5rem;font-size:.75rem;color:rgba(255,255,255,.4);font-weight:500}
+.cta-trust i{color:var(--gold-2)}
 
-/* highlighted middle panel */
-.panel-hi{background:linear-gradient(160deg,var(--navy) 0%,var(--ink) 100%);border:none;box-shadow:var(--sh-lg);transform:translateY(-22px);position:relative;overflow:hidden}
-.panel-hi::after{content:'';position:absolute;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,.3),transparent 70%);top:-80px;right:-80px}
-.panel-hi .panel-label{color:var(--blue-2);position:relative}
-.panel-hi .panel-label .dot{background:rgba(255,255,255,.1);color:var(--blue-2)}
-.panel-hi h3{color:#fff;position:relative}
-.build-list{position:relative;display:flex;flex-direction:column;gap:13px;margin-top:6px}
-.build-item{display:flex;align-items:center;gap:13px}
-.build-item .bi{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);display:grid;place-items:center;color:var(--blue-2);font-size:1rem;flex-shrink:0}
-.build-item b{display:block;font-size:.9rem;font-weight:700;color:#fff}
-.build-item span{font-size:.76rem;color:rgba(255,255,255,.5)}
+/* ── FOOTER ── */
+#footer{background:var(--ink);padding:4rem 2rem 1.5rem}
+.footer-inner{max-width:1320px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.08)}
+.footer-logo{display:flex;align-items:center;gap:.65rem;margin-bottom:1rem}
+.footer-logo-mark{width:38px;height:38px;background:linear-gradient(135deg,var(--blue),var(--navy-2));border-radius:9px;display:flex;align-items:center;justify-content:center}
+.footer-logo-mark svg{width:20px;height:20px;fill:#fff}
+.footer-logo-text{font-weight:800;font-size:1.15rem;letter-spacing:-.02em;color:#fff}
+.footer-tagline{font-size:.83rem;color:rgba(255,255,255,.45);line-height:1.6;max-width:280px;margin-bottom:1.25rem}
+.footer-contact-items{display:flex;flex-direction:column;gap:.55rem}
+.footer-contact-item{display:flex;align-items:flex-start;gap:.6rem;font-size:.8rem;color:rgba(255,255,255,.5)}
+.footer-contact-item i{color:var(--blue-2);font-size:.8rem;margin-top:.15rem;flex-shrink:0}
+.footer-contact-item a{color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s}
+.footer-contact-item a:hover{color:#fff}
+.footer-socials{display:flex;gap:.5rem;margin-top:1.25rem}
+.footer-social{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.45);font-size:.8rem;text-decoration:none;transition:background .2s,color .2s}
+.footer-social:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+.footer-col h4{font-size:.8rem;font-weight:700;color:#fff;margin-bottom:1rem;text-transform:uppercase;letter-spacing:.06em}
+.footer-links{list-style:none}
+.footer-links li{margin-bottom:.5rem}
+.footer-links a{font-size:.8rem;color:rgba(255,255,255,.45);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:#fff}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;padding-top:1.5rem;font-size:.75rem;color:rgba(255,255,255,.3)}
+.footer-bottom-links{display:flex;gap:1.5rem}
+.footer-bottom-links a{color:rgba(255,255,255,.3);text-decoration:none;transition:color .2s}
+.footer-bottom-links a:hover{color:rgba(255,255,255,.6)}
 
-/* featured property panel */
-.feat-img{position:relative;border-radius:var(--r);overflow:hidden;margin-bottom:16px}
-.feat-img img{width:100%;height:140px;object-fit:cover}
-.feat-tag{position:absolute;top:11px;left:11px;background:var(--gold);color:#fff;font-size:.66rem;font-weight:800;padding:4px 11px;border-radius:var(--pill);text-transform:uppercase;letter-spacing:.05em}
-.feat-price{font-size:1.3rem;font-weight:800;color:var(--navy);letter-spacing:-.02em}
-.feat-name{font-size:.9rem;font-weight:600;color:var(--muted);margin:2px 0 12px}
-.feat-meta{display:flex;gap:14px;font-size:.78rem;color:var(--muted);padding-top:12px;border-top:1px solid var(--line);margin-bottom:16px}
-.feat-meta i{color:var(--blue);margin-right:4px}
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
+.reveal.visible{opacity:1;transform:none}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
 
-/* ════════════════════════════════════════════════
-   PARTNERS
-════════════════════════════════════════════════ */
-.partners{padding:54px 0 10px}
-.partners-label{text-align:center;font-size:.74rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted-2);margin-bottom:26px}
-.partners-row{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
-.pchip{padding:11px 22px;border-radius:var(--r-xs);border:1.5px solid var(--line);background:#fff;font-size:.92rem;font-weight:800;letter-spacing:.01em;transition:.25s}
-.pchip:hover{border-color:transparent;box-shadow:var(--sh-md);transform:translateY(-2px)}
-
-/* ════════════════════════════════════════════════
-   ABOUT
-════════════════════════════════════════════════ */
-.about-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:78px;align-items:center}
-.about-visual{position:relative;height:540px}
-.av-main{position:absolute;top:0;left:0;width:74%;height:430px;object-fit:cover;border-radius:var(--r-lg);box-shadow:var(--sh-lg)}
-.av-thumb{position:absolute;bottom:0;right:0;width:54%;height:300px;object-fit:cover;border-radius:var(--r-lg);border:5px solid #fff;box-shadow:var(--sh-lg)}
-.av-stat{position:absolute;top:32px;right:18px;z-index:3;background:#fff;border-radius:var(--r);padding:16px 20px;box-shadow:var(--sh-lg);display:flex;align-items:center;gap:13px}
-.av-stat .ic{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--blue),var(--navy));display:grid;place-items:center;color:#fff;font-size:1rem}
-.av-stat .v{font-size:1.3rem;font-weight:800;color:var(--navy);line-height:1}
-.av-stat .l{font-size:.74rem;color:var(--muted)}
-.about-points{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:30px 0 34px}
-.apoint{padding:20px;border-radius:var(--r);background:var(--sky-2);border:1px solid var(--line-2);transition:.25s}
-.apoint:hover{background:#fff;box-shadow:var(--sh-md);transform:translateY(-3px)}
-.apoint .ic{width:42px;height:42px;border-radius:12px;background:var(--blue-soft);display:grid;place-items:center;color:var(--blue);font-size:.95rem;margin-bottom:13px}
-.apoint h6{font-size:.95rem;font-weight:700;color:var(--navy);margin-bottom:5px}
-.apoint p{font-size:.82rem;line-height:1.6;color:var(--muted)}
-
-/* ════════════════════════════════════════════════
-   STATS BAND
-════════════════════════════════════════════════ */
-.stats{background:var(--navy);position:relative;overflow:hidden;padding:62px 0}
-.stats::before{content:'';position:absolute;width:520px;height:520px;border-radius:50%;border:90px solid rgba(255,255,255,.02);top:-200px;right:-120px}
-.stats::after{content:'';position:absolute;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,.16),transparent 70%);bottom:-140px;left:8%}
-.stats-grid{position:relative;display:grid;grid-template-columns:repeat(5,1fr)}
-.stat{text-align:center;padding:6px 18px;border-right:1px solid rgba(255,255,255,.09)}
-.stat:last-child{border-right:none}
-.stat .v{font-size:2.6rem;font-weight:800;letter-spacing:-.03em;color:#fff;line-height:1}
-.stat .v span{color:var(--blue-2)}
-.stat .l{font-size:.78rem;color:rgba(255,255,255,.5);margin-top:7px;letter-spacing:.04em}
-
-/* ════════════════════════════════════════════════
-   PROPERTIES
-════════════════════════════════════════════════ */
-.properties{background:var(--sky-2)}
-.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;margin-bottom:34px}
-.ftabs{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:30px}
-.ftab{padding:9px 20px;border-radius:var(--pill);border:1.5px solid var(--line);background:#fff;font-size:.85rem;font-weight:600;color:var(--muted);transition:.22s}
-.ftab:hover{border-color:var(--navy);color:var(--navy)}
-.ftab.on{background:var(--navy);color:#fff;border-color:var(--navy)}
-
-.prop-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
-.pcard{background:#fff;border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--line-2);transition:.3s var(--ease);cursor:pointer}
-.pcard:hover{box-shadow:var(--sh-lg);transform:translateY(-5px);border-color:transparent}
-.pc-img{position:relative;overflow:hidden}
-.pc-img img{width:100%;height:215px;object-fit:cover;transition:.5s var(--ease)}
-.pcard:hover .pc-img img{transform:scale(1.06)}
-.pc-type{position:absolute;top:13px;left:13px;font-size:.66rem;font-weight:800;padding:5px 12px;border-radius:var(--pill);text-transform:uppercase;letter-spacing:.05em}
-.t-land{background:#d1fae5;color:#065f46}
-.t-basic{background:var(--blue-soft);color:#1d4ed8}
-.t-standard{background:var(--gold-soft);color:#92610a}
-.t-premium{background:#ede9fe;color:#5b21b6}
-.pc-save{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;transition:.2s}
-.pc-save:hover{transform:scale(1.12)}
-.pc-save i{color:#e11d48;font-size:.85rem}
-.pc-pop{position:absolute;top:0;left:50%;transform:translateX(-50%);background:var(--gold);color:#fff;font-size:.64rem;font-weight:800;padding:4px 15px;border-radius:0 0 10px 10px;text-transform:uppercase;letter-spacing:.06em;z-index:2}
-.pc-body{padding:17px 18px 19px}
-.pc-price{font-size:1.32rem;font-weight:800;letter-spacing:-.025em;color:var(--text)}
-.pc-name{font-size:.92rem;font-weight:600;color:var(--navy);margin:4px 0 4px}
-.pc-loc{font-size:.79rem;color:var(--muted-2);display:flex;align-items:center;gap:5px;margin-bottom:13px}
-.pc-loc i{color:var(--gold);font-size:.72rem}
-.pc-meta{display:flex;border-top:1px solid var(--line-2);padding-top:12px;font-size:.78rem;color:var(--muted)}
-.pc-meta span{flex:1;display:flex;align-items:center;gap:6px;border-right:1px solid var(--line-2);padding-left:10px}
-.pc-meta span:first-child{padding-left:0}
-.pc-meta span:last-child{border-right:none}
-.pc-meta i{color:var(--blue);font-size:.74rem}
-
-/* ════════════════════════════════════════════════
-   AMENITIES
-════════════════════════════════════════════════ */
-.amenities{background:#fff}
-.am-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;grid-template-rows:240px 240px;gap:22px;margin-top:52px}
-.am{position:relative;border-radius:var(--r-lg);overflow:hidden;cursor:pointer}
-.am img{width:100%;height:100%;object-fit:cover;transition:.6s var(--ease)}
-.am:hover img{transform:scale(1.07)}
-.am::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(8,18,46,.86) 0%,rgba(8,18,46,.12) 55%,transparent 100%)}
-.am-tall{grid-row:span 2}
-.am-body{position:absolute;inset:auto 0 0 0;z-index:2;padding:24px}
-.am-tag{display:inline-block;font-size:.64rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--blue-2);margin-bottom:7px}
-.am-body h4{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:5px;letter-spacing:-.01em}
-.am-body p{font-size:.82rem;line-height:1.55;color:rgba(255,255,255,.7);max-width:90%}
-.am-mini h4{font-size:.98rem}
-.am-mini p{font-size:.76rem}
-.am-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px;justify-content:center}
-.amchip{display:flex;align-items:center;gap:9px;padding:11px 18px;border-radius:var(--pill);background:var(--sky);border:1px solid var(--line);font-size:.84rem;font-weight:600;color:var(--navy);transition:.22s}
-.amchip:hover{background:#fff;box-shadow:var(--sh-md);transform:translateY(-2px)}
-.amchip i{color:var(--blue);font-size:.88rem}
-
-/* ════════════════════════════════════════════════
-   INTERNATIONAL
-════════════════════════════════════════════════ */
-.intl{background:linear-gradient(165deg,var(--navy) 0%,var(--ink) 100%);position:relative;overflow:hidden}
-.intl::before{content:'';position:absolute;width:760px;height:760px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,.16),transparent 65%);top:-260px;right:-200px}
-.intl-grid{position:relative;display:grid;grid-template-columns:1fr 1.05fr;gap:78px;align-items:center}
-.intl-visual{position:relative}
-.intl-visual img{width:100%;height:540px;object-fit:cover;border-radius:var(--r-xl)}
-.intl-f1{position:absolute;bottom:30px;left:-30px;background:#fff;border-radius:var(--r);padding:20px 24px;box-shadow:var(--sh-lg);min-width:225px}
-.intl-f1 .v{font-size:1.6rem;font-weight:800;color:var(--navy);letter-spacing:-.02em;line-height:1}
-.intl-f1 .l{font-size:.8rem;color:var(--muted);margin-top:4px}
-.intl-f1 .flags{font-size:1.35rem;margin-top:13px;letter-spacing:2px}
-.intl-f2{position:absolute;top:30px;right:-22px;background:var(--gold);border-radius:var(--r);padding:17px 21px;box-shadow:var(--sh-gold)}
-.intl-f2 .v{font-size:1.6rem;font-weight:800;color:#fff;line-height:1}
-.intl-f2 .l{font-size:.74rem;color:rgba(255,255,255,.8);margin-top:3px}
-.ctry-row{display:flex;flex-wrap:wrap;gap:9px;margin:26px 0}
-.ctry{display:flex;align-items:center;gap:8px;padding:9px 15px;border-radius:var(--pill);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);font-size:.82rem;font-weight:600;color:rgba(255,255,255,.82);transition:.2s;cursor:pointer}
-.ctry:hover{background:rgba(255,255,255,.14);color:#fff}
-.intl-feats{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
-.ifeat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);padding:20px;transition:.25s}
-.ifeat:hover{background:rgba(255,255,255,.09);transform:translateY(-3px)}
-.ifeat .ic{width:42px;height:42px;border-radius:12px;background:rgba(59,130,246,.16);display:grid;place-items:center;color:var(--blue-2);font-size:1rem;margin-bottom:13px}
-.ifeat h6{font-size:.92rem;font-weight:700;color:#fff;margin-bottom:5px}
-.ifeat p{font-size:.79rem;line-height:1.6;color:rgba(255,255,255,.5)}
-
-/* ════════════════════════════════════════════════
-   ROADMAP  (enhanced)
-════════════════════════════════════════════════ */
-.roadmap{background:var(--sky-2);overflow:hidden}
-.rm-top{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center;margin-bottom:80px}
-.rm-meter{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:28px;box-shadow:var(--sh-md)}
-.rm-meter-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.rm-meter-head .t{font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.rm-active{display:inline-flex;align-items:center;gap:7px;font-size:.74rem;font-weight:800;color:var(--gold);background:var(--gold-soft);padding:5px 13px;border-radius:var(--pill)}
-.rm-active .pulse{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:pulse 1.5s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1);box-shadow:0 0 0 0 rgba(217,146,10,.5)}50%{opacity:.6;transform:scale(1.25);box-shadow:0 0 0 6px rgba(217,146,10,0)}}
-.rm-track-bar{height:10px;border-radius:var(--pill);background:var(--line);overflow:hidden;margin-bottom:8px}
-.rm-track-fill{height:100%;border-radius:var(--pill);background:linear-gradient(90deg,var(--navy),var(--blue));width:0;transition:width 1.4s var(--ease)}
-.rm-pct{display:flex;justify-content:space-between;font-size:.8rem;font-weight:600;color:var(--muted)}
-.rm-pct b{color:var(--navy);font-weight:800}
-.rm-meter-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
-.rm-mini{background:var(--sky-2);border:1px solid var(--line-2);border-radius:var(--r);padding:15px;text-align:center}
-.rm-mini .v{font-size:1.4rem;font-weight:800;color:var(--navy);line-height:1}
-.rm-mini .l{font-size:.72rem;color:var(--muted);margin-top:4px}
-
-/* timeline track */
-.rm-track{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
-.rm-line{position:absolute;top:24px;left:9%;right:9%;height:3px;border-radius:2px;background:var(--line);z-index:0}
-.rm-line-fill{position:absolute;top:24px;left:9%;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--navy),var(--blue),var(--gold));z-index:1;width:0;transition:width 1.6s var(--ease)}
-.rm-phase{position:relative;z-index:2}
-.rm-node{width:50px;height:50px;border-radius:50%;background:#fff;border:3px solid var(--line);display:grid;place-items:center;margin:0 auto 22px;font-weight:800;font-size:1rem;color:var(--muted-2);transition:.3s;position:relative}
-.rm-phase.done .rm-node{background:var(--navy);border-color:var(--navy);color:#fff}
-.rm-phase.now .rm-node{background:var(--gold);border-color:var(--gold);color:#fff;box-shadow:0 0 0 6px rgba(217,146,10,.18)}
-.rm-card{background:#fff;border:1.5px solid var(--line);border-radius:var(--r-lg);padding:22px 20px;transition:.3s;height:calc(100% - 72px)}
-.rm-card:hover{box-shadow:var(--sh-lg);transform:translateY(-4px)}
-.rm-phase.done .rm-card{border-color:rgba(11,35,84,.2);background:linear-gradient(180deg,#f3f7ff,#fff)}
-.rm-phase.now .rm-card{border-color:var(--gold);box-shadow:0 8px 30px -10px rgba(217,146,10,.35)}
-.rm-ph{font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-2);margin-bottom:6px}
-.rm-phase.done .rm-ph{color:var(--navy)}
-.rm-phase.now .rm-ph{color:var(--gold)}
-.rm-card h5{font-size:.98rem;font-weight:800;color:var(--navy);line-height:1.25;margin-bottom:11px;letter-spacing:-.01em}
-.rm-deliv{display:flex;flex-direction:column;gap:7px;margin-bottom:13px}
-.rm-deliv li{display:flex;align-items:flex-start;gap:8px;font-size:.78rem;line-height:1.45;color:var(--muted)}
-.rm-deliv li i{font-size:.68rem;margin-top:4px;flex-shrink:0}
-.rm-phase.done .rm-deliv li i{color:#16a34a}
-.rm-phase:not(.done) .rm-deliv li i{color:var(--blue)}
-.rm-year{font-size:.76rem;font-weight:700;color:var(--muted)}
-.rm-chip{display:inline-flex;align-items:center;gap:5px;font-size:.66rem;font-weight:800;padding:3px 10px;border-radius:var(--pill);margin-top:8px}
-.rm-chip.done{background:rgba(22,163,74,.12);color:#15803d}
-.rm-chip.now{background:var(--gold-soft);color:var(--gold)}
-.rm-chip.soon{background:var(--sky);color:var(--blue)}
-.rm-prog{height:5px;border-radius:var(--pill);background:var(--line);overflow:hidden;margin-top:10px}
-.rm-prog span{display:block;height:100%;border-radius:var(--pill);background:var(--gold)}
-
-/* phase imagery */
-.rm-imgs{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:56px}
-.rm-img{position:relative;border-radius:var(--r-lg);overflow:hidden;height:210px}
-.rm-img img{width:100%;height:100%;object-fit:cover;transition:.5s var(--ease)}
-.rm-img:hover img{transform:scale(1.06)}
-.rm-img::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(8,18,46,.85),transparent 60%)}
-.rm-img-cap{position:absolute;inset:auto 0 0 0;z-index:2;padding:20px}
-.rm-img-cap .p{font-size:.66rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--blue-2);margin-bottom:4px}
-.rm-img-cap h5{font-size:.98rem;font-weight:700;color:#fff}
-
-/* ════════════════════════════════════════════════
-   CTA BAND
-════════════════════════════════════════════════ */
-.cta{background:linear-gradient(120deg,var(--blue) 0%,var(--navy) 60%,var(--ink) 100%);position:relative;overflow:hidden;padding:90px 0}
-.cta::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;border:80px solid rgba(255,255,255,.04);top:-260px;left:-120px}
-.cta::after{content:'';position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(217,146,10,.18),transparent 65%);bottom:-200px;right:-80px}
-.cta-inner{position:relative;text-align:center;max-width:680px;margin:0 auto}
-.cta h2{font-size:clamp(2rem,3.6vw,2.9rem);font-weight:800;letter-spacing:-.03em;color:#fff;line-height:1.15;margin-bottom:16px}
-.cta p{font-size:1.08rem;color:rgba(255,255,255,.7);margin-bottom:34px}
-.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-
-/* ════════════════════════════════════════════════
-   FOOTER
-════════════════════════════════════════════════ */
-footer{background:var(--ink);color:rgba(255,255,255,.42);padding:78px 0 30px}
-.f-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr;gap:46px}
-.f-brand{display:flex;align-items:center;gap:11px;margin-bottom:16px}
-.f-brand .brand-mark{box-shadow:none}
-.f-brand .brand-name{color:#fff}
-footer .tag{font-size:.86rem;line-height:1.8;max-width:290px;margin-bottom:22px}
-.f-social{display:flex;gap:9px}
-.f-social a{width:36px;height:36px;border-radius:11px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);display:grid;place-items:center;color:rgba(255,255,255,.5);font-size:.85rem;transition:.25s}
-.f-social a:hover{background:var(--blue);color:#fff;border-color:var(--blue);transform:translateY(-2px)}
-.f-col h6{font-size:.84rem;font-weight:700;color:#fff;margin-bottom:17px}
-.f-col li{margin-bottom:10px}
-.f-col a{font-size:.83rem;color:rgba(255,255,255,.42);transition:.2s}
-.f-col a:hover{color:var(--blue-2)}
-.f-bottom{border-top:1px solid rgba(255,255,255,.07);margin-top:54px;padding-top:24px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;font-size:.79rem}
-.f-bottom a{color:rgba(255,255,255,.35);margin-left:18px}
-.f-bottom a:hover{color:var(--blue-2)}
-
-/* ════════════════════════════════════════════════
-   RESPONSIVE
-════════════════════════════════════════════════ */
-@media(max-width:1080px){
-  .panels-grid{grid-template-columns:1fr 1fr;gap:18px}
-  .panel-feat{display:none}
-  .panel-hi{transform:none}
+@media(max-width:1100px){
+  .hero-container{grid-template-columns:1fr;padding-top:100px}
+  .hero-visual{display:none}
+  .feat-grid{grid-template-columns:1fr 1fr}
   .prop-grid{grid-template-columns:1fr 1fr}
-  .rm-track{grid-template-columns:repeat(5,minmax(140px,1fr));overflow-x:auto;padding-bottom:14px}
-  .rm-imgs{grid-template-columns:1fr 1fr}
-  .f-grid{grid-template-columns:1fr 1fr 1fr;row-gap:36px}
+  .about-inner{grid-template-columns:1fr}
+  .intl-hero-row{grid-template-columns:1fr}
+  .rm-timeline{grid-template-columns:1fr 1fr}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .lifestyle-header{grid-template-columns:1fr}
+  .lifestyle-mosaic{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+  .mosaic-item-1{grid-row:auto}
+  .intl-why{grid-template-columns:1fr 1fr}
+  .steps-grid{grid-template-columns:1fr 1fr;gap:1rem}
+  .steps-grid::before{display:none}
 }
-@media(max-width:880px){
-  .section{padding:84px 0}
-  .nav-menu,.nav-act{display:none}
-  .nav-burger{display:block}
-  .hero{padding:150px 0 200px}
-  .hs-bar{grid-template-columns:1fr 1fr}
-  .hs-go{grid-column:span 2;margin:8px;padding:13px}
-  .panels{margin-top:-140px}
-  .panels-grid{grid-template-columns:1fr}
-  .panel-hi{transform:none}
-  .about-grid,.intl-grid,.rm-top{grid-template-columns:1fr;gap:48px}
-  .about-visual{height:430px}
-  .stats-grid{grid-template-columns:repeat(3,1fr);row-gap:30px}
-  .stat:nth-child(3){border-right:none}
-  .am-grid{grid-template-columns:1fr 1fr;grid-template-rows:none}
-  .am-tall{grid-row:auto;height:240px}
-  .am{height:220px}
-  .intl-feats{grid-template-columns:1fr}
-  .f-grid{grid-template-columns:1fr 1fr}
-}
-@media(max-width:560px){
-  .wrap{padding:0 18px}
-  .hero h1{font-size:2.5rem}
-  .hs-bar{grid-template-columns:1fr}
-  .hs-go{grid-column:1}
-  .hs-cell{border-right:none;border-bottom:1px solid var(--line)}
-  .prop-grid,.rm-imgs,.intl-feats,.about-points,.am-grid,.f-grid{grid-template-columns:1fr}
-  .stats-grid{grid-template-columns:1fr 1fr}
-  .stat{border-right:none;padding:12px}
-  .sec-head{flex-direction:column;align-items:flex-start;gap:18px}
+@media(max-width:700px){
+  .nav-links{display:none}
+  .feat-grid{grid-template-columns:1fr}
+  .prop-grid{grid-template-columns:1fr}
+  .hero-stats-row{grid-template-columns:1fr 1fr}
+  .about-facts{grid-template-columns:1fr}
+  .intl-why{grid-template-columns:1fr}
+  .steps-grid{grid-template-columns:1fr}
+  .rm-timeline{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr}
+  .lifestyle-amens{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;align-items:flex-start}
 }
 </style>
 </head>
 <body>
 
-<!-- ══════════════ NAV ══════════════ -->
-<nav class="nav" id="nav">
-  <div class="wrap nav-row">
-    <a href="#" class="brand">
-      <div class="brand-mark"><i class="fas fa-mountain-city"></i></div>
-      <div class="brand-name"><b>BARINA</b><span class="c">COMMUNITY</span></div>
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="#">
+      <div class="nav-logo-mark">
+        <svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V7L12 2z"/></svg>
+      </div>
+      <span class="nav-logo-text">Barina</span>
     </a>
-    <ul class="nav-menu">
-      <li><a href="#about">About</a></li>
-      <li><a href="#properties">Properties</a></li>
-      <li><a href="#community">Community</a></li>
-      <li><a href="#international">Retire in Kenya</a></li>
-      <li><a href="#roadmap">Roadmap</a></li>
-    </ul>
-    <div class="nav-act">
-      <a href="#" class="nav-login">Member Login</a>
-      <a href="#" class="nav-cta">Reserve a Plot</a>
+    <nav class="nav-links">
+      <a href="#" class="active">Home</a>
+      <a href="#properties">Properties</a>
+      <a href="#lifestyle">Community</a>
+      <a href="#about">About</a>
+      <a href="#international">International</a>
+      <a href="#roadmap">Roadmap</a>
+    </nav>
+    <div class="nav-spacer"></div>
+    <div class="nav-actions">
+      <button class="nav-icon-btn" id="searchBtn"><i class="fa fa-search"></i></button>
+      <button class="nav-icon-btn">
+        <i class="fa fa-bell"></i>
+        <span class="nav-notif-dot"></span>
+      </button>
+      <button class="nav-account">
+        <div class="nav-avatar">G</div>
+        <span>Account</span>
+        <i class="fa fa-chevron-down" style="font-size:.6rem"></i>
+        <div class="nav-account-menu">
+          <a href="#"><i class="fa fa-user"></i> My Profile</a>
+          <a href="#"><i class="fa fa-heart"></i> Saved Properties</a>
+          <a href="#"><i class="fa fa-file-contract"></i> My Applications</a>
+          <a href="#"><i class="fa fa-calendar-check"></i> Scheduled Tours</a>
+          <div class="nav-account-divider"></div>
+          <a href="#"><i class="fa fa-cog"></i> Settings</a>
+          <a href="#"><i class="fa fa-sign-out-alt"></i> Sign Out</a>
+        </div>
+      </button>
+      <button class="nav-reserve">Reserve a Plot</button>
     </div>
-    <i class="fas fa-bars nav-burger"></i>
   </div>
 </nav>
 
-<!-- ══════════════ HERO ══════════════ -->
-<header class="hero">
-  <div class="hero-bg" id="heroBg"></div>
-  <div class="hero-grad"></div>
-  <div class="hero-glow"></div>
-  <div class="hero-glow b"></div>
-  <div class="wrap">
-    <div class="hero-inner">
-      <div class="hero-chip"><i class="fas fa-location-dot"></i> Barina, Kenya — A Visionary Planned Community</div>
-      <h1>Own Your Place in<br><em>Kenya's Future</em></h1>
-      <p class="hero-lead">Premium homes, one-acre plots, an organic farm, a hospital, schools — a complete, self-sustaining community built for the way you want to live.</p>
-
-      <div class="hero-search">
-        <div class="hs-tabs">
-          <button class="hs-tab on">Buy Property</button>
-          <button class="hs-tab">Buy Land</button>
-          <button class="hs-tab">International</button>
-        </div>
-        <div class="hs-bar">
-          <div class="hs-cell">
-            <label>Property Type</label>
-            <select><option>All Properties</option><option>Land Plot (1 Acre)</option><option>Basic Home</option><option>Standard Home</option><option>Premium Villa</option></select>
-          </div>
-          <div class="hs-cell">
-            <label>Budget</label>
-            <select><option>Any Budget</option><option>Under KES 5M</option><option>KES 5M – 15M</option><option>KES 15M – 35M</option><option>KES 35M +</option></select>
-          </div>
-          <div class="hs-cell">
-            <label>Zone / Sector</label>
-            <select><option>All Zones</option><option>North Sector</option><option>East Sector</option><option>Central Sector</option><option>Premier Ridge</option></select>
-          </div>
-          <button class="hs-go"><i class="fas fa-magnifying-glass"></i> Search</button>
-        </div>
-      </div>
-
-      <div class="hero-trust">
-        <div class="trust-avatars">
-          <img src="https://i.pravatar.cc/40?img=11" alt="">
-          <img src="https://i.pravatar.cc/40?img=32" alt="">
-          <img src="https://i.pravatar.cc/40?img=5" alt="">
-          <img src="https://i.pravatar.cc/40?img=14" alt="">
-        </div>
-        <div class="trust-text"><span class="stars">★★★★★</span><b>247 members</b> have already secured their place</div>
-      </div>
+<!-- SEARCH OVERLAY -->
+<div id="search-overlay">
+  <div class="search-box">
+    <button class="search-close" id="searchClose"><i class="fa fa-times"></i></button>
+    <input type="text" id="searchInput" placeholder="Search properties, plots, phases…"/>
+    <div class="search-pills">
+      <span class="search-pill">1-Acre Plots</span>
+      <span class="search-pill">Basic Homes</span>
+      <span class="search-pill">Standard Homes</span>
+      <span class="search-pill">Premium Homes</span>
+      <span class="search-pill">Phase 1</span>
+      <span class="search-pill">International Package</span>
     </div>
-  </div>
-</header>
-
-<!-- ══════════════ OVERLAPPING PANELS ══════════════ -->
-<section class="panels">
-  <div class="wrap">
-    <div class="panels-grid">
-      <!-- Vision -->
-      <div class="panel reveal">
-        <div class="panel-label"><span class="dot"><i class="fas fa-compass"></i></span> The Vision</div>
-        <h3>A Complete Way of Life</h3>
-        <p>Barina is a fully planned, government-registered settlement where premium living, food security, healthcare and education exist side by side — one community, everything within reach.</p>
-        <a href="#about" class="panel-link">Read the full vision <i class="fas fa-arrow-right"></i></a>
-      </div>
-
-      <!-- What we're building (highlighted) -->
-      <div class="panel panel-hi reveal">
-        <div class="panel-label"><span class="dot"><i class="fas fa-helmet-safety"></i></span> What We're Building</div>
-        <h3>Six Pillars of Barina</h3>
-        <div class="build-list">
-          <div class="build-item">
-            <div class="bi"><i class="fas fa-house-chimney"></i></div>
-            <div><b>Premium Homes &amp; 1-Acre Plots</b><span>Basic · Standard · Premium tiers</span></div>
-          </div>
-          <div class="build-item">
-            <div class="bi"><i class="fas fa-staff-snake"></i></div>
-            <div><b>Level-4 Hospital &amp; Wellness</b><span>24/7 specialist care on-site</span></div>
-          </div>
-          <div class="build-item">
-            <div class="bi"><i class="fas fa-graduation-cap"></i></div>
-            <div><b>Comprehensive Academy</b><span>Nursery through university-prep</span></div>
-          </div>
-          <div class="build-item">
-            <div class="bi"><i class="fas fa-seedling"></i></div>
-            <div><b>Organic Farm &amp; Commerce</b><span>Farm-to-table + a modern town centre</span></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Featured property -->
-      <div class="panel panel-feat reveal">
-        <div class="panel-label"><span class="dot"><i class="fas fa-star"></i></span> Featured</div>
-        <div class="feat-img">
-          <img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?w=500&q=85" alt="Featured villa">
-          <span class="feat-tag">Premium Villa</span>
-        </div>
-        <div class="feat-price">KES 35M+</div>
-        <div class="feat-name">The Ridge Estate</div>
-        <div class="feat-meta">
-          <span><i class="fas fa-bed"></i>5</span>
-          <span><i class="fas fa-bath"></i>4</span>
-          <span><i class="fas fa-vector-square"></i>4,200 ft²</span>
-        </div>
-        <a href="#properties" class="btn btn-navy" style="width:100%;padding:11px">View Property</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ PARTNERS ══════════════ -->
-<div class="partners wrap">
-  <div class="partners-label">Mortgage &amp; Financing Partners</div>
-  <div class="partners-row">
-    <div class="pchip" style="color:#1a6332">KCB Bank</div>
-    <div class="pchip" style="color:#c0392b">Equity Bank</div>
-    <div class="pchip" style="color:#00558c">Stanbic</div>
-    <div class="pchip" style="color:#4b286d">ABSA</div>
-    <div class="pchip" style="color:#00a652">NCBA</div>
-    <div class="pchip" style="color:#e60000">M-Pesa</div>
   </div>
 </div>
 
-<!-- ══════════════ ABOUT ══════════════ -->
-<section class="section" id="about">
-  <div class="wrap about-grid">
-    <div class="about-visual reveal">
-      <img class="av-main" src="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&q=85" alt="Barina home">
-      <img class="av-thumb" src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=520&q=85" alt="Organic farm">
-      <div class="av-stat">
-        <div class="ic"><i class="fas fa-certificate"></i></div>
-        <div><div class="v">100%</div><div class="l">Title-Deed Secured</div></div>
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-img"></div>
+  <div class="hero-bg-pattern"></div>
+  <div class="hero-glow-1"></div>
+  <div class="hero-glow-2"></div>
+  <div class="hero-container">
+    <div class="hero-left">
+      <div class="hero-location-bar">
+        <span class="hero-chip"><i class="fa fa-map-marker-alt"></i> Nakuru, Rift Valley, Kenya</span>
+        <span class="hero-chip"><i class="fa fa-mountain"></i> 1,850m Altitude</span>
+        <span class="hero-chip"><i class="fa fa-cloud-sun"></i> 18–28°C Year-round</span>
+        <span class="hero-badge"><i class="fa fa-circle" style="font-size:.5rem"></i> Phase 1 Now Open</span>
+      </div>
+      <h1 class="hero-h1">Your <span>Dream Home</span><br/>in Kenya's<br/>Most Scenic City</h1>
+      <p class="hero-sub">Barina Community is a fully planned settlement nestled in Nakuru's highland countryside — 2 hours from Nairobi, beside the Great Rift Valley. Premium homes, 1-acre plots, organic living, and world-class amenities in one breathtaking address.</p>
+      <div class="hero-search">
+        <div class="hero-tabs">
+          <button class="hero-tab active">Buy</button>
+          <button class="hero-tab">Land Plots</button>
+          <button class="hero-tab">International</button>
+        </div>
+        <div class="hero-search-row">
+          <input class="hero-search-input" type="text" placeholder="Search location, property type…"/>
+          <select class="hero-search-select">
+            <option>All Types</option>
+            <option>Basic Home</option>
+            <option>Standard Home</option>
+            <option>Premium Home</option>
+            <option>1-Acre Plot</option>
+          </select>
+          <button class="hero-search-btn"><i class="fa fa-search"></i> Search</button>
+        </div>
+      </div>
+      <div class="hero-highlights">
+        <span class="hero-hl">Organic Community Farm</span>
+        <span class="hero-hl">Private Hospital</span>
+        <span class="hero-hl">Academic Campus</span>
+        <span class="hero-hl">Commercial Hub</span>
+        <span class="hero-hl">Gated &amp; Secured</span>
+        <span class="hero-hl">Fiber Internet</span>
+        <span class="hero-hl">24/7 Power</span>
+      </div>
+      <div class="hero-stats-row">
+        <div class="hero-stat">
+          <div class="hero-stat-num" data-count="500">0</div>
+          <div class="hero-stat-label">Plots Available</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">KES 3.5M</div>
+          <div class="hero-stat-label">Starting Price</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num" data-count="12">0</div>
+          <div class="hero-stat-label">Amenity Facilities</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num" data-count="2">0</div>
+          <div class="hero-stat-label">Hrs to Nairobi</div>
+        </div>
       </div>
     </div>
-    <div class="reveal">
-      <div class="eyebrow">About Barina</div>
-      <h2 class="h" style="margin:14px 0 18px">More Than a Home —<br>A Community Built to Last</h2>
-      <p class="lead">Since acquiring our first 2,000 acres, we've been designing not just houses, but an entire ecosystem — where your family has food, health, learning and livelihood, all within a secure, beautifully planned community.</p>
-      <div class="about-points">
-        <div class="apoint">
-          <div class="ic"><i class="fas fa-bullseye"></i></div>
-          <h6>Clear Mission</h6>
-          <p>Premium living, food security, quality health and economic opportunity in one place.</p>
-        </div>
-        <div class="apoint">
-          <div class="ic"><i class="fas fa-leaf"></i></div>
-          <h6>Sustainable by Design</h6>
-          <p>Solar micro-grid, water recycling, organic farming and green building standards.</p>
-        </div>
-        <div class="apoint">
-          <div class="ic"><i class="fas fa-people-group"></i></div>
-          <h6>Member Governance</h6>
-          <p>Every member shapes community decisions through a transparent, fair charter.</p>
-        </div>
-        <div class="apoint">
-          <div class="ic"><i class="fas fa-shield-halved"></i></div>
-          <h6>Safe &amp; Gated</h6>
-          <p>24/7 smart security, CCTV and managed access for total peace of mind.</p>
+    <div class="hero-visual">
+      <img class="hero-photo-main" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80" alt="Barina Homes"/>
+      <img class="hero-photo-inset" src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&q=80" alt="Nakuru landscape"/>
+      <div class="hero-float-card hero-float-1">
+        <div class="hero-float-badge">Featured Plot</div>
+        <div class="hero-float-price">KES 3.5M</div>
+        <div class="hero-float-sub">1 Acre · Phase 1 · Nakuru</div>
+        <div class="hero-float-avail">
+          <span class="hero-float-dot"></span>
+          <span>Available Now</span>
         </div>
       </div>
-      <div style="display:flex;gap:13px;flex-wrap:wrap">
-        <a href="#" class="btn btn-gold">Download Brochure <i class="fas fa-download"></i></a>
-        <a href="#roadmap" class="btn btn-line">See the Roadmap</a>
+      <div class="hero-float-card hero-float-2">
+        <div class="hero-float-price">KES 8.2M</div>
+        <div class="hero-float-sub">Premium 4-Bed Home · Ready 2026</div>
+        <div class="hero-float-avail">
+          <span class="hero-float-dot" style="background:#f59e0b"></span>
+          <span>18 Units Left</span>
+        </div>
+      </div>
+      <div class="hero-lake-badge">
+        <img class="hero-lake-img" src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=120&q=80" alt="Lake Nakuru"/>
+        <div class="hero-lake-text">
+          <strong>Lake Nakuru National Park</strong>
+          15 min drive · UNESCO Biosphere Reserve
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ STATS ══════════════ -->
-<section class="stats">
-  <div class="wrap stats-grid">
-    <div class="stat"><div class="v"><span data-count="2000">0</span>+</div><div class="l">Acres Secured</div></div>
-    <div class="stat"><div class="v"><span data-count="500">0</span>+</div><div class="l">Planned Homes</div></div>
-    <div class="stat"><div class="v"><span data-count="15">0</span>+</div><div class="l">Amenities</div></div>
-    <div class="stat"><div class="v"><span data-count="247">0</span></div><div class="l">Members Enrolled</div></div>
-    <div class="stat"><div class="v"><span data-count="30">0</span>+</div><div class="l">Countries</div></div>
+<!-- 4 FEATURE CARDS -->
+<section id="features">
+  <div class="features-wrap">
+    <div style="text-align:center;max-width:600px;margin:0 auto 2.5rem">
+      <div class="section-eyebrow">What Barina Offers</div>
+      <h2 class="section-title">Everything you need.<br/>Under one community.</h2>
+      <p class="section-sub">Barina is engineered for modern Kenyan families and global settlers who want space, security, and community — without compromising on quality.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card reveal">
+        <img class="feat-card-img" src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=80" alt="Land"/>
+        <div class="feat-card-body">
+          <div class="feat-card-icon" style="background:#eff6ff;color:var(--blue)"><i class="fa fa-map"></i></div>
+          <div class="feat-card-h">1-Acre Land Plots</div>
+          <p class="feat-card-p">Own a full acre in a master-planned gated estate. Serviced with road access, water, electricity, and sewage connections. Flexible payment plans available.</p>
+          <span class="feat-card-tag">From KES 3.5M · Phase 1 Open</span>
+        </div>
+      </div>
+      <div class="feat-card reveal reveal-delay-1">
+        <img class="feat-card-img" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80" alt="Home"/>
+        <div class="feat-card-body">
+          <div class="feat-card-icon" style="background:#fef9ef;color:var(--gold)"><i class="fa fa-home"></i></div>
+          <div class="feat-card-h">Premium Homes</div>
+          <p class="feat-card-p">Choose from Basic (2-bed), Standard (3-bed), or Premium (4-bed) homes. All built to architect-approved standards with smart home features and solar-ready design.</p>
+          <span class="feat-card-tag">From KES 5.2M · Turnkey Ready</span>
+        </div>
+      </div>
+      <div class="feat-card reveal reveal-delay-2">
+        <img class="feat-card-img" src="https://images.unsplash.com/photo-1574263867128-a3d5c1b1decc?w=600&q=80" alt="Community"/>
+        <div class="feat-card-body">
+          <div class="feat-card-icon" style="background:#f0fdf4;color:#16a34a"><i class="fa fa-leaf"></i></div>
+          <div class="feat-card-h">Community Ecosystem</div>
+          <p class="feat-card-p">Organic farm, community hospital, academic campus, commercial centre, recreational parks, and a sports complex — all within walking distance inside the estate.</p>
+          <span class="feat-card-tag">12 Facilities · 300+ Acres</span>
+        </div>
+      </div>
+      <div class="feat-card reveal reveal-delay-3">
+        <img class="feat-card-img" src="https://images.unsplash.com/photo-1524850011238-e3d235c7d4c9?w=600&q=80" alt="International"/>
+        <div class="feat-card-body">
+          <div class="feat-card-icon" style="background:#fdf4ff;color:#9333ea"><i class="fa fa-globe-africa"></i></div>
+          <div class="feat-card-h">International Retirement</div>
+          <p class="feat-card-p">Kenya's Class G retirement visa, low cost of living, world-class climate, and direct flights from Europe &amp; USA. Nakuru offers what Tuscany did in the 90s — at a fraction of the price.</p>
+          <span class="feat-card-tag">International Package Available</span>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ══════════════ PROPERTIES ══════════════ -->
-<section class="section properties" id="properties">
-  <div class="wrap">
-    <div class="sec-head reveal">
+<!-- PROPERTIES -->
+<section id="properties">
+  <div class="prop-inner">
+    <div class="prop-header">
       <div>
-        <div class="eyebrow">Real Estate</div>
-        <h2 class="h" style="margin-top:14px">Choose Your Place in Barina</h2>
+        <div class="section-eyebrow">Listed Properties</div>
+        <h2 class="section-title">Browse Available Units</h2>
+        <div class="prop-filters">
+          <button class="prop-filter on">All</button>
+          <button class="prop-filter">Land Plots</button>
+          <button class="prop-filter">Basic Homes</button>
+          <button class="prop-filter">Standard Homes</button>
+          <button class="prop-filter">Premium Homes</button>
+          <button class="prop-filter">Phase 1</button>
+        </div>
       </div>
-      <a href="#" class="btn btn-line">View All 48 Listings <i class="fas fa-arrow-right"></i></a>
-    </div>
-    <div class="ftabs reveal">
-      <button class="ftab on">All</button>
-      <button class="ftab">Land Plots</button>
-      <button class="ftab">Basic Homes</button>
-      <button class="ftab">Standard Homes</button>
-      <button class="ftab">Premium Villas</button>
+      <div style="font-size:.8rem;color:var(--muted);text-align:right">
+        <strong style="color:var(--navy)">48 properties</strong> available<br/>
+        <span>Updated today</span>
+      </div>
     </div>
     <div class="prop-grid">
-      <div class="pcard reveal">
-        <div class="pc-img">
-          <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=85" alt="Land plot">
-          <span class="pc-type t-land">Land Plot</span>
-          <button class="pc-save"><i class="far fa-heart"></i></button>
-        </div>
-        <div class="pc-body">
-          <div class="pc-price">KES 3,500,000</div>
-          <div class="pc-name">Barina Acre — Sector A</div>
-          <div class="pc-loc"><i class="fas fa-location-dot"></i>North Sector, Barina</div>
-          <div class="pc-meta">
-            <span><i class="fas fa-ruler-combined"></i>1 Acre</span>
-            <span><i class="fas fa-road"></i>Tarmac</span>
-            <span><i class="fas fa-bolt"></i>Power</span>
+      <div class="prop-card reveal">
+        <div class="prop-card-img-wrap">
+          <img class="prop-card-img" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80" alt="Premium Home"/>
+          <div class="prop-card-badges">
+            <span class="badge badge-gold">Featured</span>
+            <span class="badge badge-green">Move-in Ready</span>
           </div>
+          <button class="prop-card-save"><i class="fa fa-heart"></i></button>
+        </div>
+        <div class="prop-card-body">
+          <div class="prop-price">KES 8,200,000 <span>/ unit</span></div>
+          <div class="prop-name">Barina Premium Villa — Plot 04A</div>
+          <div class="prop-loc"><i class="fa fa-map-marker-alt"></i> Phase 1, Barina Community, Nakuru</div>
+          <div class="prop-specs">
+            <div class="prop-spec"><i class="fa fa-bed"></i> <strong>4</strong> Beds</div>
+            <div class="prop-spec"><i class="fa fa-bath"></i> <strong>3</strong> Baths</div>
+            <div class="prop-spec"><i class="fa fa-ruler-combined"></i> <strong>250</strong> m²</div>
+            <div class="prop-spec"><i class="fa fa-map"></i> <strong>1</strong> Acre</div>
+          </div>
+          <button class="prop-cta">View Details &amp; Book Tour</button>
         </div>
       </div>
-      <div class="pcard reveal">
-        <div class="pc-img">
-          <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&q=85" alt="Basic home">
-          <span class="pc-type t-basic">Basic Home</span>
-          <button class="pc-save"><i class="far fa-heart"></i></button>
-        </div>
-        <div class="pc-body">
-          <div class="pc-price">KES 7,500,000</div>
-          <div class="pc-name">The Starter — 3BR Bungalow</div>
-          <div class="pc-loc"><i class="fas fa-location-dot"></i>East Sector, Barina</div>
-          <div class="pc-meta">
-            <span><i class="fas fa-bed"></i>3 Bd</span>
-            <span><i class="fas fa-bath"></i>2 Ba</span>
-            <span><i class="fas fa-vector-square"></i>1,200</span>
+      <div class="prop-card reveal reveal-delay-1">
+        <div class="prop-card-img-wrap">
+          <img class="prop-card-img" src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&q=80" alt="Standard Home"/>
+          <div class="prop-card-badges">
+            <span class="badge badge-blue">Standard</span>
           </div>
+          <button class="prop-card-save"><i class="fa fa-heart"></i></button>
+        </div>
+        <div class="prop-card-body">
+          <div class="prop-price">KES 5,800,000 <span>/ unit</span></div>
+          <div class="prop-name">Barina Standard Home — Plot 12B</div>
+          <div class="prop-loc"><i class="fa fa-map-marker-alt"></i> Phase 1, Barina Community, Nakuru</div>
+          <div class="prop-specs">
+            <div class="prop-spec"><i class="fa fa-bed"></i> <strong>3</strong> Beds</div>
+            <div class="prop-spec"><i class="fa fa-bath"></i> <strong>2</strong> Baths</div>
+            <div class="prop-spec"><i class="fa fa-ruler-combined"></i> <strong>180</strong> m²</div>
+            <div class="prop-spec"><i class="fa fa-map"></i> <strong>1</strong> Acre</div>
+          </div>
+          <button class="prop-cta">View Details &amp; Book Tour</button>
         </div>
       </div>
-      <div class="pcard reveal" style="border-color:var(--gold)">
-        <div class="pc-img">
-          <span class="pc-pop">Most Popular</span>
-          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=85" alt="Standard home">
-          <span class="pc-type t-standard">Standard Home</span>
-          <button class="pc-save"><i class="far fa-heart"></i></button>
-        </div>
-        <div class="pc-body">
-          <div class="pc-price">KES 15,000,000</div>
-          <div class="pc-name">The Family — 4BR Maisonette</div>
-          <div class="pc-loc"><i class="fas fa-location-dot"></i>Central Sector, Barina</div>
-          <div class="pc-meta">
-            <span><i class="fas fa-bed"></i>4 Bd</span>
-            <span><i class="fas fa-bath"></i>3 Ba</span>
-            <span><i class="fas fa-vector-square"></i>2,400</span>
+      <div class="prop-card reveal reveal-delay-2">
+        <div class="prop-card-img-wrap">
+          <img class="prop-card-img" src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=80" alt="Land Plot"/>
+          <div class="prop-card-badges">
+            <span class="badge badge-blue">Raw Land</span>
+            <span class="badge badge-green">Serviced</span>
           </div>
+          <button class="prop-card-save"><i class="fa fa-heart"></i></button>
+        </div>
+        <div class="prop-card-body">
+          <div class="prop-price">KES 3,500,000 <span>/ acre</span></div>
+          <div class="prop-name">1-Acre Serviced Plot — Block C</div>
+          <div class="prop-loc"><i class="fa fa-map-marker-alt"></i> Phase 1, Barina Community, Nakuru</div>
+          <div class="prop-specs">
+            <div class="prop-spec"><i class="fa fa-map"></i> <strong>1</strong> Acre</div>
+            <div class="prop-spec"><i class="fa fa-bolt"></i> Power Connected</div>
+            <div class="prop-spec"><i class="fa fa-tint"></i> Water Ready</div>
+          </div>
+          <button class="prop-cta">View Details &amp; Book Tour</button>
         </div>
       </div>
-      <div class="pcard reveal">
-        <div class="pc-img">
-          <img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?w=600&q=85" alt="Premium villa">
-          <span class="pc-type t-premium">Premium Villa</span>
-          <button class="pc-save"><i class="far fa-heart"></i></button>
+    </div>
+    <div class="prop-view-all">
+      <button class="btn-outline-navy"><i class="fa fa-th-large"></i> View All 48 Properties</button>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-inner">
+    <div class="about-visual reveal">
+      <img class="about-main-img" src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800&q=80" alt="Nakuru landscape"/>
+      <img class="about-inset" src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&q=80" alt="Rift Valley view"/>
+      <div class="about-stat-card">
+        <div class="asc-num">2 hrs</div>
+        <div class="asc-label">From Nairobi CBD<br/>via Expressway</div>
+      </div>
+    </div>
+    <div class="about-content reveal reveal-delay-1">
+      <div class="section-eyebrow">About Barina</div>
+      <h2 class="section-title">Built in Nakuru.<br/>Designed for the Future.</h2>
+      <p class="about-body-text">Barina Community is a visionary master-planned settlement located on the fertile highlands of Nakuru, Kenya's fourth-largest city and capital of the Rift Valley region. At 1,850 metres above sea level, Nakuru enjoys a near-perfect highland climate — cool mornings, warm sunny days, and cool evenings — making it one of the most liveable cities in East Africa.</p>
+      <p class="about-body-text">Adjacent to the world-famous Lake Nakuru National Park — home to flamingoes, rhinos, lions, and over 400 bird species — Barina offers residents a lifestyle that is as aspirational as it is grounded in community. We are building more than homes; we are building a legacy.</p>
+      <div class="about-climate">
+        <span class="climate-pill"><i class="fa fa-thermometer-half"></i> 18–28°C Avg Temp</span>
+        <span class="climate-pill"><i class="fa fa-cloud-rain"></i> Bimodal Rainfall</span>
+        <span class="climate-pill"><i class="fa fa-sun"></i> 2,800+ Sunshine Hrs/yr</span>
+        <span class="climate-pill"><i class="fa fa-wind"></i> Low Humidity</span>
+      </div>
+      <div class="about-facts">
+        <div class="af-item">
+          <h4><i class="fa fa-hospital" style="margin-right:.4rem;color:var(--blue)"></i> Community Hospital</h4>
+          <p>A fully equipped primary and specialist care facility serving all residents — on-estate, no more long drives for medical care.</p>
         </div>
-        <div class="pc-body">
-          <div class="pc-price">KES 35,000,000+</div>
-          <div class="pc-name">The Ridge Estate — Luxury Villa</div>
-          <div class="pc-loc"><i class="fas fa-location-dot"></i>Premier Ridge, Barina</div>
-          <div class="pc-meta">
-            <span><i class="fas fa-bed"></i>5 Bd</span>
-            <span><i class="fas fa-bath"></i>4 Ba</span>
-            <span><i class="fas fa-vector-square"></i>4,200</span>
-          </div>
+        <div class="af-item">
+          <h4><i class="fa fa-seedling" style="margin-right:.4rem;color:var(--blue)"></i> Organic Farm</h4>
+          <p>Residents access fresh organic produce grown within the estate. Community gardens, farmers market, and sustainable agriculture programs.</p>
+        </div>
+        <div class="af-item">
+          <h4><i class="fa fa-graduation-cap" style="margin-right:.4rem;color:var(--blue)"></i> Academic Campus</h4>
+          <p>Early childhood, primary, and secondary schools all within walking distance. Partnerships with leading Kenyan and international institutions.</p>
+        </div>
+        <div class="af-item">
+          <h4><i class="fa fa-store" style="margin-right:.4rem;color:var(--blue)"></i> Commercial Centre</h4>
+          <p>On-estate retail, restaurants, banking, co-working spaces, and services — a complete urban convenience within the community gates.</p>
+        </div>
+        <div class="af-item">
+          <h4><i class="fa fa-shield-alt" style="margin-right:.4rem;color:var(--blue)"></i> Gated &amp; Secure</h4>
+          <p>24/7 perimeter security, CCTV surveillance, boom-gate entry points, and a resident-only access management system.</p>
+        </div>
+        <div class="af-item">
+          <h4><i class="fa fa-wifi" style="margin-right:.4rem;color:var(--blue)"></i> Smart Infrastructure</h4>
+          <p>Fibre optic internet, solar-ready homes, rainwater harvesting, and green waste management baked into every plot and unit.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ AMENITIES ══════════════ -->
-<section class="section amenities" id="community">
-  <div class="wrap">
-    <div class="sec-head reveal" style="align-items:flex-end">
+<!-- LIFESTYLE -->
+<section id="lifestyle">
+  <div class="lifestyle-inner">
+    <div class="lifestyle-header">
       <div>
-        <div class="eyebrow">Life Inside Barina</div>
-        <h2 class="h" style="margin-top:14px">Everything You Need,<br>Within the Community</h2>
+        <div class="section-eyebrow lifestyle-eyebrow">The Barina Way of Life</div>
+        <h2 class="section-title lifestyle-title">More than a home.<br/>A whole world inside.</h2>
       </div>
-      <p class="lead" style="max-width:430px">15+ purpose-built facilities mean members never need to leave for essentials — healthcare, learning, commerce and recreation, all on-site.</p>
-    </div>
-    <div class="am-grid">
-      <div class="am am-tall reveal">
-        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=900&q=85" alt="Commercial centre">
-        <div class="am-body">
-          <span class="am-tag">Commerce</span>
-          <h4>Modern Commercial Centre</h4>
-          <p>Retail, co-working, restaurants, a cinema and a weekend market — the beating heart of Barina.</p>
-        </div>
-      </div>
-      <div class="am am-mini reveal">
-        <img src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=600&q=85" alt="Hospital">
-        <div class="am-body">
-          <span class="am-tag">Healthcare</span>
-          <h4>Level-4 Hospital</h4>
-          <p>Specialists, maternity, 24h emergency.</p>
-        </div>
-      </div>
-      <div class="am am-mini reveal">
-        <img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=600&q=85" alt="Organic farm">
-        <div class="am-body">
-          <span class="am-tag">Agriculture</span>
-          <h4>Organic Farm</h4>
-          <p>200+ acres, farm-to-table delivery.</p>
-        </div>
-      </div>
-      <div class="am am-mini reveal">
-        <img src="https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=85" alt="School">
-        <div class="am-body">
-          <span class="am-tag">Education</span>
-          <h4>Academic Campus</h4>
-          <p>Nursery to university-prep, STEM labs.</p>
-        </div>
-      </div>
-      <div class="am am-mini reveal">
-        <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=600&q=85" alt="Sports">
-        <div class="am-body">
-          <span class="am-tag">Recreation</span>
-          <h4>Sports &amp; Wellness</h4>
-          <p>Pool, gym, tennis, yoga, trails.</p>
-        </div>
-      </div>
-    </div>
-    <div class="am-chips reveal">
-      <div class="amchip"><i class="fas fa-solar-panel"></i>Solar Micro-Grid</div>
-      <div class="amchip"><i class="fas fa-droplet"></i>Water Treatment</div>
-      <div class="amchip"><i class="fas fa-shield-halved"></i>24/7 Security</div>
-      <div class="amchip"><i class="fas fa-wifi"></i>Fibre Internet</div>
-      <div class="amchip"><i class="fas fa-place-of-worship"></i>Worship Centre</div>
-      <div class="amchip"><i class="fas fa-tree"></i>Green Parks</div>
-      <div class="amchip"><i class="fas fa-charging-station"></i>EV Charging</div>
-      <div class="amchip"><i class="fas fa-microchip"></i>Tech &amp; Innovation Hub</div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ INTERNATIONAL ══════════════ -->
-<section class="section intl on-dark" id="international">
-  <div class="wrap intl-grid">
-    <div class="intl-visual reveal">
-      <img src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=800&q=85" alt="Kenya landscape">
-      <div class="intl-f1">
-        <div class="v">60% Lower</div>
-        <div class="l">Cost of living vs Western cities</div>
-        <div class="flags">🇺🇸 🇬🇧 🇩🇪 🇫🇷 🇨🇦</div>
-      </div>
-      <div class="intl-f2">
-        <div class="v">30+</div>
-        <div class="l">Countries Represented</div>
-      </div>
-    </div>
-    <div class="reveal">
-      <div class="eyebrow on-dark">International Members</div>
-      <h2 class="h" style="margin:14px 0 16px">Your Retirement<br>Paradise in Kenya</h2>
-      <p class="lead">From the USA, UK, Germany or anywhere in Europe — Barina offers a secure, warm and enriching place to retire, in one of Africa's most beautiful countries.</p>
-      <div class="ctry-row">
-        <div class="ctry">🇺🇸 USA</div>
-        <div class="ctry">🇬🇧 UK</div>
-        <div class="ctry">🇩🇪 Germany</div>
-        <div class="ctry">🇫🇷 France</div>
-        <div class="ctry">🇨🇦 Canada</div>
-        <div class="ctry">🇦🇺 Australia</div>
-        <div class="ctry">🇳🇱 Netherlands</div>
-      </div>
-      <div class="intl-feats">
-        <div class="ifeat"><div class="ic"><i class="fas fa-passport"></i></div><h6>Retirement Visa Support</h6><p>Full guidance through Kenya's Class G retirement permit, end to end.</p></div>
-        <div class="ifeat"><div class="ic"><i class="fas fa-building-columns"></i></div><h6>International Transfers</h6><p>SWIFT purchases with full KRA compliance and legal escrow.</p></div>
-        <div class="ifeat"><div class="ic"><i class="fas fa-plane-arrival"></i></div><h6>Relocation Concierge</h6><p>Airport pickup, orientation and settling-in — handled for you.</p></div>
-        <div class="ifeat"><div class="ic"><i class="fas fa-heart-pulse"></i></div><h6>Health Cover Transition</h6><p>Partner insurers move your cover seamlessly to Kenya.</p></div>
-      </div>
-      <div style="display:flex;gap:13px;margin-top:30px;flex-wrap:wrap">
-        <a href="#" class="btn btn-gold">Book a Virtual Tour <i class="fas fa-video"></i></a>
-        <a href="#" class="btn btn-glass">Talk to an Advisor</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ ROADMAP ══════════════ -->
-<section class="section roadmap" id="roadmap">
-  <div class="wrap">
-    <div class="rm-top">
-      <div class="reveal">
-        <div class="eyebrow">Development Roadmap</div>
-        <h2 class="h" style="margin:14px 0 18px">A Transparent,<br>Phased Build-Out</h2>
-        <p class="lead">Every phase is publicly tracked. Members watch construction progress, financial allocations and milestones in real time — no surprises, full accountability from day one.</p>
-        <div style="display:flex;gap:13px;margin-top:28px;flex-wrap:wrap">
-          <a href="#" class="btn btn-navy">View Live Progress <i class="fas fa-arrow-up-right-from-square"></i></a>
-          <a href="#" class="btn btn-line">Download Master Plan</a>
-        </div>
-      </div>
-      <div class="reveal">
-        <div class="rm-meter">
-          <div class="rm-meter-head">
-            <span class="t">Overall Progress</span>
-            <span class="rm-active"><span class="pulse"></span> Phase 1 Active</span>
+      <div>
+        <p class="lifestyle-tagline">Wake up to highland air. Walk your children to school. Farm your own land. Shop, heal, and connect — all within your community gates. This is what Barina makes possible.</p>
+        <div class="lifestyle-amens">
+          <div class="amen-item">
+            <div class="amen-icon"><i class="fa fa-swimming-pool"></i></div>
+            <div class="amen-body"><h4>Sports &amp; Recreation</h4><p>Olympic pool, football pitch, tennis courts, cycling trails, and a community gym</p></div>
           </div>
-          <div class="rm-track-bar"><div class="rm-track-fill" data-fill="18"></div></div>
-          <div class="rm-pct"><span>Groundbreaking 2023</span><span><b>18%</b> complete</span></div>
-          <div class="rm-meter-mini">
-            <div class="rm-mini"><div class="v">183</div><div class="l">Plots Reserved</div></div>
-            <div class="rm-mini"><div class="v">12</div><div class="l">Active Projects</div></div>
-            <div class="rm-mini"><div class="v">2035</div><div class="l">Full Completion</div></div>
+          <div class="amen-item">
+            <div class="amen-icon"><i class="fa fa-tree"></i></div>
+            <div class="amen-body"><h4>Green Spaces</h4><p>5km of walking trails, Central Park, botanical garden, and children's adventure zones</p></div>
+          </div>
+          <div class="amen-item">
+            <div class="amen-icon"><i class="fa fa-utensils"></i></div>
+            <div class="amen-body"><h4>Dining &amp; Lifestyle</h4><p>On-estate restaurants, coffee shops, a rooftop bar, and weekly farmers market</p></div>
+          </div>
+          <div class="amen-item">
+            <div class="amen-icon"><i class="fa fa-pray"></i></div>
+            <div class="amen-body"><h4>Places of Worship</h4><p>Mosque, church, and meditation garden — quiet places for reflection within the estate</p></div>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- timeline -->
-    <div class="rm-track reveal">
-      <div class="rm-line"></div>
-      <div class="rm-line-fill" data-fill="30"></div>
-
-      <div class="rm-phase done">
-        <div class="rm-node"><i class="fas fa-check"></i></div>
-        <div class="rm-card">
-          <div class="rm-ph">Phase 0</div>
-          <h5>Land &amp; Master Planning</h5>
-          <ul class="rm-deliv">
-            <li><i class="fas fa-check"></i>2,000+ acres secured</li>
-            <li><i class="fas fa-check"></i>Master plan approved</li>
-            <li><i class="fas fa-check"></i>Environmental clearance</li>
-          </ul>
-          <div class="rm-year">2023</div>
-          <span class="rm-chip done"><i class="fas fa-circle-check"></i>Completed</span>
-        </div>
+    <div class="lifestyle-mosaic">
+      <div class="mosaic-item mosaic-item-1">
+        <img src="https://images.unsplash.com/photo-1600585152220-90363fe7e115?w=700&q=80" alt="Community"/>
+        <div class="mosaic-overlay"><span class="mosaic-label"><i class="fa fa-home" style="margin-right:.4rem"></i>Premium Residences</span></div>
       </div>
-
-      <div class="rm-phase now">
-        <div class="rm-node">1</div>
-        <div class="rm-card">
-          <div class="rm-ph">Phase 1</div>
-          <h5>Roads, Power &amp; Water</h5>
-          <ul class="rm-deliv">
-            <li><i class="fas fa-check"></i>Internal tarmac network</li>
-            <li><i class="fas fa-check"></i>Borehole &amp; solar grid</li>
-            <li><i class="fas fa-spinner"></i>Perimeter &amp; security</li>
-          </ul>
-          <div class="rm-year">2024 – 2025</div>
-          <span class="rm-chip now"><i class="fas fa-person-digging"></i>In Progress</span>
-          <div class="rm-prog"><span style="width:68%"></span></div>
-        </div>
+      <div class="mosaic-item">
+        <img src="https://images.unsplash.com/photo-1574263867128-a3d5c1b1decc?w=400&q=80" alt="Farm"/>
+        <div class="mosaic-overlay"><span class="mosaic-label"><i class="fa fa-leaf" style="margin-right:.4rem"></i>Organic Farm</span></div>
       </div>
-
-      <div class="rm-phase">
-        <div class="rm-node">2</div>
-        <div class="rm-card">
-          <div class="rm-ph">Phase 2</div>
-          <h5>First Homes &amp; Town Centre</h5>
-          <ul class="rm-deliv">
-            <li><i class="fas fa-circle-dot"></i>150 homes constructed</li>
-            <li><i class="fas fa-circle-dot"></i>Commercial centre shell</li>
-            <li><i class="fas fa-circle-dot"></i>Community parks open</li>
-          </ul>
-          <div class="rm-year">2025 – 2026</div>
-          <span class="rm-chip soon"><i class="fas fa-clock"></i>Upcoming</span>
-        </div>
+      <div class="mosaic-item">
+        <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=400&q=80" alt="Lake"/>
+        <div class="mosaic-overlay"><span class="mosaic-label"><i class="fa fa-water" style="margin-right:.4rem"></i>Lake Nakuru Views</span></div>
       </div>
-
-      <div class="rm-phase">
-        <div class="rm-node">3</div>
-        <div class="rm-card">
-          <div class="rm-ph">Phase 3</div>
-          <h5>Hospital, School &amp; Farm</h5>
-          <ul class="rm-deliv">
-            <li><i class="fas fa-circle-dot"></i>Level-4 hospital opens</li>
-            <li><i class="fas fa-circle-dot"></i>Academic campus built</li>
-            <li><i class="fas fa-circle-dot"></i>First organic harvest</li>
-          </ul>
-          <div class="rm-year">2026 – 2028</div>
-          <span class="rm-chip soon"><i class="fas fa-clock"></i>Planned</span>
-        </div>
+      <div class="mosaic-item">
+        <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80" alt="Families"/>
+        <div class="mosaic-overlay"><span class="mosaic-label"><i class="fa fa-users" style="margin-right:.4rem"></i>Family First Community</span></div>
       </div>
-
-      <div class="rm-phase">
-        <div class="rm-node">4</div>
-        <div class="rm-card">
-          <div class="rm-ph">Phase 4 – 5</div>
-          <h5>Villas, Tech Hub &amp; University</h5>
-          <ul class="rm-deliv">
-            <li><i class="fas fa-circle-dot"></i>Premium villas &amp; sports</li>
-            <li><i class="fas fa-circle-dot"></i>Digital innovation hub</li>
-            <li><i class="fas fa-circle-dot"></i>Barina University</li>
-          </ul>
-          <div class="rm-year">2028 – 2035</div>
-          <span class="rm-chip soon"><i class="fas fa-flag-checkered"></i>Vision</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- imagery -->
-    <div class="rm-imgs">
-      <div class="rm-img reveal">
-        <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=700&q=85" alt="Infrastructure">
-        <div class="rm-img-cap"><div class="p">Phase 1 — Now</div><h5>Infrastructure &amp; Roadworks</h5></div>
-      </div>
-      <div class="rm-img reveal">
-        <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=700&q=85" alt="Construction">
-        <div class="rm-img-cap"><div class="p">Phase 2 — 2025</div><h5>Home Construction Begins</h5></div>
-      </div>
-      <div class="rm-img reveal">
-        <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?w=700&q=85" alt="Hospital">
-        <div class="rm-img-cap"><div class="p">Phase 3 — 2026</div><h5>Hospital, School &amp; Farm</h5></div>
+      <div class="mosaic-item">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" alt="Architecture"/>
+        <div class="mosaic-overlay"><span class="mosaic-label"><i class="fa fa-building" style="margin-right:.4rem"></i>Modern Architecture</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ CTA ══════════════ -->
-<section class="cta">
-  <div class="wrap cta-inner reveal">
-    <h2>Your Future Home is Waiting in Barina</h2>
-    <p>Join 247 members who've already secured their place. Early members get launch pricing and first pick of plots.</p>
+<!-- INTERNATIONAL -->
+<section id="international">
+  <div class="intl-inner">
+    <div class="intl-hero-row">
+      <div class="reveal">
+        <div class="section-eyebrow">International Members</div>
+        <h2 class="section-title">The smartest retirement<br/>address in Africa.</h2>
+        <p class="intl-intro">Thousands of retirees and remote workers from the USA, UK, Germany, Canada, and Australia are choosing Kenya — and Nakuru specifically — for its unbeatable quality of life, affordability, and climate. Barina is built with you in mind.</p>
+        <div class="intl-why">
+          <div class="intl-why-card">
+            <div class="intl-why-card-icon" style="background:#eff6ff;color:var(--blue)"><i class="fa fa-dollar-sign"></i></div>
+            <h4>60–80% Cost Saving</h4>
+            <p>Live a $5,000/month lifestyle in the West for under $1,500/month in Nakuru. Premium home, full domestic help, dining out every night.</p>
+          </div>
+          <div class="intl-why-card">
+            <div class="intl-why-card-icon" style="background:#f0fdf4;color:#16a34a"><i class="fa fa-thermometer-half"></i></div>
+            <h4>Year-round Perfection</h4>
+            <p>Nakuru's highland climate — 18 to 28°C every month — means no heating bills, no AC dependency. Perpetual spring weather.</p>
+          </div>
+          <div class="intl-why-card">
+            <div class="intl-why-card-icon" style="background:#fef9ef;color:var(--gold)"><i class="fa fa-paw"></i></div>
+            <h4>Wildlife on Your Doorstep</h4>
+            <p>Lake Nakuru National Park is 15 minutes from your door. Daily flamingo walks, rhino sightings, and 400+ bird species — this is not a holiday, this is home.</p>
+          </div>
+          <div class="intl-why-card">
+            <div class="intl-why-card-icon" style="background:#fdf4ff;color:#9333ea"><i class="fa fa-plane"></i></div>
+            <h4>Direct Flights</h4>
+            <p>Direct flights from London, Amsterdam, Dubai, and Doha to Nairobi — then 2 hours on the expressway. Easy to reach, easy to return.</p>
+          </div>
+          <div class="intl-why-card">
+            <div class="intl-why-card-icon" style="background:#fff1f2;color:#e11d48"><i class="fa fa-heartbeat"></i></div>
+            <h4>World-class Healthcare</h4>
+            <p>Nairobi's Aga Khan and Karen hospitals rank among Africa's best. On-estate Barina clinic for daily needs. Health insurance costs a fraction of the West.</p>
+          </div>
+          <div class="intl-why-card">
+            <div class="intl-why-card-icon" style="background:#f0fdf4;color:#0891b2"><i class="fa fa-language"></i></div>
+            <h4>English-speaking Nation</h4>
+            <p>Kenya is officially bilingual — English and Kiswahili. No language barrier. Legal system based on British common law. Freehold land titles available.</p>
+          </div>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="intl-compare">
+          <h3>Monthly Cost of Living</h3>
+          <p>Equivalent lifestyle — rent, food, transport, services</p>
+          <div class="compare-row">
+            <span class="compare-country">🇺🇸 San Francisco, USA</span>
+            <span class="compare-val">$5,800 / mo</span>
+          </div>
+          <div class="compare-row">
+            <span class="compare-country">🇬🇧 London, UK</span>
+            <span class="compare-val">$4,900 / mo</span>
+          </div>
+          <div class="compare-row">
+            <span class="compare-country">🇩🇪 Munich, Germany</span>
+            <span class="compare-val">$4,200 / mo</span>
+          </div>
+          <div class="compare-row">
+            <span class="compare-country">🇦🇺 Sydney, Australia</span>
+            <span class="compare-val">$4,600 / mo</span>
+          </div>
+          <div class="compare-row" style="border:1px solid rgba(217,146,10,.3);border-radius:8px;padding:.65rem .75rem;margin-top:.5rem;background:rgba(217,146,10,.08)">
+            <span class="compare-country" style="color:var(--gold-2);font-weight:700">🇰🇪 Nakuru (Barina)</span>
+            <span class="compare-val compare-highlight">$1,200–$1,800 / mo</span>
+          </div>
+          <div class="compare-note">* Expat lifestyle data 2024. Includes rent, food, transport &amp; leisure.</div>
+        </div>
+        <div class="intl-visa">
+          <i class="fa fa-passport"></i>
+          <div class="intl-visa-text">
+            <h4>Kenya Class G Retirement Visa</h4>
+            <p>Available to non-residents 50+ with proof of pension or passive income of $1,000+/month. Valid 2 years, renewable. Full freehold property ownership rights for foreigners.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="intl-countries reveal">
+      <div class="section-eyebrow">Our Global Community</div>
+      <h3 class="section-title" style="font-size:1.5rem">Members joining from across the world</h3>
+      <div class="country-chips">
+        <span class="country-chip"><span class="flag">🇺🇸</span> United States</span>
+        <span class="country-chip"><span class="flag">🇬🇧</span> United Kingdom</span>
+        <span class="country-chip"><span class="flag">🇩🇪</span> Germany</span>
+        <span class="country-chip"><span class="flag">🇨🇦</span> Canada</span>
+        <span class="country-chip"><span class="flag">🇦🇺</span> Australia</span>
+        <span class="country-chip"><span class="flag">🇫🇷</span> France</span>
+        <span class="country-chip"><span class="flag">🇳🇱</span> Netherlands</span>
+        <span class="country-chip"><span class="flag">🇸🇪</span> Sweden</span>
+        <span class="country-chip"><span class="flag">🇮🇹</span> Italy</span>
+        <span class="country-chip"><span class="flag">🇦🇪</span> UAE / Dubai</span>
+        <span class="country-chip"><span class="flag">🇮🇳</span> India</span>
+        <span class="country-chip"><span class="flag">🇿🇦</span> South Africa</span>
+        <span class="country-chip"><span class="flag">🇰🇪</span> Kenyan Diaspora</span>
+      </div>
+    </div>
+    <div class="intl-steps reveal">
+      <div class="section-eyebrow" style="margin-top:3rem">How to Join from Abroad</div>
+      <h3 class="section-title" style="font-size:1.5rem">5 steps to owning in Barina</h3>
+      <div class="steps-grid">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div class="step-h">Enquire Online</div>
+          <p class="step-p">Fill our international buyer form and receive a full info pack + video tour within 24 hours</p>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div class="step-h">Virtual Tour</div>
+          <p class="step-p">Book a live Zoom tour with our sales team and walk through plots and show homes remotely</p>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div class="step-h">Reserve &amp; Sign</div>
+          <p class="step-p">Pay a 10% reservation deposit (wire transfer or crypto accepted) to secure your chosen plot</p>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div class="step-h">Legal &amp; Title</div>
+          <p class="step-p">Our legal team handles all Kenya Land Registry paperwork. Title deed issued in your name</p>
+        </div>
+        <div class="step-item">
+          <div class="step-num">05</div>
+          <div class="step-h">Move In</div>
+          <p class="step-p">Arrive in Nakuru, settle into your home. Airport pickup, relocation support, and a welcome event included</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="roadmap-inner">
+    <div style="text-align:center;max-width:600px;margin:0 auto">
+      <div class="section-eyebrow">Development Roadmap</div>
+      <h2 class="section-title">Built in stages.<br/>Delivered on time.</h2>
+    </div>
+    <div class="rm-timeline">
+      <div class="rm-node reveal">
+        <div class="rm-dot done"><i class="fa fa-check"></i></div>
+        <div class="rm-card">
+          <div class="rm-phase">Phase 0 · Complete</div>
+          <div class="rm-title">Land &amp; Planning</div>
+          <div class="rm-date">2022 – 2023</div>
+          <ul class="rm-bullets">
+            <li>Land acquisition (300 acres)</li>
+            <li>Master plan approval</li>
+            <li>Environmental impact assessment</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rm-node reveal reveal-delay-1">
+        <div class="rm-dot active"><i class="fa fa-hard-hat"></i></div>
+        <div class="rm-card">
+          <div class="rm-phase active-text">Phase 1 · In Progress</div>
+          <div class="rm-title">Infrastructure &amp; Plots</div>
+          <div class="rm-date">2024 – 2025</div>
+          <ul class="rm-bullets">
+            <li>Roads, water, power grid</li>
+            <li>500 serviced plots</li>
+            <li>Gate &amp; security systems</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rm-node reveal reveal-delay-2">
+        <div class="rm-dot future"><i class="fa fa-building"></i></div>
+        <div class="rm-card">
+          <div class="rm-phase">Phase 2 · 2026</div>
+          <div class="rm-title">Homes &amp; Amenities</div>
+          <div class="rm-date">2025 – 2026</div>
+          <ul class="rm-bullets">
+            <li>200 homes (all tiers)</li>
+            <li>Hospital &amp; school open</li>
+            <li>Commercial centre</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rm-node reveal reveal-delay-3">
+        <div class="rm-dot future"><i class="fa fa-flag-checkered"></i></div>
+        <div class="rm-card">
+          <div class="rm-phase">Phase 3 · 2027+</div>
+          <div class="rm-title">Full Community</div>
+          <div class="rm-date">2027 and beyond</div>
+          <ul class="rm-bullets">
+            <li>Organic farm operational</li>
+            <li>Recreational complex</li>
+            <li>500+ families settled</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="rm-progress-bar reveal">
+      <div class="rm-progress-label">
+        <span>Overall Progress</span>
+        <span>38% Complete</span>
+      </div>
+      <div class="rm-track">
+        <div class="rm-track-fill" data-fill="38"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-inner">
+    <div class="cta-tag">Limited Phase 1 Units</div>
+    <h2 class="cta-h">Reserve your plot before they're gone.</h2>
+    <p class="cta-sub">Phase 1 has fewer than 120 plots remaining. Prices increase with each milestone. Lock in today's rate.</p>
     <div class="cta-btns">
-      <a href="#" class="btn btn-gold" style="padding:16px 34px">Reserve Your Plot Today <i class="fas fa-arrow-right"></i></a>
-      <a href="#" class="btn btn-glass" style="padding:15px 34px">Schedule a Call</a>
+      <button class="btn-gold"><i class="fa fa-calendar-check"></i> Book a Free Site Visit</button>
+      <button class="btn-white-outline"><i class="fa fa-phone"></i> Speak to Sales Team</button>
+    </div>
+    <div class="cta-trust">
+      <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+      &nbsp;Trusted by 200+ buyers &nbsp;·&nbsp; Registered with Kenya Real Estate Authority
     </div>
   </div>
 </section>
 
-<!-- ══════════════ FOOTER ══════════════ -->
-<footer>
-  <div class="wrap">
-    <div class="f-grid">
+<!-- FOOTER -->
+<footer id="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
       <div>
-        <div class="f-brand">
-          <div class="brand-mark"><i class="fas fa-mountain-city"></i></div>
-          <div class="brand-name"><b>BARINA</b><span class="c">COMMUNITY</span></div>
+        <div class="footer-logo">
+          <div class="footer-logo-mark">
+            <svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V7L12 2z"/></svg>
+          </div>
+          <span class="footer-logo-text">Barina Community</span>
         </div>
-        <p class="tag">A visionary planned community in Kenya — premium living, organic sustainability, world-class amenities and genuine human connection.</p>
-        <div class="f-social">
-          <a href="#"><i class="fab fa-facebook-f"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-          <a href="#"><i class="fab fa-x-twitter"></i></a>
-          <a href="#"><i class="fab fa-youtube"></i></a>
-          <a href="#"><i class="fab fa-whatsapp"></i></a>
-          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        <p class="footer-tagline">A master-planned settlement in Nakuru, Kenya. Premium homes, 1-acre plots, and a fully self-sustaining community for modern families and global citizens.</p>
+        <div class="footer-contact-items">
+          <div class="footer-contact-item"><i class="fa fa-map-marker-alt"></i><span>Off Nakuru–Nairobi Highway, Nakuru County, Kenya</span></div>
+          <div class="footer-contact-item"><i class="fa fa-phone"></i><a href="tel:+254700000000">+254 700 000 000</a></div>
+          <div class="footer-contact-item"><i class="fa fa-envelope"></i><a href="mailto:hello@barinacommunity.co.ke">hello@barinacommunity.co.ke</a></div>
+          <div class="footer-contact-item"><i class="fa fa-clock"></i><span>Mon – Sat, 8:00am – 6:00pm EAT</span></div>
+        </div>
+        <div class="footer-socials">
+          <a class="footer-social" href="#"><i class="fab fa-facebook-f"></i></a>
+          <a class="footer-social" href="#"><i class="fab fa-instagram"></i></a>
+          <a class="footer-social" href="#"><i class="fab fa-twitter"></i></a>
+          <a class="footer-social" href="#"><i class="fab fa-youtube"></i></a>
+          <a class="footer-social" href="#"><i class="fab fa-whatsapp"></i></a>
+          <a class="footer-social" href="#"><i class="fab fa-linkedin-in"></i></a>
         </div>
       </div>
-      <div class="f-col"><h6>Properties</h6><ul>
-        <li><a href="#">Land Plots (1 Acre)</a></li>
-        <li><a href="#">Basic Homes</a></li>
-        <li><a href="#">Standard Homes</a></li>
-        <li><a href="#">Premium Villas</a></li>
-        <li><a href="#">All Listings</a></li>
-      </ul></div>
-      <div class="f-col"><h6>Community</h6><ul>
-        <li><a href="#">Commercial Centre</a></li>
-        <li><a href="#">Organic Farm</a></li>
-        <li><a href="#">Hospital</a></li>
-        <li><a href="#">Academy</a></li>
-        <li><a href="#">Sports Complex</a></li>
-      </ul></div>
-      <div class="f-col"><h6>Members</h6><ul>
-        <li><a href="#">Member Login</a></li>
-        <li><a href="#">Register</a></li>
-        <li><a href="#">Community Projects</a></li>
-        <li><a href="#">Payment Tracker</a></li>
-        <li><a href="#">Member Forum</a></li>
-      </ul></div>
-      <div class="f-col"><h6>Company</h6><ul>
-        <li><a href="#">About Barina</a></li>
-        <li><a href="#">Development Roadmap</a></li>
-        <li><a href="#">Retire in Kenya</a></li>
-        <li><a href="#">News &amp; Updates</a></li>
-        <li><a href="#">Privacy Policy</a></li>
-      </ul></div>
+      <div class="footer-col">
+        <h4>Properties</h4>
+        <ul class="footer-links">
+          <li><a href="#">1-Acre Land Plots</a></li>
+          <li><a href="#">Basic Homes (2-bed)</a></li>
+          <li><a href="#">Standard Homes (3-bed)</a></li>
+          <li><a href="#">Premium Homes (4-bed)</a></li>
+          <li><a href="#">International Package</a></li>
+          <li><a href="#">Off-Plan Units</a></li>
+          <li><a href="#">Payment Plans</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Community</h4>
+        <ul class="footer-links">
+          <li><a href="#">About Barina</a></li>
+          <li><a href="#">Amenities &amp; Facilities</a></li>
+          <li><a href="#">Development Roadmap</a></li>
+          <li><a href="#">Community Blog</a></li>
+          <li><a href="#">Resident Portal</a></li>
+          <li><a href="#">Events Calendar</a></li>
+          <li><a href="#">Lake Nakuru Guide</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul class="footer-links">
+          <li><a href="#">Book a Site Visit</a></li>
+          <li><a href="#">International Buyers Guide</a></li>
+          <li><a href="#">Kenya Property Law FAQ</a></li>
+          <li><a href="#">Retirement Visa Info</a></li>
+          <li><a href="#">Contact Sales</a></li>
+          <li><a href="#">Investor Relations</a></li>
+          <li><a href="#">Media &amp; Press</a></li>
+        </ul>
+      </div>
     </div>
-    <div class="f-bottom">
-      <div>&copy; 2025 Barina Community. All rights reserved.</div>
-      <div><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Cookies</a></div>
+    <div class="footer-bottom">
+      <span>© 2025 Barina Community Ltd. All rights reserved. &nbsp;🇰🇪 Proudly Kenyan</span>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Sale</a>
+        <a href="#">Cookie Policy</a>
+        <a href="#">Sitemap</a>
+      </div>
     </div>
   </div>
 </footer>
 
 <script>
-// nav solidify on scroll
 const nav=document.getElementById('nav');
-const onScroll=()=>{nav.classList.toggle('solid',window.scrollY>40);
-  heroBg.style.transform=`scale(1.06) translateY(${Math.min(window.scrollY*0.18,120)}px)`;};
-const heroBg=document.getElementById('heroBg');
-window.addEventListener('scroll',onScroll,{passive:true});
+window.addEventListener('scroll',()=>{nav.classList.toggle('solid',window.scrollY>40)},{passive:true});
 
-// search + filter tabs
-document.querySelectorAll('.hs-tabs').forEach(g=>g.querySelectorAll('.hs-tab').forEach(t=>
-  t.onclick=()=>{g.querySelectorAll('.hs-tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');}));
-document.querySelectorAll('.ftabs').forEach(g=>g.querySelectorAll('.ftab').forEach(t=>
-  t.onclick=()=>{g.querySelectorAll('.ftab').forEach(x=>x.classList.remove('on'));t.classList.add('on');}));
+document.getElementById('searchBtn').addEventListener('click',()=>{
+  const o=document.getElementById('search-overlay');
+  o.classList.add('open');
+  setTimeout(()=>document.getElementById('searchInput').focus(),100);
+});
+document.getElementById('searchClose').addEventListener('click',()=>{
+  document.getElementById('search-overlay').classList.remove('open');
+});
+document.getElementById('search-overlay').addEventListener('click',function(e){
+  if(e.target===this)this.classList.remove('open');
+});
 
-// save heart toggle
-document.querySelectorAll('.pc-save').forEach(b=>b.onclick=e=>{e.stopPropagation();
-  const i=b.querySelector('i');i.classList.toggle('far');i.classList.toggle('fas');});
+document.querySelectorAll('.hero-tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.hero-tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+  });
+});
 
-// reveal on scroll
-const revIO=new IntersectionObserver((es)=>es.forEach(e=>{
-  if(e.isIntersecting){e.target.classList.add('in');revIO.unobserve(e.target);}
-}),{threshold:.14});
-document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4*60)+'ms';revIO.observe(el);});
+document.querySelectorAll('.prop-filter').forEach(f=>{
+  f.addEventListener('click',()=>{
+    document.querySelectorAll('.prop-filter').forEach(x=>x.classList.remove('on'));
+    f.classList.add('on');
+  });
+});
 
-// counters
-const cIO=new IntersectionObserver((es)=>es.forEach(e=>{
-  if(!e.isIntersecting)return;const el=e.target,tgt=+el.dataset.count;let c=0;
-  const step=Math.max(1,Math.ceil(tgt/55));
-  const t=setInterval(()=>{c=Math.min(c+step,tgt);el.textContent=c.toLocaleString();
-    if(c>=tgt)clearInterval(t);},22);cIO.unobserve(el);
-}),{threshold:.6});
-document.querySelectorAll('[data-count]').forEach(el=>cIO.observe(el));
+const revealObs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revealObs.unobserve(e.target);}});
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
 
-// progress bars fill when visible
-const fIO=new IntersectionObserver((es)=>es.forEach(e=>{
-  if(!e.isIntersecting)return;const el=e.target;
-  if(el.classList.contains('rm-track-fill'))el.style.width=el.dataset.fill+'%';
-  if(el.classList.contains('rm-line-fill'))el.style.width=`calc((100% - 18%) * ${el.dataset.fill/100} + 0px)`;
-  fIO.unobserve(el);
-}),{threshold:.4});
-document.querySelectorAll('.rm-track-fill,.rm-line-fill').forEach(el=>fIO.observe(el));
+const countObs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const el=e.target,target=+el.dataset.count;
+    let start=0,step=Math.ceil(target/60);
+    const tick=()=>{start+=step;el.textContent=start>=target?target:start;if(start<target)requestAnimationFrame(tick);};
+    tick();countObs.unobserve(el);
+  });
+},{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el=>countObs.observe(el));
+
+const fillEl=document.querySelector('.rm-track-fill[data-fill]');
+if(fillEl){
+  const fillObs=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){fillEl.style.width=fillEl.dataset.fill+'%';fillObs.unobserve(fillEl);}});
+  },{threshold:.4});
+  fillObs.observe(fillEl);
+}
 </script>
 </body>
 </html>
