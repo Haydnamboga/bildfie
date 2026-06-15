@@ -41,7 +41,7 @@ router.post('/stk-push', requireAuth, pushRules, wrap(async (req, res) => {
 }));
 
 /* ── POST /api/mpesa/stk-push/invoice/:invoiceId ────────────────────── */
-// Pay a specific BuildLink invoice via STK push.
+// Pay a specific bildfie invoice via STK push.
 // Invoice must be in 'approved' status and belong to the logged-in client.
 
 router.post('/stk-push/invoice/:invoiceId', requireAuth, wrap(async (req, res) => {

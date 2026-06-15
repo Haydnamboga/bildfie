@@ -1,5 +1,5 @@
 /*
- * BuildLink — Modals & Actions
+ * bildfie — Modals & Actions
  * Professional modal, invite modal, new project form
  */
 'use strict';

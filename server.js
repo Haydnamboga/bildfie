@@ -108,6 +108,7 @@ app.use((req, res, next) => {
 
 /* ── Static assets (CSS, JS, images) ────────────────────────────────── */
 app.use(express.static(path.join(__dirname, 'public'), {
+  index: false,                     // never auto-serve index.html — EJS routes own the pages
   maxAge: PROD ? '7d' : 0,          // cache static assets for 7 days in prod
 }));
 
@@ -121,16 +122,11 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
 app.use('/api/auth',          require('./routes/auth'));
 app.use('/api/projects',      require('./routes/projects'));
 app.use('/api/professionals', require('./routes/professionals'));
-app.use('/api/materials',     require('./routes/materials'));
-app.use('/api/equipment',     require('./routes/equipment'));
-app.use('/api/transport',     require('./routes/transport'));
 app.use('/api/bids',          require('./routes/bids'));
 app.use('/api/reviews',       require('./routes/reviews'));
-app.use('/api/cart',          require('./routes/cart'));
 app.use('/api/invitations',   require('./routes/invitations'));
 app.use('/api/messages',      require('./routes/messages'));
 app.use('/api/dashboard',     require('./routes/dashboard'));
-app.use('/api/prices',        require('./routes/prices'));
 app.use('/api/mpesa',         require('./routes/mpesa'));
 app.use('/api/admin',         require('./routes/admin'));
 app.get('/api/health',        (req, res) => res.json({
@@ -138,7 +134,7 @@ app.get('/api/health',        (req, res) => res.json({
   env:     process.env.NODE_ENV,
   uptime:  Math.floor(process.uptime()),
   time:    new Date(),
-  version: '2026-05-27f',
+  version: '2026-06-15a',
 }));
 
 /* ── One-time admin bootstrap (disabled after first use) ─────────────── */
@@ -161,11 +157,6 @@ app.get('/api/setup-admin', async (req, res) => {
 /* ── Public pages ────────────────────────────────────────────────────── */
 app.get('/',              (req, res) => res.render('pages/index'));
 app.get('/professionals', (req, res) => res.render('pages/professionals'));
-app.get('/materials',     (req, res) => res.render('pages/materials'));
-app.get('/equipment',     (req, res) => res.render('pages/equipment'));
-app.get('/transport',     (req, res) => res.render('pages/transport'));
-app.get('/facilities',    (req, res) => res.render('pages/facilities'));
-app.get('/projects',      (req, res) => res.render('pages/projects'));
 app.get('/login',           (req, res) => res.render('pages/login'));
 app.get('/register',        (req, res) => res.render('pages/register'));
 app.get('/reset-password',  (req, res) => res.render('pages/reset-password'));

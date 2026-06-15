@@ -1,5 +1,5 @@
 /*
- * BuildLink — App Init
+ * bildfie — App Init
  * Boots the page: fetches live data from the API, merges with static
  * fallbacks, then renders all grids and widgets.
  *

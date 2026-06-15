@@ -1,5 +1,5 @@
 /*
- * BuildLink — Brand Overrides & Custom Styles (Bootstrap 5 supplement)
+ * bildfie — Brand Overrides & Custom Styles (Bootstrap 5 supplement)
  * Only styles Bootstrap cannot provide natively.
  */
 
@@ -19,7 +19,7 @@
   --bs-border-color:    #E3E3E8;
   --bs-font-sans-serif: 'Sora', system-ui, sans-serif;
 
-  /* BuildLink custom tokens */
+  /* bildfie custom tokens */
   --bl-accent:          #C43100;
   --bl-accent-light:    #FEF0EB;
   --bl-navy:            #011D47;

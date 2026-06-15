@@ -1,5 +1,5 @@
 /*
- * BuildLink — Static Demo Data (used when API is offline)
+ * bildfie — Static Demo Data (used when API is offline)
  */
 'use strict';
 const BL = window.BL || {};
@@ -62,9 +62,9 @@ BL.bids = [
 ];
 
 BL.testimonials = [
-  { stars:5, text:'"BuildLink transformed how we source professionals. Found our structural engineer and QS within 48 hours — both verified and outstanding. Project delivered on time and under budget."', name:'John Kariuki', role:'Property Developer', project:'Westlands Tower, Nairobi', avatar:'https://i.pravatar.cc/100?img=22' },
+  { stars:5, text:'"bildfie transformed how we source professionals. Found our structural engineer and QS within 48 hours — both verified and outstanding. Project delivered on time and under budget."', name:'John Kariuki', role:'Property Developer', project:'Westlands Tower, Nairobi', avatar:'https://i.pravatar.cc/100?img=22' },
   { stars:5, text:'"As a contractor, the materials marketplace saved us weeks of supplier hunting. Prices are transparent, delivery reliable. The bulk RFQ feature alone is worth its weight in gold."', name:'Christine Mwema', role:'General Contractor', project:'Karen Residential Estate', avatar:'https://i.pravatar.cc/100?img=25' },
-  { stars:5, text:'"I\'ve grown my engineering practice from 2 to 14 staff since joining BuildLink. The credibility filter means clients come pre-qualified and serious about delivery."', name:'Eng. Samuel Kiplagat', role:'Civil Engineer', project:'Thika Road Infrastructure', avatar:'https://i.pravatar.cc/100?img=28' },
+  { stars:5, text:'"I\'ve grown my engineering practice from 2 to 14 staff since joining bildfie. The credibility filter means clients come pre-qualified and serious about delivery."', name:'Eng. Samuel Kiplagat', role:'Civil Engineer', project:'Thika Road Infrastructure', avatar:'https://i.pravatar.cc/100?img=28' },
 ];
 
 BL.transport = [
@@ -98,7 +98,7 @@ BL.messages = [
   { id:2, sender_name:'Bamburi Cement Ltd', sender_role:'Supplier', sender_avatar:'https://i.pravatar.cc/100?img=35', created_at:'1 hr ago', content:'Your order #BL-2809 of 200 bags has been dispatched. ETA today 4PM.', read:0 },
   { id:3, sender_name:'Grace Wanjiku', sender_role:'Quantity Surveyor', sender_avatar:'https://i.pravatar.cc/100?img=9', created_at:'3 hrs ago', content:'Revised BoQ attached. Main change is in the finishes section — tiles upgraded from standard to Italian vitrified.', read:1 },
   { id:4, sender_name:'David Mwangi', sender_role:'Project Manager', sender_avatar:'https://i.pravatar.cc/100?img=12', created_at:'Yesterday', content:'Site visit report for Karen project attached. Overall progress is on track at 68%.', read:1 },
-  { id:5, sender_name:'BuildLink Support', sender_role:'Platform', sender_avatar:'https://i.pravatar.cc/100?img=40', created_at:'2 days ago', content:'Your account has been upgraded to Professional Verified status. Congratulations!', read:1 },
+  { id:5, sender_name:'bildfie Support', sender_role:'Platform', sender_avatar:'https://i.pravatar.cc/100?img=40', created_at:'2 days ago', content:'Your account has been upgraded to Professional Verified status. Congratulations!', read:1 },
 ];
 
 BL.invoices = [

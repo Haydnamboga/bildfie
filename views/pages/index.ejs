@@ -1,404 +1,182 @@
-<%- include('../partials/head', { title: "BuildLink — Africa's #1 Construction Marketplace", description: "Africa's leading construction marketplace. Find verified professionals, source materials, hire equipment and manage your project." }) %>
+<%- include('../partials/head', { title: "bildfie — Find and hire verified construction professionals", description: "Post a construction project, get fixed-price bids from verified professionals, and pay only when the work is approved. Milestone escrow on every job." }) %>
 <%- include('../partials/navbar', { activePage: "", user: locals.user }) %>
 
 
-<!-- INFO BAR -->
-<div class="bl-infobar">
-  <div class="container-xl d-flex align-items-center justify-content-between h-100">
-    <div class="d-flex align-items-center gap-4">
-      <div class="bl-ib-item">
-        <div class="bl-ib-dot"></div>
-        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        Nairobi, Kenya
-      </div>
-      <div class="bl-ib-item">
-        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-        48,600+ Professionals
-      </div>
-      <div class="bl-ib-item d-none d-lg-flex">
-        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        24,800+ Products Listed
-      </div>
-      <div class="bl-ib-item d-none d-xl-flex">
-        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        180+ Countries Served
-      </div>
-    </div>
-    <div class="bl-ib-right d-none d-lg-flex">
-      <div class="bl-ib-price">OPC Cement <strong>KES 980</strong>/bag <span class="text-success">+2.1%</span></div>
-      <div class="bl-ib-price">Steel Rebar <strong>KES 128</strong>/kg <span class="text-danger">-0.8%</span></div>
-      <div class="bl-ib-price">Timber <strong>KES 1,200</strong>/m³ <span class="text-success">+1.4%</span></div>
-      <div class="bl-ib-price" style="border-left:1px solid rgba(255,255,255,.1);padding-left:14px"><strong id="live-time">—</strong> EAT</div>
-    </div>
-  </div>
-</div>
-
-<!-- HERO -->
+<!-- HERO ──────────────────────────────────────────────────────────── -->
 <section class="bl-hero">
   <div class="bl-hero-texture"></div>
   <div class="bl-hero-glow"></div>
   <div class="container-xl position-relative">
     <div class="row align-items-center g-5">
-      <div class="col-lg-6">
-        <div class="d-flex align-items-center gap-2 mb-4">
-          <div class="bl-hero-badge"><span></span>Africa's #1 Construction Platform</div>
-        </div>
-        <h1 class="bl-hero-h">Build <i>Smarter.</i><br>Connect <i>Faster.</i></h1>
-        <p class="bl-hero-sub">The complete construction ecosystem — find verified professionals, source materials at transparent prices, hire equipment, and manage your entire project from one intelligent platform.</p>
+      <div class="col-lg-7">
+        <div class="bl-hero-badge mb-4"><span></span>Construction marketplace · Kenya</div>
+        <h1 class="bl-hero-h">Find and hire <i>verified</i> construction professionals.</h1>
+        <p class="bl-hero-sub">Post a project. Contractors bid. Pay only when work is approved.</p>
+
         <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
-          <a href="/professionals" class="btn btn-primary btn-lg">Find Professionals</a>
-          <a href="/materials" class="btn btn-outline-light btn-lg">Browse Materials</a>
+          <a href="/login?next=/dashboard" class="btn btn-primary btn-lg">Post a Project</a>
+          <a href="/register" class="btn btn-outline-light btn-lg">Join as a Professional</a>
         </div>
-        <div class="bl-hero-stats">
-          <div class="bl-hstat"><div class="bl-hstat-n">48,600+</div><div class="bl-hstat-l">Verified Pros</div></div>
-          <div class="bl-hstat"><div class="bl-hstat-n">24,800+</div><div class="bl-hstat-l">Products</div></div>
-          <div class="bl-hstat"><div class="bl-hstat-n">$1.2B</div><div class="bl-hstat-l">GMV This Year</div></div>
-          <div class="bl-hstat"><div class="bl-hstat-n">180+</div><div class="bl-hstat-l">Countries</div></div>
-        </div>
-      </div>
-      <div class="col-lg-5 offset-lg-1">
-        <div class="bl-search-box">
-          <div class="bl-search-title">Find on BuildLink</div>
-          <div class="bl-search-tabs">
-            <button class="bl-stab on" data-placeholder="Architect, Engineer, Contractor…" data-category="professionals">Professionals</button>
-            <button class="bl-stab" data-placeholder="Cement, Steel, Timber…" data-category="materials">Materials</button>
-            <button class="bl-stab" data-placeholder="Excavator, Crane, Scaffolding…" data-category="equipment">Equipment</button>
-            <button class="bl-stab" data-placeholder="Describe your project…" data-category="bids">Post a Bid</button>
-          </div>
-          <div class="bl-sbar">
-            <div class="bl-sinp-wrap">
-              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-              <input class="bl-sinp" id="main-search" placeholder="Architect, Engineer, Contractor…" autocomplete="off">
-            </div>
-            <button class="bl-sbtn" onclick="doSearch(document.getElementById('main-search').value.toLowerCase().trim())">Search</button>
-          </div>
-          <div id="search-results" class="bl-search-results"></div>
-          <div class="row g-2 mt-1">
-            <div class="col-6">
-              <select class="form-select form-select-sm">
-                <option>All Trades</option>
-                <option>Architecture</option>
-                <option>Civil Engineering</option>
-                <option>Electrical</option>
-                <option>Plumbing / MEP</option>
-                <option>Quantity Surveying</option>
-                <option>Project Management</option>
-                <option>Interior Design</option>
-              </select>
-            </div>
-            <div class="col-6">
-              <select class="form-select form-select-sm">
-                <option>Any Location</option>
-                <option>Nairobi</option>
-                <option>Mombasa</option>
-                <option>Kisumu</option>
-                <option>Kampala</option>
-                <option>Dar es Salaam</option>
-                <option>Kigali</option>
-              </select>
-            </div>
-          </div>
-          <div class="d-flex flex-wrap gap-2 mt-3">
-            <span class="bl-chip" data-filter>Verified Only</span>
-            <span class="bl-chip" data-filter>Available Now</span>
-            <span class="bl-chip" data-filter>Top Rated</span>
-            <span class="bl-chip" data-filter>NCA Licensed</span>
-          </div>
-          <div class="d-flex justify-content-between align-items-center mt-3">
-            <span class="text-muted" style="font-size:10px">48,600 professionals listed</span>
-            <a href="/professionals" class="text-primary fw-bold text-decoration-none" style="font-size:11px">Browse All &rarr;</a>
-          </div>
+
+        <!-- Honest mechanics, not invented statistics -->
+        <div class="d-flex flex-wrap gap-3 bl-hero-assure">
+          <span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Payments held in escrow</span>
+          <span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Released by milestone</span>
+          <span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg> Photo-verified work</span>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PRICE TICKER -->
-<div class="bl-ticker">
-  <div class="bl-ticker-inner">
-    <div class="bl-tick-item">OPC Cement 42.5N<span class="bl-tick-price up">KES 980/bag &uarr;</span></div>
-    <div class="bl-tick-item">Y12 Steel Rebar<span class="bl-tick-price dn">KES 128/kg &darr;</span></div>
-    <div class="bl-tick-item">Hardwood Timber<span class="bl-tick-price up">KES 1,200/m&sup3; &uarr;</span></div>
-    <div class="bl-tick-item">Hollow Blocks 6&rdquo;<span class="bl-tick-price">KES 55/pc &uarr;</span></div>
-    <div class="bl-tick-item">Aluzinc Roofing 0.5mm<span class="bl-tick-price up">KES 820/m&sup2; &uarr;</span></div>
-    <div class="bl-tick-item">2.5mm&sup2; PVC Cable<span class="bl-tick-price dn">KES 38/m &darr;</span></div>
-    <div class="bl-tick-item">110mm uPVC Pipe<span class="bl-tick-price">KES 480/6m &uarr;</span></div>
-    <div class="bl-tick-item">Vitrified Tiles 60&times;60<span class="bl-tick-price dn">KES 1,400/m&sup2; &darr;</span></div>
-    <div class="bl-tick-item">Ballast 20mm Granite<span class="bl-tick-price">KES 3,200/t &uarr;</span></div>
-    <div class="bl-tick-item">Bitumen Membrane SBS<span class="bl-tick-price up">KES 2,400/roll &uarr;</span></div>
-    <div class="bl-tick-item">OPC Cement 42.5N<span class="bl-tick-price up">KES 980/bag &uarr;</span></div>
-    <div class="bl-tick-item">Y12 Steel Rebar<span class="bl-tick-price dn">KES 128/kg &darr;</span></div>
-    <div class="bl-tick-item">Hardwood Timber<span class="bl-tick-price up">KES 1,200/m&sup3; &uarr;</span></div>
-    <div class="bl-tick-item">Hollow Blocks 6&rdquo;<span class="bl-tick-price">KES 55/pc &uarr;</span></div>
-    <div class="bl-tick-item">Aluzinc Roofing 0.5mm<span class="bl-tick-price up">KES 820/m&sup2; &uarr;</span></div>
-    <div class="bl-tick-item">2.5mm&sup2; PVC Cable<span class="bl-tick-price dn">KES 38/m &darr;</span></div>
-  </div>
-</div>
 
-<!-- TOP PROFESSIONALS -->
-<section class="py-5 bg-light">
-  <div class="container-xl">
-    <div class="d-flex align-items-end justify-content-between mb-4 bl-rv">
-      <div>
-        <div class="bl-sec-label">Platform Picks</div>
-        <h2 class="bl-sec-h">Top-Rated Professionals</h2>
-        <p class="bl-sec-sub">ID-verified, licence-checked experts ready to deliver.</p>
-      </div>
-      <a href="/professionals" class="bl-see-all d-none d-md-block">View All Professionals &rarr;</a>
-    </div>
-    <div class="d-flex gap-2 flex-wrap mb-4 bl-tbar">
-      <button class="btn btn-sm bl-tab on">All Trades</button>
-      <button class="btn btn-sm bl-tab">Architecture</button>
-      <button class="btn btn-sm bl-tab">Civil Engineering</button>
-      <button class="btn btn-sm bl-tab">MEP</button>
-      <button class="btn btn-sm bl-tab">Quantity Surveying</button>
-      <button class="btn btn-sm bl-tab">Project Management</button>
-    </div>
-    <div class="row g-3" id="profs-grid"></div>
-  </div>
-</section>
-
-<!-- OPEN BIDS -->
-<section class="py-5">
-  <div class="container-xl">
-    <div class="d-flex align-items-end justify-content-between mb-4 bl-rv">
-      <div>
-        <div class="bl-sec-label">Live Opportunities</div>
-        <h2 class="bl-sec-h">Open Project Bids</h2>
-        <p class="bl-sec-sub">Win work — bid on live construction projects across East Africa.</p>
-      </div>
-      <a href="/professionals" class="bl-see-all d-none d-md-block">All Open Bids &rarr;</a>
-    </div>
-    <div class="row g-3" id="bids-grid"></div>
-  </div>
-</section>
-
-<!-- FEATURED MATERIALS -->
-<section class="py-5 bg-light">
-  <div class="container-xl">
-    <div class="d-flex align-items-end justify-content-between mb-4 bl-rv">
-      <div>
-        <div class="bl-sec-label">Materials &amp; Supply</div>
-        <h2 class="bl-sec-h">Trending Building Materials</h2>
-        <p class="bl-sec-sub">Transparent pricing, verified suppliers, same-day dispatch on 4,400+ products.</p>
-      </div>
-      <a href="/materials" class="bl-see-all d-none d-md-block">Shop All Materials &rarr;</a>
-    </div>
-    <div class="row g-3" id="mats-grid"></div>
-  </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section class="py-5" style="background:var(--bl-navy)">
+<!-- HOW IT WORKS ──────────────────────────────────────────────────── -->
+<section id="how" class="py-5" style="background:var(--bl-navy)">
   <div class="container-xl">
     <div class="text-center mb-5 bl-rv">
-      <div class="bl-sec-label" style="justify-content:center;color:var(--bl-accent)">Simple Process</div>
-      <h2 class="bl-sec-h text-white text-center">How BuildLink Works</h2>
+      <div class="bl-sec-label" style="justify-content:center;color:var(--bl-accent)">How it works</div>
+      <h2 class="bl-sec-h text-white text-center">From posted job to paid in five steps</h2>
     </div>
     <div class="bl-hiw-grid">
       <div class="bl-hiw-c bl-rv bl-stagger-1" data-n="01">
-        <div class="bl-hiw-ico" style="font-family:'Sora',sans-serif;font-weight:800;font-size:28px;font-style:normal">01</div>
-        <div class="bl-hiw-t">Post or Search</div>
-        <div class="bl-hiw-d">Describe your need — a professional, materials, or equipment. Our smart engine matches you instantly across 48,600+ verified listings.</div>
+        <div class="bl-hiw-ico" style="font-weight:800;font-size:26px">01</div>
+        <div class="bl-hiw-t">Post your project</div>
+        <div class="bl-hiw-d">Describe the work, set a fixed budget in KES, add photos of the site, and pick a start date.</div>
       </div>
       <div class="bl-hiw-c bl-rv bl-stagger-2" data-n="02">
-        <div class="bl-hiw-ico" style="font-family:'Sora',sans-serif;font-weight:800;font-size:28px;font-style:normal">02</div>
-        <div class="bl-hiw-t">Compare &amp; Verify</div>
-        <div class="bl-hiw-d">Every professional is ID and licence verified. Every supplier is audited. Compare ratings, portfolios, and credentials side by side.</div>
+        <div class="bl-hiw-ico" style="font-weight:800;font-size:26px">02</div>
+        <div class="bl-hiw-t">Compare bids</div>
+        <div class="bl-hiw-d">Verified contractors in your trade and area send a fixed quote, a timeline, and a short pitch. You pick one.</div>
       </div>
       <div class="bl-hiw-c bl-rv bl-stagger-3" data-n="03">
-        <div class="bl-hiw-ico" style="font-family:'Sora',sans-serif;font-weight:800;font-size:28px;font-style:normal">03</div>
-        <div class="bl-hiw-t">Hire, Order &amp; Build</div>
-        <div class="bl-hiw-d">Sign contracts, release milestone payments via Escrow, track material delivery, and manage your entire project from the dashboard.</div>
+        <div class="bl-hiw-ico" style="font-weight:800;font-size:26px">03</div>
+        <div class="bl-hiw-t">Fund escrow</div>
+        <div class="bl-hiw-d">Pay the agreed amount into escrow via M-Pesa. Work only begins once the funds are safely held.</div>
+      </div>
+      <div class="bl-hiw-c bl-rv bl-stagger-4" data-n="04">
+        <div class="bl-hiw-ico" style="font-weight:800;font-size:26px">04</div>
+        <div class="bl-hiw-t">Track by milestone</div>
+        <div class="bl-hiw-d">The contractor uploads site photos as each milestone is reached. You see progress from anywhere.</div>
+      </div>
+      <div class="bl-hiw-c bl-rv bl-stagger-4" data-n="05">
+        <div class="bl-hiw-ico" style="font-weight:800;font-size:26px">05</div>
+        <div class="bl-hiw-t">Approve &amp; release</div>
+        <div class="bl-hiw-d">Approve a milestone and its share of the escrow releases automatically. No manual step, no chasing payment.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- COMPLETED PROJECTS -->
-<section class="py-5">
-  <div class="container-xl">
-    <div class="d-flex align-items-end justify-content-between mb-4 bl-rv">
-      <div>
-        <div class="bl-sec-label">Showcase</div>
-        <h2 class="bl-sec-h">Completed Projects</h2>
-        <p class="bl-sec-sub">Real projects delivered by BuildLink professionals.</p>
-      </div>
-      <a href="/projects" class="bl-see-all d-none d-md-block">All Projects &rarr;</a>
-    </div>
-    <div class="row g-3" id="projs-grid"></div>
-  </div>
-</section>
 
-<!-- TRUST SIGNALS -->
+<!-- PROTECTION ────────────────────────────────────────────────────── -->
 <section class="py-5 bg-light">
   <div class="container-xl">
     <div class="text-center mb-5 bl-rv">
-      <div class="bl-sec-label" style="justify-content:center">Why BuildLink</div>
-      <h2 class="bl-sec-h text-center">Built on Trust &amp; Verification</h2>
+      <div class="bl-sec-label" style="justify-content:center">Why bildfie</div>
+      <h2 class="bl-sec-h text-center">Protection built into every job</h2>
+      <p class="bl-sec-sub text-center mx-auto" style="max-width:620px">No deposits handed over on trust. No disputes over what was agreed. The platform enforces the rules so both sides are protected.</p>
     </div>
     <div class="row g-3">
       <div class="col-sm-6 col-lg-3">
         <div class="bl-trust-card bl-rv bl-stagger-1">
-          <div class="bl-trust-t">100% Verified Professionals</div>
-          <div class="bl-trust-d">Every professional undergoes NCA licence check, government ID verification, and reference validation before going live.</div>
+          <div class="bl-trust-t">Milestone escrow</div>
+          <div class="bl-trust-d">Every project is split into 2–5 milestones. Each holds its own slice of the escrow, released only when you approve that stage.</div>
         </div>
       </div>
       <div class="col-sm-6 col-lg-3">
         <div class="bl-trust-card bl-rv bl-stagger-2">
-          <div class="bl-trust-t">BuildLink Escrow Protection</div>
-          <div class="bl-trust-d">Payments held in escrow and released only when milestones are met and you confirm satisfaction. Zero financial risk.</div>
+          <div class="bl-trust-t">Photo proof of work</div>
+          <div class="bl-trust-d">A milestone can't be marked complete without site photos from the contractor. Proof is enforced by the system, not by trust.</div>
         </div>
       </div>
       <div class="col-sm-6 col-lg-3">
         <div class="bl-trust-card bl-rv bl-stagger-3">
-          <div class="bl-trust-t">Transparent Material Prices</div>
-          <div class="bl-trust-d">Live market price index updated daily. No hidden markups — know the true cost of every material before you buy.</div>
+          <div class="bl-trust-t">All on platform</div>
+          <div class="bl-trust-d">Owners and contractors message inside bildfie. Every conversation is logged, creating an audit trail if anything is disputed.</div>
         </div>
       </div>
       <div class="col-sm-6 col-lg-3">
         <div class="bl-trust-card bl-rv bl-stagger-4">
-          <div class="bl-trust-t">Full Project Management</div>
-          <div class="bl-trust-d">Track progress, approve milestones, review invoices, and communicate with your team — all from your dashboard.</div>
+          <div class="bl-trust-t">One simple fee</div>
+          <div class="bl-trust-d">bildfie takes 2.5%, deducted only when payment releases. Deposit KES 35,000 → the contractor receives KES 34,125.</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- TESTIMONIALS -->
-<section class="bl-testi-sect py-5">
-  <div class="bl-testi-glow"></div>
-  <div class="container-xl position-relative">
+
+<!-- TRUST BADGES ──────────────────────────────────────────────────── -->
+<section class="py-5">
+  <div class="container-xl">
     <div class="text-center mb-5 bl-rv">
-      <div class="bl-sec-label" style="justify-content:center;color:var(--bl-accent)">Client Stories</div>
-      <h2 class="bl-sec-h text-white text-center">What Our Community Says</h2>
+      <div class="bl-sec-label" style="justify-content:center">Verification</div>
+      <h2 class="bl-sec-h text-center">Three badges — earned, not bought</h2>
+      <p class="bl-sec-sub text-center mx-auto" style="max-width:620px">bildfie keeps verification simple and hard to fake. There are only three badges a professional can hold.</p>
     </div>
-    <div class="row g-4">
+    <div class="row g-4 justify-content-center">
       <div class="col-md-4">
-        <div class="bl-testi-card bl-rv bl-stagger-1">
-          <div class="bl-testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <div class="bl-testi-q">"BuildLink transformed how we source professionals. Found our structural engineer and QS within 48 hours — both verified and outstanding. Project delivered on time and under budget."</div>
-          <div class="bl-testi-auth">
-            <div class="bl-testi-av"><img src="https://i.pravatar.cc/100?img=22" alt="John Kariuki"></div>
-            <div>
-              <div class="bl-testi-name">John Kariuki</div>
-              <div class="bl-testi-role">Property Developer</div>
-              <div class="bl-testi-project">Westlands Tower, Nairobi</div>
-            </div>
+        <div class="bl-trust-card bl-rv bl-stagger-1 h-100">
+          <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width:44px;height:44px;border-radius:12px;background:rgba(27,79,114,.08);color:var(--bl-navy)">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
+          <div class="bl-trust-t">NCA Verified</div>
+          <div class="bl-trust-d">The contractor's National Construction Authority licence number is confirmed against the NCA register.</div>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="bl-testi-card bl-rv bl-stagger-2">
-          <div class="bl-testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <div class="bl-testi-q">"As a contractor, the materials marketplace saved us weeks of supplier hunting. Prices are transparent, delivery reliable. The bulk RFQ feature alone is worth its weight in gold."</div>
-          <div class="bl-testi-auth">
-            <div class="bl-testi-av"><img src="https://i.pravatar.cc/100?img=25" alt="Christine Mwema"></div>
-            <div>
-              <div class="bl-testi-name">Christine Mwema</div>
-              <div class="bl-testi-role">General Contractor</div>
-              <div class="bl-testi-project">Karen Residential Estate</div>
-            </div>
+        <div class="bl-trust-card bl-rv bl-stagger-2 h-100">
+          <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width:44px;height:44px;border-radius:12px;background:rgba(230,126,34,.1);color:var(--bl-accent)">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.6 5.8 21 7 14 2 9.3 9 8.5 12 2"/></svg>
           </div>
+          <div class="bl-trust-t">bildfie Vetted</div>
+          <div class="bl-trust-d">Awarded automatically after 10+ completed jobs on bildfie with an average rating of 4.5 or higher.</div>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="bl-testi-card bl-rv bl-stagger-3">
-          <div class="bl-testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <div class="bl-testi-q">"I've grown my engineering practice from 2 to 14 staff since joining BuildLink. The credibility filter means clients come pre-qualified and serious about delivery."</div>
-          <div class="bl-testi-auth">
-            <div class="bl-testi-av"><img src="https://i.pravatar.cc/100?img=28" alt="Eng. Samuel Kiplagat"></div>
-            <div>
-              <div class="bl-testi-name">Eng. Samuel Kiplagat</div>
-              <div class="bl-testi-role">Civil Engineer</div>
-              <div class="bl-testi-project">Thika Road Infrastructure</div>
-            </div>
+        <div class="bl-trust-card bl-rv bl-stagger-3 h-100">
+          <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width:44px;height:44px;border-radius:12px;background:rgba(39,174,96,.1);color:#27ae60">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 7-9 11-9 11s-9-4-9-11V5l9-3 9 3z"/></svg>
           </div>
+          <div class="bl-trust-t">Insured</div>
+          <div class="bl-trust-d">A valid Contractor All Risk insurance certificate has been uploaded and reviewed, with an expiry date on file.</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PRICING PLANS -->
+
+<!-- FEATURED PROFESSIONALS (real data, honest empty state) ─────────── -->
 <section class="py-5 bg-light">
   <div class="container-xl">
-    <div class="text-center mb-2 bl-rv">
-      <div class="bl-sec-label" style="justify-content:center">Pricing</div>
-      <h2 class="bl-sec-h text-center">Plans for Every Builder</h2>
-      <p class="bl-sec-sub text-center">Start free. Upgrade as you grow.</p>
+    <div class="d-flex align-items-end justify-content-between mb-4 bl-rv">
+      <div>
+        <div class="bl-sec-label">Professionals</div>
+        <h2 class="bl-sec-h">Verified professionals on bildfie</h2>
+        <p class="bl-sec-sub">Browse by trade — masons, electricians, plumbers, carpenters and more.</p>
+      </div>
+      <a href="/professionals" class="bl-see-all d-none d-md-block">Browse all &rarr;</a>
     </div>
-    <div class="row g-4 justify-content-center mt-3">
-      <div class="col-md-4 col-lg-3">
-        <div class="bl-plan-card bl-rv bl-stagger-1">
-          <div class="bl-plan-name">Starter</div>
-          <div class="bl-plan-price">Free<span> / forever</span></div>
-          <div class="bl-plan-sub">For individuals getting started</div>
-          <div class="bl-plan-features">
-            <div class="bl-plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Create profile &amp; portfolio</div>
-            <div class="bl-plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Browse materials &amp; prices</div>
-            <div class="bl-plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>10 bids per month</div>
-            <div class="bl-plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Basic messaging</div>
-            <div class="bl-plan-feat off"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Verified badge</div>
-            <div class="bl-plan-feat off"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Analytics dashboard</div>
-          </div>
-          <button class="btn btn-outline-primary w-100" onclick="showToast('Signing up for free…')">Get Started Free</button>
-        </div>
-      </div>
-      <div class="col-md-4 col-lg-3">
-        <div class="bl-plan-card featured bl-rv bl-stagger-2">
-          <div class="bl-plan-badge">Most Popular</div>
-          <div class="bl-plan-name">Professional</div>
-          <div class="bl-plan-price">KES 4,500<span> / month</span></div>
-          <div class="bl-plan-sub">For active professionals &amp; SMEs</div>
-          <div class="bl-plan-features">
-            <div class="bl-plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Everything in Starter</div>
-            <div class="bl-plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Verified Pro badge</div>
-            <div class="bl-plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Unlimited bids</div>
-            <div class="bl-plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Priority listing placement</div>
-            <div class="bl-plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Full analytics &amp; reporting</div>
-            <div class="bl-plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Escrow payment access</div>
-          </div>
-          <button class="btn btn-primary w-100" onclick="showToast('Starting trial…')">Start 14-Day Trial</button>
-        </div>
-      </div>
-      <div class="col-md-4 col-lg-3">
-        <div class="bl-plan-card bl-rv bl-stagger-3">
-          <div class="bl-plan-name">Enterprise</div>
-          <div class="bl-plan-price">Custom<span> pricing</span></div>
-          <div class="bl-plan-sub">For large firms &amp; developers</div>
-          <div class="bl-plan-features">
-            <div class="bl-plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Everything in Professional</div>
-            <div class="bl-plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Dedicated account manager</div>
-            <div class="bl-plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Multi-user team access</div>
-            <div class="bl-plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>API integration</div>
-            <div class="bl-plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Custom reporting &amp; SLAs</div>
-            <div class="bl-plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>White-label options</div>
-          </div>
-          <button class="btn btn-dark w-100" onclick="showToast('Contacting sales…')">Contact Sales</button>
-        </div>
-      </div>
-    </div>
+    <div class="row g-3" id="home-pros"></div>
   </div>
 </section>
 
-<!-- CTA BANNER -->
+
+<!-- FINAL CTA ─────────────────────────────────────────────────────── -->
 <div class="bl-cta bl-rv">
   <div class="bl-cta-glow"></div>
   <div class="container-xl position-relative">
     <div class="row align-items-center g-4">
       <div class="col-lg-7">
-        <h2 class="bl-cta-h">Ready to <i>build</i> something great?</h2>
-        <p class="bl-cta-sub">Join 48,600+ construction professionals and 3,200+ verified suppliers already using BuildLink across East Africa.</p>
+        <h2 class="bl-cta-h">Have a job that needs <i>doing right?</i></h2>
+        <p class="bl-cta-sub">Post your project today and start receiving fixed-price bids from verified professionals near you.</p>
       </div>
       <div class="col-lg-5">
         <div class="d-flex align-items-center gap-3 flex-wrap justify-content-lg-end">
-          <button class="btn btn-primary btn-lg" onclick="window.location.href='register.html'">Create Free Account</button>
-          <button class="btn btn-outline-light btn-lg" onclick="showToast('Loading demo…')">Watch Demo</button>
+          <a href="/login?next=/dashboard" class="btn btn-primary btn-lg">Post a Project</a>
+          <a href="/register" class="btn btn-outline-light btn-lg">Join as a Professional</a>
         </div>
-        <div class="text-center text-lg-end mt-2" style="font-size:10px;color:rgba(255,255,255,.25)">No credit card required</div>
       </div>
     </div>
   </div>
@@ -406,133 +184,60 @@
 
 
 <%- include('../partials/footer') %>
-<!-- PROFESSIONAL DETAIL MODAL -->
-<div class="modal fade" id="profModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0 shadow-lg" style="border-radius:16px;overflow:hidden">
-      <div class="modal-header border-0 pb-0">
-        <div>
-          <div class="text-muted" style="font-size:10px;text-transform:uppercase;letter-spacing:.08em">Professional Profile</div>
-          <div class="fw-bold" id="modal-name" style="font-size:16px">—</div>
-        </div>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="d-flex align-items-center gap-3 mb-3">
-          <img id="modal-avatar" src="https://i.pravatar.cc/100?img=1" class="rounded-circle" style="width:56px;height:56px;object-fit:cover" alt="">
-          <div>
-            <div class="fw-bold" id="modal-fullname" style="font-family:'Playfair Display',serif;font-size:18px"></div>
-            <div class="text-muted small" id="modal-title"></div>
-            <div class="d-flex align-items-center gap-2 mt-1">
-              <span class="small fw-semibold" id="modal-rating"></span>
-              <span class="badge bl-badge-elite" id="modal-badge"></span>
-            </div>
-          </div>
-        </div>
-        <div class="row g-2 mb-3">
-          <div class="col-3"><div class="rounded p-2 text-center" style="background:var(--bl-bg)"><div style="font-size:9px;color:var(--bl-faint);text-transform:uppercase;letter-spacing:.06em">Jobs</div><div class="fw-bold" style="font-size:12px" id="modal-jobs"></div></div></div>
-          <div class="col-3"><div class="rounded p-2 text-center" style="background:var(--bl-bg)"><div style="font-size:9px;color:var(--bl-faint);text-transform:uppercase;letter-spacing:.06em">Rating</div><div class="fw-bold" style="font-size:12px" id="modal-rat"></div></div></div>
-          <div class="col-3"><div class="rounded p-2 text-center" style="background:var(--bl-bg)"><div style="font-size:9px;color:var(--bl-faint);text-transform:uppercase;letter-spacing:.06em">On Time</div><div class="fw-bold" style="font-size:12px" id="modal-ontime"></div></div></div>
-          <div class="col-3"><div class="rounded p-2 text-center" style="background:var(--bl-bg)"><div style="font-size:9px;color:var(--bl-faint);text-transform:uppercase;letter-spacing:.06em">Exp.</div><div class="fw-bold" style="font-size:12px" id="modal-exp"></div></div></div>
-        </div>
-        <div class="p-3 rounded-3 mb-3 small" id="modal-bio" style="background:var(--bl-bg);border-left:2px solid var(--bl-accent);line-height:1.75"></div>
-        <div class="d-flex flex-wrap gap-1 mb-3" id="modal-tags"></div>
-        <div class="d-flex justify-content-between align-items-center p-2 rounded-3" style="background:var(--bl-bg)">
-          <div>
-            <span class="text-muted" style="font-size:10px">Availability</span>
-            <span id="modal-avail" class="fw-bold ms-2" style="font-size:11px"></span>
-          </div>
-          <span class="fw-bold" id="modal-rate" style="font-size:13px;color:var(--bl-accent)"></span>
-        </div>
-      </div>
-      <div class="modal-footer border-0 pt-0 gap-2">
-        <button class="btn btn-outline-secondary flex-fill" onclick="showToast('Opening chat…')" data-bs-dismiss="modal">Message</button>
-        <button class="btn btn-primary flex-fill" onclick="showToast('Sending hire request…')" data-bs-dismiss="modal">Hire Now</button>
-        <button class="btn btn-outline-primary flex-fill" onclick="openInviteModal(window._currentProfId)" data-bs-dismiss="modal">Invite to Project</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- INVITE TO PROJECT MODAL -->
-<div class="modal fade" id="inviteModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0 shadow-lg" style="border-radius:16px">
-      <div class="modal-header border-0">
-        <h5 class="modal-title fw-bold">Invite to Project</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <p class="text-muted small mb-3">Select a project and role for <strong id="invite-pro-name"></strong></p>
-        <div class="mb-3">
-          <label class="form-label small fw-600">Select Project</label>
-          <select class="form-select" id="invite-project-select">
-            <option value="">— Choose a project —</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label class="form-label small fw-600">Role / Capacity</label>
-          <select class="form-select" id="invite-role-select">
-            <option value="contractor">Main Contractor</option>
-            <option value="architect">Architect</option>
-            <option value="engineer">Engineer</option>
-            <option value="qs">Quantity Surveyor</option>
-            <option value="mep">MEP Consultant</option>
-            <option value="pm">Project Manager</option>
-            <option value="subcontractor">Subcontractor</option>
-            <option value="supplier">Supplier</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label class="form-label small fw-600">Personal Message (optional)</label>
-          <textarea class="form-control" id="invite-message" rows="3" placeholder="Tell them about your project…"></textarea>
-        </div>
-      </div>
-      <div class="modal-footer border-0 pt-0">
-        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button class="btn btn-primary" onclick="submitInvite()">Send Invitation</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- LOGIN MODAL -->
-<div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0 shadow-lg" style="border-radius:16px">
-      <div class="modal-header border-0">
-        <h5 class="modal-title fw-bold">Sign in to BuildLink</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="mb-3">
-          <label class="form-label small fw-600">Email Address</label>
-          <input type="email" class="form-control" id="login-email" placeholder="you@example.com">
-        </div>
-        <div class="mb-3">
-          <label class="form-label small fw-600">Password</label>
-          <input type="password" class="form-control" id="login-password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
-        </div>
-        <button class="btn btn-primary w-100" onclick="doLogin()">Sign In</button>
-        <div class="text-center mt-3 small text-muted">Don't have an account? <a href="/register" class="text-primary text-decoration-none">Register free</a></div>
-      </div>
-    </div>
-  </div>
-</div>
 <%- include('../partials/scripts') %>
 <script>
-// Search tab switching — update placeholder and context
-document.querySelectorAll('.bl-stab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.bl-stab').forEach(t => t.classList.remove('on'));
-    tab.classList.add('on');
-    const ph = tab.dataset.placeholder;
-    if (ph) document.getElementById('main-search').placeholder = ph;
-    // Clear current results
-    const r = document.getElementById('search-results');
-    if (r) r.classList.remove('open');
-  });
-});
+/* Featured professionals — real API data only, with an honest empty state.
+   Never falls back to demo data. */
+(async () => {
+  const grid = document.getElementById('home-pros');
+  if (!grid) return;
+
+  const emptyState = `
+    <div class="col-12">
+      <div class="text-center p-5 rounded-4" style="background:#fff;border:1px dashed var(--bl-line,#e3e8ee)">
+        <div class="fw-bold mb-1" style="font-size:16px">No professionals listed yet</div>
+        <p class="text-muted small mb-3">bildfie is just getting started. Be one of the first verified professionals.</p>
+        <a href="/register" class="btn btn-primary btn-sm">Join as a Professional</a>
+      </div>
+    </div>`;
+
+  const card = p => {
+    const initials = (p.name || '?').trim().split(/\s+/).map(s => s[0]).slice(0,2).join('').toUpperCase();
+    const avatar = p.avatar
+      ? `<img src="${p.avatar}" alt="" style="width:46px;height:46px;border-radius:12px;object-fit:cover">`
+      : `<div class="d-flex align-items-center justify-content-center" style="width:46px;height:46px;border-radius:12px;background:var(--bl-navy);color:#fff;font-weight:700;font-size:14px">${initials}</div>`;
+    const rating = Number(p.rating) > 0 ? `★ ${Number(p.rating).toFixed(1)}` : 'New';
+    const verified = p.verified ? `<span class="badge text-bg-light border" style="font-size:9px">Verified</span>` : '';
+    return `
+      <div class="col-sm-6 col-lg-3">
+        <a href="/professionals" class="text-decoration-none">
+          <div class="p-3 rounded-4 h-100" style="background:#fff;border:1px solid var(--bl-line,#e3e8ee)">
+            <div class="d-flex align-items-center gap-2 mb-2">${avatar}
+              <div class="overflow-hidden">
+                <div class="fw-bold text-dark text-truncate" style="font-size:13px">${p.name || 'Professional'}</div>
+                <div class="text-muted text-truncate" style="font-size:11px">${p.trade || ''}</div>
+              </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="text-muted" style="font-size:11px">${p.location || ''}</span>
+              <span class="fw-semibold" style="font-size:11px;color:var(--bl-accent)">${rating}</span>
+            </div>
+            <div class="mt-2">${verified}</div>
+          </div>
+        </a>
+      </div>`;
+  };
+
+  try {
+    const res = await fetch('/api/professionals?limit=4');
+    if (!res.ok) throw new Error('request failed');
+    const data = await res.json();
+    const pros = data.professionals || [];
+    grid.innerHTML = pros.length ? pros.map(card).join('') : emptyState;
+  } catch (e) {
+    grid.innerHTML = emptyState;
+  }
+})();
 </script>
 </body>
 </html>

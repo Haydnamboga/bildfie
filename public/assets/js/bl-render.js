@@ -1,5 +1,5 @@
 /*
- * BuildLink — Render Functions
+ * bildfie — Render Functions
  * All card/list rendering: professionals, materials, bids, projects,
  * equipment, transport, and dashboard widgets.
  */

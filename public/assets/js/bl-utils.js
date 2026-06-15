@@ -1,5 +1,5 @@
 /*
- * BuildLink — Utilities
+ * bildfie — Utilities
  * Toast, clock, scroll reveal, nav scroll, UI helpers, search, formatting
  */
 'use strict';

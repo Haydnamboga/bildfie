@@ -1,5 +1,5 @@
 /*
- * BuildLink API Client + localStorage fallback
+ * bildfie API Client + localStorage fallback
  * Tries the Express backend first; falls back to seeded local data.
  */
 'use strict';
