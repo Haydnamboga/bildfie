@@ -74,8 +74,8 @@ function emp_avatar($p) { return !empty($p['photo_url']) ? $p['photo_url'] : 'ht
         <div style="display:flex;gap:8px;align-items:center;padding-top:12px;flex-wrap:wrap;">
           <?php if (!empty($c['website'])): ?><a href="https://<?= htmlspecialchars(preg_replace('#^https?://#','',$c['website'])) ?>" target="_blank" rel="noopener" style="text-decoration:none;font-size:12.5px;font-weight:700;border:1.5px solid var(--line);color:#1e3a5f;padding:8px 15px;border-radius:9px;"><i class="bi bi-globe me-1"></i>Website</a><?php endif; ?>
           <button class="bf-follow" type="button" data-follow="co:<?= htmlspecialchars($c['slug'], ENT_QUOTES) ?>">
-            <span class="bf-follow-off"><i class="bi bi-plus-lg"></i>Follow</span>
-            <span class="bf-follow-on"><i class="bi bi-check-lg"></i>Following</span>
+            <span class="bf-follow-off"><i class="bi bi-bookmark"></i>Save</span>
+            <span class="bf-follow-on"><i class="bi bi-bookmark-check-fill"></i>Saved</span>
           </button>
         </div>
       </div>
@@ -146,10 +146,6 @@ function emp_avatar($p) { return !empty($p['photo_url']) ? $p['photo_url'] : 'ht
           <div style="min-width:0;"><div style="font-size:10px;color:var(--ink-4);text-transform:uppercase;letter-spacing:.04em;"><?= $k ?></div><div style="font-size:12.5px;color:var(--ink-2);font-weight:600;word-break:break-word;"><?= htmlspecialchars($v) ?></div></div>
         </div>
         <?php endforeach; ?>
-        <div style="display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--line-2);">
-          <i class="bi bi-rss" style="color:#1e3a5f;font-size:14px;width:18px;flex-shrink:0;"></i>
-          <div><div style="font-size:10px;color:var(--ink-4);text-transform:uppercase;letter-spacing:.04em;">Followers</div><div style="font-size:12.5px;color:var(--ink-2);font-weight:600;"><?= number_format((int)$c['followers']) ?></div></div>
-        </div>
       </div>
 
       <!-- Open positions (vacancies + direct apply) -->

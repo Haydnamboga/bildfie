@@ -13,22 +13,15 @@ $nav = 'professionals';
 
     <!-- Utility bar -->
     <div class="bf-mkt-utility">
-      <span class="bf-mkt-utility-item"><i class="bi bi-people"></i><b>48,600+</b> Verified Professionals</span>
-      <span class="bf-mkt-utility-item"><i class="bi bi-star-fill"></i><b>4.8★</b> Average Rating</span>
-      <span class="bf-mkt-utility-item"><i class="bi bi-check2-circle"></i><b>12,400+</b> Projects Completed</span>
-      <span class="bf-mkt-utility-item"><i class="bi bi-globe"></i><b>180+</b> Countries</span>
-      <span class="bf-mkt-ticker">
-        <span class="dot"></span>
-        <span class="bf-mkt-ticker-item"><span class="val">1,240+</span> <span class="lbl">available now</span></span>
-      </span>
+      <span class="bf-mkt-utility-item"><i class="bi bi-patch-check-fill"></i> Verified construction professionals across Kenya</span>
     </div>
 
     <div style="padding:28px 0 26px;">
       <div class="d-flex align-items-start justify-content-between flex-wrap gap-3">
         <div>
           <div class="bf-section-eyebrow mb-2"><i class="bi bi-people" style="color:#c0392b;"></i> Professionals</div>
-          <h1 style="font-size:clamp(22px,3vw,30px);font-weight:800;color:var(--ink);margin:0 0 6px;">48,600+ verified construction professionals</h1>
-          <p style="font-size:13px;color:var(--ink-3);margin:0;">Architects, engineers, contractors and specialists across Africa — ID &amp; licence verified, rated and ready to work.</p>
+          <h1 style="font-size:clamp(22px,3vw,30px);font-weight:800;color:var(--ink);margin:0 0 6px;">Verified construction professionals</h1>
+          <p style="font-size:13px;color:var(--ink-3);margin:0;">Architects, engineers, contractors and specialists — licence verified, rated and ready to work.</p>
         </div>
         <a href="/pages/bids/index.php" class="bf-btn-accent">Post a project</a>
       </div>
@@ -69,23 +62,13 @@ $nav = 'professionals';
         <?php endforeach; ?>
       </div>
 
-      <!-- Big stats -->
-      <div class="bf-mkt-stats">
-        <?php foreach ([['48,600+','Professionals'],['4.8★','Average Rating'],['12,400+','Projects Completed'],['180+','Countries'],['98%','On-Time Delivery']] as [$n,$l]): ?>
-        <div>
-          <div class="bf-mkt-stat-num"><?= preg_replace('/([+★])/u','<span>$1</span>',$n) ?></div>
-          <div class="bf-mkt-stat-label"><?= $l ?></div>
-        </div>
-        <?php endforeach; ?>
-      </div>
     </div>
 
     <!-- Category nav -->
     <div class="bf-mkt-catnav">
-      <?php foreach ([['All Trades','48,600'],['Architecture','8,200'],['Civil Engineering','11,400'],['Structural','6,800'],['MEP Engineering','9,100'],['Quantity Surveying','4,200'],['Project Management','3,900'],['Interior Design','5,400'],['Landscape','1,800'],['Site Foreman','7,200']] as $i=>[$c,$ct]): ?>
+      <?php foreach (['All Trades','Architecture','Civil Engineering','Structural','MEP Engineering','Quantity Surveying','Project Management','Interior Design','Landscape','Site Foreman'] as $i=>$c): ?>
       <div class="bf-mkt-catnav-item <?= $i===0?'active':'' ?>">
         <div class="bf-mkt-catnav-name"><?= $c ?></div>
-        <div class="bf-mkt-catnav-count"><?= $ct ?></div>
       </div>
       <?php endforeach; ?>
     </div>
@@ -97,7 +80,7 @@ $nav = 'professionals';
 
   <!-- Results bar -->
   <div class="d-flex align-items-center justify-content-between flex-wrap gap-2" style="margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid var(--line);">
-    <div style="font-size:12.5px;color:var(--ink-3);">Showing <strong style="color:var(--ink);">48,624</strong> professionals</div>
+    <div style="font-size:12.5px;color:var(--ink-3);">Browse professionals</div>
     <div class="d-flex gap-2">
       <select class="form-select form-select-sm" style="font-size:12px;width:auto;border-color:var(--line);">
         <option>All countries</option><option>Kenya</option><option>Nigeria</option><option>Ghana</option><option>UAE</option>
@@ -300,8 +283,8 @@ $nav = 'professionals';
             <div class="bf-co-actions">
               <a href="/pages/companies/view.php?slug=<?= urlencode($c['slug']) ?>" class="bf-action-outline"><i class="bi bi-eye"></i> View</a>
               <button class="bf-follow sm" type="button" data-follow="co:<?= htmlspecialchars($c['slug'], ENT_QUOTES) ?>">
-                <span class="bf-follow-off"><i class="bi bi-plus-lg"></i>Follow</span>
-                <span class="bf-follow-on"><i class="bi bi-check-lg"></i>Following</span>
+                <span class="bf-follow-off"><i class="bi bi-bookmark"></i>Save</span>
+                <span class="bf-follow-on"><i class="bi bi-bookmark-check-fill"></i>Saved</span>
               </button>
             </div>
           </div>
@@ -333,7 +316,6 @@ $nav = 'professionals';
   <!-- Load more -->
   <div style="text-align:center;margin-top:36px;">
     <button class="bf-btn-outline" style="padding:12px 36px;font-size:13px;">Load more professionals</button>
-    <div style="font-size:12px;color:var(--ink-4);margin-top:10px;">Showing 12 of 48,624 professionals</div>
   </div>
 
 </div>

@@ -142,8 +142,9 @@ $slug = $prov['public_id'] ?? ('u' . $puid);
     <!-- ═══ Action bar ═══ -->
     <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--white);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin-top:12px;">
       <div style="margin-right:auto;">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-4);">Day rate from</div>
-        <div style="font-size:18px;font-weight:900;color:#c0392b;"><?= htmlspecialchars($rate) ?></div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-4);">Pricing</div>
+        <div style="font-size:15px;font-weight:800;color:var(--ink);">Fixed quote per project</div>
+        <div style="font-size:11px;color:var(--ink-4);">Request a quote or post a project to get a fixed price.</div>
       </div>
       <button class="bf-fav" data-fav="pro:<?= htmlspecialchars($slug, ENT_QUOTES) ?>" title="Save"><i class="bi bi-heart"></i></button>
       <a href="/pages/dashboard/messages.php" class="bf-btn-ghost"><i class="bi bi-chat-dots me-1"></i>Message</a>

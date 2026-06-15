@@ -126,8 +126,6 @@ foreach ($bfMyProjects as $bp) { $bfProjOptions .= '<option value="' . (int) $bp
           <select class="bf-f-input" name="project_id" disabled><option>No projects yet</option></select>
           <div style="font-size:11px;color:var(--ink-4);margin-top:4px;">Create a project first under <a href="/pages/projects/new.php" style="color:#1e3a5f;font-weight:700;">Projects → New project</a>, then invite them to it.</div>
           <?php endif; ?>
-          <label class="bf-f-lbl mt-2">Invite as</label>
-          <select class="bf-f-input" name="role"><option>Lead Contractor</option><option>Sub-Contractor</option><option>Consultant</option><option>Supplier</option><option>Site Supervisor</option><option>Engineer</option><option>Foreman</option></select>
           <label class="bf-f-lbl mt-2">Message (optional)</label>
           <textarea class="bf-f-input" name="message" rows="3" placeholder="Briefly describe the scope and timeline…"></textarea>
         </div>

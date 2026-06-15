@@ -16,16 +16,6 @@
           </select>
         </div>
         <div class="mb-3">
-          <label class="form-label fw-semibold small">Invite as</label>
-          <select class="form-select form-select-sm">
-            <option>Lead Contractor</option>
-            <option>Sub-Contractor</option>
-            <option>Consultant</option>
-            <option>Supplier</option>
-            <option>Site Supervisor</option>
-          </select>
-        </div>
-        <div class="mb-3">
           <label class="form-label fw-semibold small">Message (optional)</label>
           <textarea class="form-control form-control-sm" rows="3" placeholder="Briefly describe the scope…"></textarea>
         </div>

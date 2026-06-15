@@ -44,21 +44,6 @@ $nav = 'bids';
 
 <div class="container" style="padding-top:36px;padding-bottom:60px;">
 
-  <!-- Stats bar -->
-  <div style="display:flex;gap:24px;flex-wrap:wrap;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--line);">
-    <?php foreach ([['186','Open projects','bi-kanban'],['47','Closing today','bi-clock text-warning'],['KES 2.4B','Total bid value','bi-currency-exchange'],['4,200+','Professionals bidding','bi-people']] as [$n,$l,$ic]): ?>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <div style="width:36px;height:36px;border-radius:10px;background:var(--surface);display:flex;align-items:center;justify-content:center;border:1px solid var(--line);">
-        <i class="bi <?= $ic ?>" style="font-size:15px;color:#1e3a5f;"></i>
-      </div>
-      <div>
-        <div style="font-size:16px;font-weight:900;color:var(--ink);"><?= $n ?></div>
-        <div style="font-size:10.5px;color:var(--ink-4);"><?= $l ?></div>
-      </div>
-    </div>
-    <?php endforeach; ?>
-  </div>
-
   <!-- Bids grid -->
   <div class="row g-3">
     <?php

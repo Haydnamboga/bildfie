@@ -62,8 +62,8 @@ $total = (int) db_value("SELECT COUNT(*) FROM companies WHERE status<>'suspended
           <div style="display:flex;gap:8px;margin-top:13px;">
             <a href="/pages/companies/view.php?slug=<?= urlencode($c['slug']) ?>" class="bf-action-outline" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:8px 0;font-size:12px;font-weight:700;text-decoration:none;"><i class="bi bi-eye"></i> View</a>
             <button class="bf-follow sm" type="button" data-follow="co:<?= htmlspecialchars($c['slug'], ENT_QUOTES) ?>" style="flex:1;">
-              <span class="bf-follow-off"><i class="bi bi-plus-lg"></i>Follow</span>
-              <span class="bf-follow-on"><i class="bi bi-check-lg"></i>Following</span>
+              <span class="bf-follow-off"><i class="bi bi-bookmark"></i>Save</span>
+              <span class="bf-follow-on"><i class="bi bi-bookmark-check-fill"></i>Saved</span>
             </button>
           </div>
         </div>

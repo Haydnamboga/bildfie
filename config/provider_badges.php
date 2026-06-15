@@ -11,17 +11,14 @@
  */
 if (!function_exists('provider_trust_defs')) {
     function provider_trust_defs(): array {
+        // Spec §5.3 — exactly 3 trust badges. Hard to earn. Do not add more.
+        //   NCA Verified   — NCA licence number confirmed.
+        //   bildfie Vetted — 10+ jobs completed at 4.5+ rating (awarded automatically).
+        //   Insured        — valid Contractor All Risk certificate on file.
         return [
-            'is_elite'      => ['Elite Pro',             'bi-gem',                  '#1e3a5f', '#ffffff'],
-            'is_preferred'  => ['bildfie Choice',        'bi-hand-thumbs-up-fill',  '#eef2ff', '#4338ca'],
-            'is_top_rated'  => ['Top Rated',             'bi-award-fill',           '#fdf6e3', '#9a7d27'],
-            'is_verified'   => ['ID Verified',           'bi-person-badge-fill',    '#eaf0f6', '#1e3a5f'],
-            'is_certified'  => ['Licence / NCA Certified','bi-patch-check-fill',    '#f0fdf4', '#166534'],
-            'is_insured'    => ['Insured',               'bi-shield-fill-check',    '#eff6ff', '#1e40af'],
-            'is_warranty'   => ['Warranty Offered',      'bi-clipboard2-check',     '#f0fdf4', '#15803d'],
-            'is_escrow'     => ['Escrow Ready',          'bi-lock-fill',            '#ecfeff', '#0e7490'],
-            'is_fast_responder' => ['Fast Responder',    'bi-lightning-charge-fill','#fffbeb', '#b45309'],
-            'is_featured'   => ['Premium',               'bi-star-fill',            '#fff7ed', '#c2410c'],
+            'is_certified'  => ['NCA Verified',   'bi-patch-check-fill',    '#f0fdf4', '#166534'],
+            'is_preferred'  => ['bildfie Vetted', 'bi-hand-thumbs-up-fill', '#eef2ff', '#4338ca'],
+            'is_insured'    => ['Insured',        'bi-shield-fill-check',   '#eff6ff', '#1e40af'],
         ];
     }
 }
