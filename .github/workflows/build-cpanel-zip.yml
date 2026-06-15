@@ -1,0 +1,72 @@
+name: Build cPanel deploy ZIP
+
+# Produces a ready-to-upload ZIP of bildfie for cPanel.
+# Runs on every push to the main branches, and can be triggered manually.
+# Download the ZIP from the run's "Artifacts" section, then upload + extract
+# it in cPanel (see docs/DEPLOY-CPANEL.md).
+
+on:
+  push:
+    branches:
+      - main
+      - claude/bildfie-multi-device-hosting-m477od
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP 8.3 (matches cPanel)
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, bcmath, pdo, pdo_mysql, intl, gd, zip, fileinfo, curl, openssl
+          tools: composer:v2
+          coverage: none
+
+      - name: Install PHP dependencies (production)
+        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build front-end assets
+        run: |
+          npm ci
+          npm run build
+
+      - name: Assemble cPanel package
+        run: |
+          set -e
+          rm -rf release
+          mkdir -p release/bildfie
+          # Copy the whole app, excluding things the server must not receive.
+          rsync -a ./ release/bildfie \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude 'node_modules' \
+            --exclude 'release' \
+            --exclude 'tests' \
+            --exclude '.env' \
+            --exclude 'database/*.sqlite' \
+            --exclude 'storage/*.key'
+          # Ship a clean writable storage tree.
+          find release/bildfie/storage -type f -name '.gitignore' -prune -o -type f -print -delete 2>/dev/null || true
+          cd release
+          zip -rqy bildfie-cpanel.zip bildfie
+          echo "Package contents (top level):"
+          unzip -l bildfie-cpanel.zip | head -20
+
+      - name: Upload deploy ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: bildfie-cpanel-zip
+          path: release/bildfie-cpanel.zip
+          retention-days: 30
+          if-no-files-found: error
