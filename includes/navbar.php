@@ -1,9 +1,6 @@
 <?php $nav = $nav ?? '';
 $navLinks = [
   ['professionals', 'Professionals',  '/pages/marketplace/professionals.php'],
-  ['materials',     'Materials',      '/pages/marketplace/materials.php'],
-  ['equipment',     'Equipment',      '/pages/marketplace/equipment.php'],
-  ['logistics',     'Logistics',      '/pages/marketplace/transport.php'],
   ['services',      'Services',       '/pages/services/index.php'],
 ];
 ?>

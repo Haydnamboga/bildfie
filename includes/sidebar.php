@@ -30,16 +30,6 @@
         ['subscriptions', 'bi-stars',                  'Subscriptions', '/pages/subscriptions/index.php'],
         ['sales-reports', 'bi-graph-up-arrow',         'Sales Reports', '#'],
       ]],
-      ['Inventory', 'bi-boxes', [
-        ['inventory',         'bi-box-seam',             'Inventory',         '/pages/inventory/index.php'],
-        ['products',          'bi-box',                  'Products',          '#'],
-        ['categories',        'bi-tags',                 'Categories',        '#'],
-        ['warehouses',        'bi-building',             'Warehouses',        '#'],
-        ['stock-movements',   'bi-arrow-left-right',     'Stock Movements',   '#'],
-        ['stock-adjustments', 'bi-sliders',              'Stock Adjustments', '#'],
-        ['reorder-levels',    'bi-exclamation-triangle', 'Reorder Levels',    '#'],
-        ['product-reports',   'bi-clipboard-data',       'Product Reports',   '#'],
-      ]],
       ['Utilities', 'bi-tools', [
         ['files',       'bi-folder2',            'Files & Documents', '#'],
         ['media',       'bi-images',             'Media',             '#'],

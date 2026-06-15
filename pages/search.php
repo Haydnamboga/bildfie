@@ -75,42 +75,7 @@ $nav = '';
   </div>
   <?php endif; ?>
 
-  <?php if ($show('Materials')): ?>
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-    <h2 style="font-size:16px;font-weight:800;color:var(--ink);margin:0;"><i class="bi bi-box-seam me-2" style="color:#1e3a5f;"></i>Materials</h2>
-    <a href="/pages/marketplace/materials.php" style="font-size:12px;font-weight:700;color:#c0392b;text-decoration:none;">See all →</a>
-  </div>
-  <div class="row g-3 mb-4">
-    <?php foreach ($mats as [$pn,$pp,$sup]): ?>
-    <div class="col-md-4">
-      <a href="/pages/marketplace/material.php?name=<?= urlencode($pn) ?>&price=<?= urlencode($pp) ?>&supplier=<?= urlencode($sup) ?>" style="text-decoration:none;display:block;background:var(--white);border:1px solid var(--line);border-radius:12px;padding:14px;height:100%;">
-        <div style="font-size:13px;font-weight:800;color:var(--ink);"><?= $pn ?></div>
-        <div style="font-size:11px;color:var(--ink-4);margin-top:2px;"><i class="bi bi-shop" style="font-size:10px;"></i> <?= $sup ?></div>
-        <div style="font-size:15px;font-weight:900;color:#c0392b;margin-top:6px;"><?= $pp ?></div>
-      </a>
-    </div>
-    <?php endforeach; ?>
-  </div>
-  <?php endif; ?>
-
-  <?php if ($show('Equipment')): ?>
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-    <h2 style="font-size:16px;font-weight:800;color:var(--ink);margin:0;"><i class="bi bi-truck me-2" style="color:#1e3a5f;"></i>Equipment</h2>
-    <a href="/pages/marketplace/equipment.php" style="font-size:12px;font-weight:700;color:#c0392b;text-decoration:none;">See all →</a>
-  </div>
-  <div class="row g-3 mb-4">
-    <?php foreach ($equip as [$en,$ec,$ed,$ei]): ?>
-    <div class="col-md-4">
-      <a href="/pages/marketplace/equipment-view.php?name=<?= urlencode($en) ?>&cat=<?= urlencode($ec) ?>&day=<?= urlencode($ed) ?>&img=<?= urlencode($ei) ?>" style="text-decoration:none;display:block;background:var(--white);border:1px solid var(--line);border-radius:12px;overflow:hidden;height:100%;">
-        <img src="<?= $ei ?>" alt="<?= $en ?>" style="width:100%;height:120px;object-fit:cover;display:block;">
-        <div style="padding:12px 14px;"><div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#c0392b;"><?= $ec ?></div><div style="font-size:13px;font-weight:800;color:var(--ink);margin-top:2px;"><?= $en ?></div><div style="font-size:12px;font-weight:800;color:var(--ink);margin-top:4px;"><?= $ed ?><span style="font-size:10px;color:var(--ink-4);font-weight:600;">/day</span></div></div>
-      </a>
-    </div>
-    <?php endforeach; ?>
-  </div>
-  <?php endif; ?>
-
-  <?php if ($cat === '' || strcasecmp($cat,'Facilities')===0): // Bids shown when broad search ?>
+  <?php if ($cat === ''): // Open bids shown on a broad search ?>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
     <h2 style="font-size:16px;font-weight:800;color:var(--ink);margin:0;"><i class="bi bi-megaphone me-2" style="color:#1e3a5f;"></i>Open projects to bid on</h2>
     <a href="/pages/bids/index.php" style="font-size:12px;font-weight:700;color:#c0392b;text-decoration:none;">See all →</a>

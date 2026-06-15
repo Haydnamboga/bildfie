@@ -8,18 +8,10 @@
           <i class="bi bi-building-fill-up"></i> bildfie
         </div>
         <p style="font-size:13px;color:rgba(255,255,255,.45);line-height:1.7;max-width:220px;">
-          Africa's trusted construction marketplace — connecting verified professionals with quality projects across 47 counties and 6 countries.
+          A construction marketplace connecting verified professionals with quality projects.
         </p>
-        <div class="mt-4 d-flex gap-2">
-          <a href="#" class="bf-footer-social"><i class="bi bi-twitter-x"></i></a>
-          <a href="#" class="bf-footer-social"><i class="bi bi-linkedin"></i></a>
-          <a href="#" class="bf-footer-social"><i class="bi bi-facebook"></i></a>
-          <a href="#" class="bf-footer-social"><i class="bi bi-instagram"></i></a>
-          <a href="#" class="bf-footer-social"><i class="bi bi-youtube"></i></a>
-        </div>
         <div class="mt-4" style="font-size:11px;color:rgba(255,255,255,.25);line-height:1.8;">
-          <div>🇰🇪 Nairobi, Kenya (HQ)</div>
-          <div>🇳🇬 Lagos · 🇬🇭 Accra · 🇦🇪 Dubai</div>
+          <div>🇰🇪 Kenya</div>
           <div class="mt-1"><a href="mailto:hello@bildfie.com" style="color:rgba(255,255,255,.35);">hello@bildfie.com</a></div>
         </div>
       </div>
@@ -29,13 +21,7 @@
         <div class="bf-footer-heading">Marketplace</div>
         <?php foreach ([
           'Professionals' => '/pages/marketplace/professionals.php',
-          'Materials & Hardware' => '/pages/marketplace/materials.php',
-          'Equipment Hire' => '/pages/marketplace/equipment.php',
-          'Transport & Logistics' => '/pages/marketplace/transport.php',
-          'Facilities & Yards' => '/pages/marketplace/facilities.php',
           'Open Bids' => '/pages/bids/index.php',
-          'Learn Hub' => '/pages/learn/index.php',
-          'Project Showcase' => '/pages/projects/index.php',
         ] as $l => $h): ?>
         <a href="<?= $h ?>" class="bf-footer-link"><?= $l ?></a>
         <?php endforeach; ?>
@@ -85,14 +71,6 @@
           </div>
           <div class="bf-news-note"><i class="bi bi-shield-check"></i> Weekly digest · No spam, unsubscribe anytime.</div>
         </form>
-        <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08);">
-          <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.2);margin-bottom:10px;">Trusted & Accredited By</div>
-          <div class="d-flex flex-wrap gap-2">
-            <?php foreach (['NCA Kenya','CIOB','AAK','FIDIC','ISO 9001','RIBA'] as $b): ?>
-            <span style="font-size:9.5px;font-weight:700;color:rgba(255,255,255,.28);border:1px solid rgba(255,255,255,.1);padding:3px 8px;border-radius:4px;"><?= $b ?></span>
-            <?php endforeach; ?>
-          </div>
-        </div>
       </div>
 
     </div>
