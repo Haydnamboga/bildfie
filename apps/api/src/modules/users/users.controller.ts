@@ -20,11 +20,8 @@ export class UsersController {
   }
 
   @Patch("me")
-  updateMe(
-    @CurrentUser() user: SessionUser,
-    @Body() body: Parameters<UsersService["updateProfile"]>[1],
-  ) {
-    return this.usersService.updateProfile(user.id, body);
+  updateMe(@CurrentUser() user: SessionUser, @Body() body: Record<string, unknown>) {
+    return this.usersService.updateProfile(user.id, body as Parameters<UsersService["updateProfile"]>[1]);
   }
 
   @Get(":id")
