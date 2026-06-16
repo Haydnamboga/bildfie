@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
+import { MilestonesController } from "./milestones.controller";
+import { MilestonesService } from "./milestones.service";
 
-// Milestones — see architecture spec §8. Add controllers + providers as built out.
 @Module({
-  controllers: [],
-  providers: [],
-  exports: [],
+  controllers: [MilestonesController],
+  providers: [MilestonesService],
 })
 export class MilestonesModule {}

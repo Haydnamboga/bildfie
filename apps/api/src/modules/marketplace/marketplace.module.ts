@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
+import { MarketplaceController } from "./marketplace.controller";
+import { MarketplaceService } from "./marketplace.service";
 
-// Marketplace — see architecture spec §8. Add controllers + providers as built out.
 @Module({
-  controllers: [],
-  providers: [],
-  exports: [],
+  controllers: [MarketplaceController],
+  providers: [MarketplaceService],
 })
 export class MarketplaceModule {}

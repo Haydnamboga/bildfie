@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
+import { TasksController } from "./tasks.controller";
+import { TasksService } from "./tasks.service";
 
-// Tasks — see architecture spec §8. Add controllers + providers as built out.
 @Module({
-  controllers: [],
-  providers: [],
-  exports: [],
+  controllers: [TasksController],
+  providers: [TasksService],
 })
 export class TasksModule {}

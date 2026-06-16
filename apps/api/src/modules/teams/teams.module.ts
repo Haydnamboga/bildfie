@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
+import { TeamsController } from "./teams.controller";
+import { TeamsService } from "./teams.service";
 
-// Teams — see architecture spec §8. Add controllers + providers as built out.
 @Module({
-  controllers: [],
-  providers: [],
-  exports: [],
+  controllers: [TeamsController],
+  providers: [TeamsService],
 })
 export class TeamsModule {}

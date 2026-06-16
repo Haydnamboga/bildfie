@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
+import { MessagingController } from "./messaging.controller";
+import { MessagingService } from "./messaging.service";
 
-// Messaging — see architecture spec §8. Add controllers + providers as built out.
 @Module({
-  controllers: [],
-  providers: [],
-  exports: [],
+  controllers: [MessagingController],
+  providers: [MessagingService],
 })
 export class MessagingModule {}
