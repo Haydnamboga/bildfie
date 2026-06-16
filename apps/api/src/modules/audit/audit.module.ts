@@ -1,9 +1,9 @@
-import { Module } from "@nestjs/common";
+import { Global, Module } from "@nestjs/common";
+import { AuditService } from "./audit.service";
 
-// Audit — see architecture spec §8. Add controllers + providers as built out.
+@Global()
 @Module({
-  controllers: [],
-  providers: [],
-  exports: [],
+  providers: [AuditService],
+  exports: [AuditService],
 })
 export class AuditModule {}

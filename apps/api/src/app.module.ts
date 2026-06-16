@@ -1,7 +1,9 @@
 import { Module } from "@nestjs/common";
+import { APP_INTERCEPTOR } from "@nestjs/core";
 import { HealthController } from "./health.controller";
+import { AuditInterceptor } from "./common/interceptors/audit.interceptor";
 
-// Business-capability modules (build out per §10 order).
+import { AuditModule } from "./modules/audit/audit.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { UsersModule } from "./modules/users/users.module";
 import { MarketplaceModule } from "./modules/marketplace/marketplace.module";
@@ -15,10 +17,10 @@ import { ReviewsModule } from "./modules/reviews/reviews.module";
 import { NotificationsModule } from "./modules/notifications/notifications.module";
 import { AdminModule } from "./modules/admin/admin.module";
 import { SystemModule } from "./modules/system/system.module";
-import { AuditModule } from "./modules/audit/audit.module";
 
 @Module({
   imports: [
+    AuditModule,
     AuthModule,
     UsersModule,
     MarketplaceModule,
@@ -32,8 +34,13 @@ import { AuditModule } from "./modules/audit/audit.module";
     NotificationsModule,
     AdminModule,
     SystemModule,
-    AuditModule,
   ],
   controllers: [HealthController],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: AuditInterceptor,
+    },
+  ],
 })
 export class AppModule {}

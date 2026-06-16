@@ -1,6 +1,3 @@
-// Shared TypeScript types / DTOs used by web + mobile + api.
-// Keep these framework-agnostic — no React, no Nest imports here.
-
 export type UserRole = "USER" | "ADMIN" | "SUPER_ADMIN";
 
 export interface SessionUser {
@@ -8,6 +5,7 @@ export interface SessionUser {
   email: string;
   fullName: string;
   role: UserRole;
+  mfaVerified?: boolean;
 }
 
 export interface ApiError {
@@ -22,3 +20,22 @@ export type Paginated<T> = {
   page: number;
   pageSize: number;
 };
+
+export interface JwtPayload {
+  sub: string;
+  email: string;
+  fullName: string;
+  role: UserRole;
+  mfaVerified: boolean;
+}
+
+export interface TokenPair {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface AuthResponse {
+  user: SessionUser;
+  accessToken: string;
+  refreshToken: string;
+}

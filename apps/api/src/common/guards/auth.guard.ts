@@ -1,18 +1,26 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
+import { verifyAccessToken } from "@bildfie/auth/server";
 
-/**
- * Validates the session/JWT and attaches the user to the request.
- * TODO: verify the token via @bildfie/auth and load the user.
- */
 @Injectable()
 export class AuthGuard implements CanActivate {
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-    const token = (request.headers.authorization ?? "").replace("Bearer ", "");
-    if (!token) {
-      throw new UnauthorizedException();
+    const raw = (request.headers.authorization ?? "") as string;
+    const token = raw.startsWith("Bearer ") ? raw.slice(7).trim() : "";
+    if (!token) throw new UnauthorizedException();
+
+    try {
+      const payload = verifyAccessToken(token);
+      request.user = {
+        id: payload.sub,
+        email: payload.email,
+        fullName: payload.fullName,
+        role: payload.role,
+        mfaVerified: payload.mfaVerified,
+      };
+    } catch {
+      throw new UnauthorizedException("Token invalid or expired");
     }
-    // TODO: const payload = verifyJwt(token); request.user = await loadUser(payload.sub);
     return true;
   }
 }

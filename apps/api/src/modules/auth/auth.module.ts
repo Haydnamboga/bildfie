@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
+import { AuthController } from "./auth.controller";
+import { AuthService } from "./auth.service";
 
-// Auth — see architecture spec §8. Add controllers + providers as built out.
 @Module({
-  controllers: [],
-  providers: [],
-  exports: [],
+  controllers: [AuthController],
+  providers: [AuthService],
 })
 export class AuthModule {}

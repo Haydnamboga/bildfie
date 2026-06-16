@@ -54,6 +54,8 @@ model User {
   messages        Message[]
   notifications   Notification[]
   auditLogs       AuditLog[]
+  refreshTokens   RefreshToken[]
+  verificationTokens VerificationToken[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -331,4 +333,28 @@ model AuditLog {
   @@index([actorId])
   @@index([entity, entityId])
   @@map("audit_logs")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+model VerificationToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  type      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("verification_tokens")
 }
