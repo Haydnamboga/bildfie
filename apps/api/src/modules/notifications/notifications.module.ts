@@ -1,9 +1,10 @@
 import { Module } from "@nestjs/common";
+import { NotificationsController } from "./notifications.controller";
+import { NotificationsService } from "./notifications.service";
 
-// Notifications — see architecture spec §8. Add controllers + providers as built out.
 @Module({
-  controllers: [],
-  providers: [],
-  exports: [],
+  controllers: [NotificationsController],
+  providers: [NotificationsService],
+  exports: [NotificationsService],
 })
 export class NotificationsModule {}

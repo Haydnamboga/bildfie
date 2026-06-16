@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
+import { PaymentsController } from "./payments.controller";
+import { PaymentsService } from "./payments.service";
 
-// Payments — see architecture spec §8. Add controllers + providers as built out.
 @Module({
-  controllers: [],
-  providers: [],
-  exports: [],
+  controllers: [PaymentsController],
+  providers: [PaymentsService],
 })
 export class PaymentsModule {}

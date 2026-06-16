@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
+import { SystemController } from "./system.controller";
+import { SystemService } from "./system.service";
 
-// System — see architecture spec §8. Add controllers + providers as built out.
 @Module({
-  controllers: [],
-  providers: [],
-  exports: [],
+  controllers: [SystemController],
+  providers: [SystemService],
 })
 export class SystemModule {}

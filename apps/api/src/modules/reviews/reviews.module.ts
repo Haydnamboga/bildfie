@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
+import { ReviewsController } from "./reviews.controller";
+import { ReviewsService } from "./reviews.service";
 
-// Reviews — see architecture spec §8. Add controllers + providers as built out.
 @Module({
-  controllers: [],
-  providers: [],
-  exports: [],
+  controllers: [ReviewsController],
+  providers: [ReviewsService],
 })
 export class ReviewsModule {}

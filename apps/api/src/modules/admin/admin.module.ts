@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
+import { AdminController } from "./admin.controller";
+import { AdminService } from "./admin.service";
 
-// Admin — see architecture spec §8. Add controllers + providers as built out.
 @Module({
-  controllers: [],
-  providers: [],
-  exports: [],
+  controllers: [AdminController],
+  providers: [AdminService],
 })
 export class AdminModule {}
