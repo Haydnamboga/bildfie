@@ -4,26 +4,24 @@ import { useRouter } from "expo-router";
 import { api } from "../../lib/api";
 import { TokenStore } from "../../lib/token";
 
-export default function LoginScreen() {
+export default function SignupScreen() {
   const router = useRouter();
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [mfaToken, setMfaToken] = useState("");
-  const [needsMfa, setNeedsMfa] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function submit() {
     setError("");
+    if (password.length < 8) { setError("Password must be at least 8 characters"); return; }
     setLoading(true);
     try {
-      const res = await api.login({ email, password, ...(needsMfa ? { mfaToken } : {}) });
+      const res = await api.register({ fullName, email, password });
       TokenStore.set(res.accessToken, res.refreshToken);
       router.replace("/(app)/");
     } catch (err: unknown) {
-      const msg = (err as { message?: string }).message ?? "Login failed";
-      if (msg.toLowerCase().includes("mfa")) setNeedsMfa(true);
-      setError(msg);
+      setError((err as { message?: string }).message ?? "Registration failed");
     } finally {
       setLoading(false);
     }
@@ -32,22 +30,20 @@ export default function LoginScreen() {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <ScrollView contentContainerStyle={s.root} keyboardShouldPersistTaps="handled">
-        <Text style={s.title}>Welcome back</Text>
-        <Text style={s.subtitle}>Log in to your bildfie account</Text>
+        <Text style={s.title}>Create account</Text>
+        <Text style={s.subtitle}>Join bildfie — hire or get hired</Text>
 
+        <TextInput style={s.input} placeholder="Full name" value={fullName} onChangeText={setFullName} />
         <TextInput style={s.input} placeholder="Email" autoCapitalize="none" keyboardType="email-address" value={email} onChangeText={setEmail} />
-        <TextInput style={s.input} placeholder="Password" secureTextEntry value={password} onChangeText={setPassword} />
-        {needsMfa && (
-          <TextInput style={s.input} placeholder="6-digit MFA code" keyboardType="number-pad" maxLength={6} value={mfaToken} onChangeText={setMfaToken} />
-        )}
+        <TextInput style={s.input} placeholder="Password (min 8 chars)" secureTextEntry value={password} onChangeText={setPassword} />
         {!!error && <Text style={s.error}>{error}</Text>}
 
         <TouchableOpacity style={s.btn} onPress={submit} disabled={loading}>
-          <Text style={s.btnText}>{loading ? "Logging in…" : "Log in"}</Text>
+          <Text style={s.btnText}>{loading ? "Creating account…" : "Sign up"}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.push("/(auth)/signup")} style={s.link}>
-          <Text style={s.linkText}>No account? Sign up</Text>
+        <TouchableOpacity onPress={() => router.push("/(auth)/")} style={s.link}>
+          <Text style={s.linkText}>Already have an account? Log in</Text>
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
