@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "bildfie",
+    "slug": "bildfie",
+    "scheme": "bildfie",
+    "version": "0.0.0",
+    "orientation": "portrait",
+    "newArchEnabled": true,
+    "plugins": ["expo-router"]
+  }
+}

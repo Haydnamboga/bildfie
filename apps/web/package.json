@@ -1,0 +1,30 @@
+{
+  "name": "@bildfie/web",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p ${WEB_PORT:-3000}",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@bildfie/api-client": "workspace:*",
+    "@bildfie/auth": "workspace:*",
+    "@bildfie/types": "workspace:*",
+    "@bildfie/ui": "workspace:*",
+    "@bildfie/validation": "workspace:*",
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@bildfie/eslint-config": "workspace:*",
+    "@bildfie/tsconfig": "workspace:*",
+    "@types/node": "^20.16.5",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.6.2"
+  }
+}

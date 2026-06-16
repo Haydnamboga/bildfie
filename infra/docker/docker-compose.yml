@@ -1,0 +1,17 @@
+# Local dev dependencies (PostgreSQL). Apps run on the host via `pnpm dev`.
+#   docker compose -f infra/docker/docker-compose.yml up -d
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: bildfie
+      POSTGRES_PASSWORD: bildfie
+      POSTGRES_DB: bildfie
+    ports:
+      - "5432:5432"
+    volumes:
+      - bildfie_pg:/var/lib/postgresql/data
+
+volumes:
+  bildfie_pg:

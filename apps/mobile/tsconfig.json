@@ -1,0 +1,8 @@
+{
+  "extends": "@bildfie/tsconfig/react-native.json",
+  "compilerOptions": {
+    "baseUrl": "."
+  },
+  "include": ["app/**/*.ts", "app/**/*.tsx"],
+  "exclude": ["node_modules"]
+}
