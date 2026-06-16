@@ -1,39 +1,38 @@
 # Dependencies
 node_modules/
+.pnp
+.pnp.js
 
-# Environment secrets — NEVER commit
-.env
-
-# Database (dev data — use migrations for schema)
-db/buildlink.db
-db/*.db
-
-# Uploads
-uploads/
-
-# OS / editor
-.DS_Store
-Thumbs.db
-*.swp
-*.swo
-.vscode/
-.idea/
-
-# Build artefacts (future)
+# Build outputs
 dist/
 build/
+.next/
+out/
+.turbo/
+.expo/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Prisma
+packages/db/generated/
 
 # Logs
 *.log
 npm-debug.log*
+pnpm-debug.log*
 
-# Test / scratch output files
-server_out.txt
-tunnel_url.txt
-D:/test.png
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
 
-# Retired files
-db/database.js.bak
+# Testing
+coverage/
 
-# Claude internal
-.claude/
+# Misc
+*.tsbuildinfo

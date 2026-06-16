@@ -1,0 +1,8 @@
+{
+  "extends": "@bildfie/tsconfig/base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "."
+  },
+  "include": ["src", "prisma"]
+}
