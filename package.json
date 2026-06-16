@@ -1,41 +1,26 @@
 {
   "name": "bildfie",
-  "version": "1.0.0",
-  "description": "Africa's #1 Construction Marketplace",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js",
-    "migrate": "node db/migrate.js",
-    "migrate:rollback": "node db/migrate.js rollback",
-    "migrate:status": "node db/migrate.js status",
-    "seed": "npx knex seed:run",
-    "clear-demo": "node db/clear-demo.js",
-    "build": "npm install"
-  },
+  "version": "0.0.0",
+  "private": true,
+  "description": "bildfie.com — marketplace + CRM platform (Turborepo monorepo)",
+  "packageManager": "pnpm@9.12.0",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20",
+    "pnpm": ">=9"
   },
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "better-sqlite3": "^12.10.0",
-    "compression": "^1.8.1",
-    "cors": "^2.8.5",
-    "dotenv": "^17.4.2",
-    "ejs": "^6.0.1",
-    "express": "^4.18.2",
-    "express-rate-limit": "^8.5.2",
-    "express-session": "^1.17.3",
-    "express-validator": "^7.3.2",
-    "helmet": "^8.2.0",
-    "knex": "^3.2.10",
-    "morgan": "^1.10.1",
-    "multer": "^1.4.5-lts.1",
-    "nodemailer": "^8.0.9",
-    "pg": "^8.21.0",
-    "uuid": "^9.0.0"
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "db:generate": "pnpm --filter @bildfie/db generate",
+    "db:migrate": "pnpm --filter @bildfie/db migrate"
   },
   "devDependencies": {
-    "localtunnel": "^2.0.2"
+    "prettier": "^3.3.3",
+    "turbo": "^2.1.3",
+    "typescript": "^5.6.2"
   }
 }
