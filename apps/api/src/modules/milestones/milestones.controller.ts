@@ -42,4 +42,32 @@ export class MilestonesController {
   ) {
     return this.svc.remove(user.id, projectId, milestoneId);
   }
+
+  @Post(":id/submit")
+  submitForReview(
+    @CurrentUser() user: SessionUser,
+    @Param("projectId") projectId: string,
+    @Param("id") id: string,
+    @Body() body: { notes?: string },
+  ) {
+    return this.svc.submitForReview(user.id, projectId, id, body.notes);
+  }
+
+  @Post(":id/approve")
+  approveSubmission(
+    @CurrentUser() user: SessionUser,
+    @Param("projectId") projectId: string,
+    @Param("id") id: string,
+  ) {
+    return this.svc.approveSubmission(user.id, projectId, id);
+  }
+
+  @Post(":id/request-revision")
+  requestRevision(
+    @CurrentUser() user: SessionUser,
+    @Param("projectId") projectId: string,
+    @Param("id") id: string,
+  ) {
+    return this.svc.requestRevision(user.id, projectId, id);
+  }
 }

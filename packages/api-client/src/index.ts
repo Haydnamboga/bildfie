@@ -60,7 +60,7 @@ export class ApiClient {
   }
 
   // Marketplace
-  searchProfessionals(params?: { q?: string; skill?: string; minRate?: number; maxRate?: number; page?: number }) {
+  searchProfessionals(params?: { q?: string; skill?: string; minRate?: number; maxRate?: number; category?: string; location?: string; page?: number }) {
     const qs = new URLSearchParams(Object.entries(params ?? {}).filter(([, v]) => v !== undefined).map(([k, v]) => [k, String(v)]));
     return this.request<Paginated<SessionUser>>(`/marketplace/professionals?${qs}`);
   }
@@ -145,6 +145,82 @@ export class ApiClient {
   }
   sendMessage(projectId: string, body: string) {
     return this.request<unknown>(`/projects/${projectId}/messages`, { method: "POST", body: JSON.stringify({ body }) });
+  }
+
+  // Jobs
+  createJobPost(body: { title: string; description: string; category: string; location: string; budgetMin?: number; budgetMax?: number; dueDate?: string }) {
+    return this.request<unknown>("/jobs", { method: "POST", body: JSON.stringify(body) });
+  }
+  listJobPosts(params?: { category?: string; location?: string; status?: string }) {
+    const qs = new URLSearchParams(Object.entries(params ?? {}).filter(([, v]) => v !== undefined).map(([k, v]) => [k, String(v)]));
+    return this.request<unknown[]>(`/jobs?${qs}`);
+  }
+  getJobPost(id: string) {
+    return this.request<unknown>(`/jobs/${id}`);
+  }
+  getJobPostProposals(id: string) {
+    return this.request<unknown[]>(`/jobs/${id}/proposals`);
+  }
+  updateJobPost(id: string, body: Record<string, unknown>) {
+    return this.request<unknown>(`/jobs/${id}`, { method: "PATCH", body: JSON.stringify(body) });
+  }
+  deleteJobPost(id: string) {
+    return this.request<void>(`/jobs/${id}`, { method: "DELETE" });
+  }
+
+  // Proposals
+  submitProposal(jobId: string, body: { coverLetter: string; amount: number; timeline?: string }) {
+    return this.request<unknown>(`/jobs/${jobId}/proposals`, { method: "POST", body: JSON.stringify(body) });
+  }
+  myProposals() {
+    return this.request<unknown[]>("/proposals/mine");
+  }
+  respondToProposal(id: string, action: "shortlist" | "accept" | "reject") {
+    return this.request<unknown>(`/proposals/${id}/respond`, { method: "PATCH", body: JSON.stringify({ action }) });
+  }
+  withdrawProposal(id: string) {
+    return this.request<void>(`/proposals/${id}`, { method: "DELETE" });
+  }
+
+  // Portfolio
+  getPortfolio(userId: string) {
+    return this.request<unknown[]>(`/users/${userId}/portfolio`);
+  }
+  addPortfolioItem(body: { title: string; description?: string; imageUrl?: string; category?: string; completedAt?: string }) {
+    return this.request<unknown>("/portfolio", { method: "POST", body: JSON.stringify(body) });
+  }
+  deletePortfolioItem(id: string) {
+    return this.request<void>(`/portfolio/${id}`, { method: "DELETE" });
+  }
+
+  // Change orders
+  listChangeOrders(projectId: string) {
+    return this.request<unknown[]>(`/projects/${projectId}/change-orders`);
+  }
+  createChangeOrder(projectId: string, body: { title: string; description: string; amount: number }) {
+    return this.request<unknown>(`/projects/${projectId}/change-orders`, { method: "POST", body: JSON.stringify(body) });
+  }
+  respondToChangeOrder(projectId: string, id: string, action: "approve" | "reject") {
+    return this.request<unknown>(`/projects/${projectId}/change-orders/${id}/respond`, { method: "PATCH", body: JSON.stringify({ action }) });
+  }
+
+  // Daily logs
+  listDailyLogs(projectId: string) {
+    return this.request<unknown[]>(`/projects/${projectId}/daily-logs`);
+  }
+  createDailyLog(projectId: string, body: { logDate: string; weather?: string; workersCount?: number; notes: string }) {
+    return this.request<unknown>(`/projects/${projectId}/daily-logs`, { method: "POST", body: JSON.stringify(body) });
+  }
+
+  // Milestone submission
+  submitMilestone(projectId: string, milestoneId: string, notes?: string) {
+    return this.request<unknown>(`/projects/${projectId}/milestones/${milestoneId}/submit`, { method: "POST", body: JSON.stringify({ notes }) });
+  }
+  approveMilestone(projectId: string, milestoneId: string) {
+    return this.request<unknown>(`/projects/${projectId}/milestones/${milestoneId}/approve`, { method: "POST" });
+  }
+  requestMilestoneRevision(projectId: string, milestoneId: string) {
+    return this.request<unknown>(`/projects/${projectId}/milestones/${milestoneId}/request-revision`, { method: "POST" });
   }
 
   health() {

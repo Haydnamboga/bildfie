@@ -19,6 +19,9 @@ import { AdminModule } from "./modules/admin/admin.module";
 import { SystemModule } from "./modules/system/system.module";
 import { JobsModule } from "./modules/jobs/jobs.module";
 import { ProposalsModule } from "./modules/proposals/proposals.module";
+import { PortfolioModule } from "./modules/portfolio/portfolio.module";
+import { ChangeOrdersModule } from "./modules/change-orders/change-orders.module";
+import { DailyLogsModule } from "./modules/daily-logs/daily-logs.module";
 
 @Module({
   imports: [
@@ -38,6 +41,9 @@ import { ProposalsModule } from "./modules/proposals/proposals.module";
     SystemModule,
     JobsModule,
     ProposalsModule,
+    PortfolioModule,
+    ChangeOrdersModule,
+    DailyLogsModule,
   ],
   controllers: [HealthController],
   providers: [
