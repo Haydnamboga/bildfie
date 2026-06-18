@@ -1,11 +1,27 @@
 {
   "expo": {
-    "name": "bildfie",
+    "name": "Bildfie",
     "slug": "bildfie",
     "scheme": "bildfie",
-    "version": "0.0.0",
+    "version": "1.0.0",
     "orientation": "portrait",
     "newArchEnabled": true,
-    "plugins": ["expo-router"]
+    "plugins": ["expo-router"],
+    "android": {
+      "package": "com.bildfie.app",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1a1a2e"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.bildfie.app"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "bildfie"
+      }
+    }
   }
 }
