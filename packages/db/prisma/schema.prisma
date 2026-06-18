@@ -1,5 +1,4 @@
 // bildfie.com — Prisma schema (single source of DB truth)
-// Build order §10: User, Role, Project, Task, Milestone, Offer, Team, Payment.
 // All access goes through the API; no client touches the DB directly.
 
 generator client {
@@ -12,7 +11,7 @@ datasource db {
 }
 
 // ──────────────────────────────────────────────────────────────
-// Roles & access (user | admin | super_admin)
+// Enums
 // ──────────────────────────────────────────────────────────────
 
 enum Role {
@@ -21,41 +20,141 @@ enum Role {
   SUPER_ADMIN
 }
 
+enum ProLevel {
+  STARTER
+  VERIFIED
+  TOP_RATED
+}
+
+enum TradeCategory {
+  ELECTRICAL
+  PLUMBING
+  CARPENTRY
+  CIVIL
+  TILING
+  PAINTING
+  ROOFING
+  HVAC
+  LANDSCAPING
+  MASONRY
+  WELDING
+  GENERAL
+}
+
+enum ProjectStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  IN_REVIEW
+  DONE
+}
+
+enum MilestoneStatus {
+  PENDING
+  ACTIVE
+  SUBMITTED
+  COMPLETED
+  PAID
+}
+
+enum SubmissionStatus {
+  PENDING_REVIEW
+  APPROVED
+  REVISION_REQUESTED
+  AUTO_RELEASED
+}
+
+enum OfferStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  WITHDRAWN
+}
+
+enum JobPostStatus {
+  OPEN
+  IN_REVIEW
+  AWARDED
+  CLOSED
+}
+
+enum ProposalStatus {
+  PENDING
+  SHORTLISTED
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+enum ChangeOrderStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum PaymentProvider {
+  MPESA
+  STRIPE
+}
+
+enum PaymentStatus {
+  PENDING
+  HELD_IN_ESCROW
+  RELEASED
+  REFUNDED
+  FAILED
+}
+
 // ──────────────────────────────────────────────────────────────
 // User — ALL accounts (user/admin/super-admin distinguished by role)
 // ──────────────────────────────────────────────────────────────
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
+  id           String    @id @default(cuid())
+  email        String    @unique
   passwordHash String
   fullName     String
-  role         Role     @default(USER)
+  role         Role      @default(USER)
 
   // MFA — required for admin & super-admin logins
-  mfaEnabled   Boolean  @default(false)
-  mfaSecret    String?
+  mfaEnabled Boolean @default(false)
+  mfaSecret  String?
 
   emailVerified Boolean @default(false)
 
   // Marketplace profile
   headline   String?
   bio        String?
-  skills     String[] @default([])
-  hourlyRate Decimal? @db.Decimal(10, 2)
+  skills     String[]      @default([])
+  hourlyRate Decimal?      @db.Decimal(10, 2)
+  location   String?
+  category   TradeCategory?
+  proLevel   ProLevel      @default(STARTER)
 
   // Relations
-  ownedProjects   Project[]      @relation("ProjectOwner")
-  teamMemberships TeamMember[]
-  sentOffers      Offer[]        @relation("OfferFrom")
-  receivedOffers  Offer[]        @relation("OfferTo")
-  reviewsGiven    Review[]       @relation("ReviewAuthor")
-  reviewsReceived Review[]       @relation("ReviewSubject")
-  messages        Message[]
-  notifications   Notification[]
-  auditLogs       AuditLog[]
-  refreshTokens   RefreshToken[]
-  verificationTokens VerificationToken[]
+  ownedProjects        Project[]             @relation("ProjectOwner")
+  teamMemberships      TeamMember[]
+  sentOffers           Offer[]               @relation("OfferFrom")
+  receivedOffers       Offer[]               @relation("OfferTo")
+  reviewsGiven         Review[]              @relation("ReviewAuthor")
+  reviewsReceived      Review[]              @relation("ReviewSubject")
+  messages             Message[]
+  notifications        Notification[]
+  auditLogs            AuditLog[]
+  refreshTokens        RefreshToken[]
+  verificationTokens   VerificationToken[]
+  jobPosts             JobPost[]             @relation("ClientJobPosts")
+  proposals            Proposal[]
+  portfolio            PortfolioItem[]
+  changeOrders         ChangeOrder[]
+  dailyLogs            DailyLog[]
+  milestoneSubmissions MilestoneSubmission[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -65,15 +164,61 @@ model User {
 }
 
 // ──────────────────────────────────────────────────────────────
-// Project lifecycle (draft → active → complete)
+// JobPost — client posts a job; pros submit proposals
 // ──────────────────────────────────────────────────────────────
 
-enum ProjectStatus {
-  DRAFT
-  ACTIVE
-  COMPLETED
-  CANCELLED
+model JobPost {
+  id          String        @id @default(cuid())
+  title       String
+  description String
+  category    TradeCategory
+  location    String
+  budgetMin   Decimal?      @db.Decimal(12, 2)
+  budgetMax   Decimal?      @db.Decimal(12, 2)
+  dueDate     DateTime?
+  status      JobPostStatus @default(OPEN)
+
+  clientId String
+  client   User     @relation("ClientJobPosts", fields: [clientId], references: [id], onDelete: Cascade)
+  proposals Proposal[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([clientId])
+  @@index([status])
+  @@index([category])
+  @@map("job_posts")
 }
+
+// ──────────────────────────────────────────────────────────────
+// Proposal — pro submits a bid on a JobPost
+// ──────────────────────────────────────────────────────────────
+
+model Proposal {
+  id          String         @id @default(cuid())
+  coverLetter String
+  amount      Decimal        @db.Decimal(12, 2)
+  timeline    String?
+  status      ProposalStatus @default(PENDING)
+
+  jobPostId String
+  jobPost   JobPost @relation(fields: [jobPostId], references: [id], onDelete: Cascade)
+  proId     String
+  pro       User    @relation(fields: [proId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([jobPostId, proId])
+  @@index([proId])
+  @@index([jobPostId, status])
+  @@map("proposals")
+}
+
+// ──────────────────────────────────────────────────────────────
+// Project lifecycle (draft → active → complete)
+// ──────────────────────────────────────────────────────────────
 
 model Project {
   id          String        @id @default(cuid())
@@ -84,11 +229,13 @@ model Project {
   ownerId String
   owner   User   @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: Cascade)
 
-  team       TeamMember[]
-  tasks      Task[]
-  milestones Milestone[]
-  offers     Offer[]
-  messages   Message[]
+  team         TeamMember[]
+  tasks        Task[]
+  milestones   Milestone[]
+  offers       Offer[]
+  messages     Message[]
+  changeOrders ChangeOrder[]
+  dailyLogs    DailyLog[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -108,7 +255,7 @@ model TeamMember {
   project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  roleLabel String?  // e.g. "Lead Carpenter" — free-text project role
+  roleLabel String?
   joinedAt  DateTime @default(now())
 
   @@unique([projectId, userId])
@@ -119,13 +266,6 @@ model TeamMember {
 // ──────────────────────────────────────────────────────────────
 // Task — breakdown under a project, optionally grouped by milestone
 // ──────────────────────────────────────────────────────────────
-
-enum TaskStatus {
-  TODO
-  IN_PROGRESS
-  IN_REVIEW
-  DONE
-}
 
 model Task {
   id          String     @id @default(cuid())
@@ -154,13 +294,6 @@ model Task {
 // Milestone — groups tasks, triggers payments
 // ──────────────────────────────────────────────────────────────
 
-enum MilestoneStatus {
-  PENDING
-  ACTIVE
-  COMPLETED
-  PAID
-}
-
 model Milestone {
   id          String          @id @default(cuid())
   title       String
@@ -168,12 +301,14 @@ model Milestone {
   status      MilestoneStatus @default(PENDING)
   amount      Decimal         @db.Decimal(12, 2)
   dueDate     DateTime?
+  autoReleaseAt DateTime?
 
   projectId String
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
-  tasks   Task[]
-  payment Payment?
+  tasks      Task[]
+  payment    Payment?
+  submission MilestoneSubmission?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -183,15 +318,29 @@ model Milestone {
 }
 
 // ──────────────────────────────────────────────────────────────
-// Offer — marketplace hiring (sent/received between users)
+// MilestoneSubmission — pro submits work for review; auto-releases after 14 days
 // ──────────────────────────────────────────────────────────────
 
-enum OfferStatus {
-  PENDING
-  ACCEPTED
-  DECLINED
-  WITHDRAWN
+model MilestoneSubmission {
+  id            String           @id @default(cuid())
+  notes         String?
+  status        SubmissionStatus @default(PENDING_REVIEW)
+  autoReleaseAt DateTime
+  reviewedAt    DateTime?
+
+  milestoneId   String    @unique
+  milestone     Milestone @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+  submittedById String
+  submittedBy   User      @relation(fields: [submittedById], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@map("milestone_submissions")
 }
+
+// ──────────────────────────────────────────────────────────────
+// Offer — direct hire between users (complement to job-board flow)
+// ──────────────────────────────────────────────────────────────
 
 model Offer {
   id      String      @id @default(cuid())
@@ -217,30 +366,81 @@ model Offer {
 }
 
 // ──────────────────────────────────────────────────────────────
+// PortfolioItem — pro showcases past work
+// ──────────────────────────────────────────────────────────────
+
+model PortfolioItem {
+  id          String         @id @default(cuid())
+  title       String
+  description String?
+  imageUrl    String?
+  category    TradeCategory?
+  completedAt DateTime?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("portfolio_items")
+}
+
+// ──────────────────────────────────────────────────────────────
+// ChangeOrder — formal scope/price amendment on a project
+// ──────────────────────────────────────────────────────────────
+
+model ChangeOrder {
+  id          String            @id @default(cuid())
+  title       String
+  description String
+  amount      Decimal           @db.Decimal(12, 2)
+  status      ChangeOrderStatus @default(PENDING)
+
+  projectId     String
+  project       Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  requestedById String
+  requestedBy   User    @relation(fields: [requestedById], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+  @@map("change_orders")
+}
+
+// ──────────────────────────────────────────────────────────────
+// DailyLog — construction site diary
+// ──────────────────────────────────────────────────────────────
+
+model DailyLog {
+  id           String   @id @default(cuid())
+  logDate      DateTime
+  weather      String?
+  workersCount Int?
+  notes        String
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+  @@map("daily_logs")
+}
+
+// ──────────────────────────────────────────────────────────────
 // Payment — escrow, M-Pesa Daraja + Stripe, tied to a Milestone
 // ──────────────────────────────────────────────────────────────
 
-enum PaymentProvider {
-  MPESA
-  STRIPE
-}
-
-enum PaymentStatus {
-  PENDING
-  HELD_IN_ESCROW
-  RELEASED
-  REFUNDED
-  FAILED
-}
-
 model Payment {
-  id       String          @id @default(cuid())
-  provider PaymentProvider
-  status   PaymentStatus   @default(PENDING)
-  amount   Decimal         @db.Decimal(12, 2)
-  currency String          @default("KES")
-
-  // Provider reference (M-Pesa receipt / Stripe payment intent)
+  id          String          @id @default(cuid())
+  provider    PaymentProvider
+  status      PaymentStatus   @default(PENDING)
+  amount      Decimal         @db.Decimal(12, 2)
+  currency    String          @default("KES")
   providerRef String?
 
   milestoneId String    @unique
@@ -258,8 +458,8 @@ model Payment {
 // ──────────────────────────────────────────────────────────────
 
 model Review {
-  id      String @id @default(cuid())
-  rating  Int    // 1–5
+  id      String  @id @default(cuid())
+  rating  Int
   comment String?
 
   authorId  String
@@ -280,8 +480,8 @@ model Review {
 // ──────────────────────────────────────────────────────────────
 
 model Message {
-  id      String @id @default(cuid())
-  body    String
+  id   String @id @default(cuid())
+  body String
 
   projectId String
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
@@ -295,15 +495,15 @@ model Message {
 }
 
 // ──────────────────────────────────────────────────────────────
-// Notification — email / SMS / push
+// Notification
 // ──────────────────────────────────────────────────────────────
 
 model Notification {
-  id     String  @id @default(cuid())
-  type   String
-  title  String
-  body   String?
-  read   Boolean @default(false)
+  id    String  @id @default(cuid())
+  type  String
+  title String
+  body  String?
+  read  Boolean @default(false)
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -319,9 +519,9 @@ model Notification {
 // ──────────────────────────────────────────────────────────────
 
 model AuditLog {
-  id       String   @id @default(cuid())
-  action   String   // e.g. "user.role.changed"
-  entity   String?  // affected entity type
+  id       String  @id @default(cuid())
+  action   String
+  entity   String?
   entityId String?
   metadata Json?
 
