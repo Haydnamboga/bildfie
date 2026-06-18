@@ -3,29 +3,34 @@ import { prisma } from "@bildfie/db";
 
 @Injectable()
 export class MarketplaceService {
-  async searchProfessionals(opts: {
+  async searchProfessionals(params: {
     q?: string;
     skill?: string;
     minRate?: number;
     maxRate?: number;
+    category?: string;
+    location?: string;
     page?: number;
     pageSize?: number;
   }) {
-    const { q, skill, minRate, maxRate, page = 1, pageSize = 20 } = opts;
+    const { q = "", skill, minRate, maxRate, category, location, page = 1, pageSize = 12 } = params;
     const skip = (page - 1) * pageSize;
 
     const where = {
+      OR: q
+        ? [
+            { fullName: { contains: q, mode: "insensitive" as const } },
+            { headline: { contains: q, mode: "insensitive" as const } },
+            { skills: { has: q } },
+          ]
+        : undefined,
       role: "USER" as const,
       emailVerified: true,
-      ...(q && {
-        OR: [
-          { fullName: { contains: q, mode: "insensitive" as const } },
-          { headline: { contains: q, mode: "insensitive" as const } },
-        ],
-      }),
-      ...(skill && { skills: { has: skill } }),
-      ...(minRate !== undefined && { hourlyRate: { gte: minRate } }),
-      ...(maxRate !== undefined && { hourlyRate: { lte: maxRate } }),
+      ...(skill ? { skills: { has: skill } } : {}),
+      ...(minRate !== undefined ? { hourlyRate: { gte: minRate } } : {}),
+      ...(maxRate !== undefined ? { hourlyRate: { lte: maxRate } } : {}),
+      ...(category ? { category: category as any } : {}),
+      ...(location ? { location: { contains: location, mode: "insensitive" as const } } : {}),
     };
 
     const [data, total] = await Promise.all([
@@ -38,6 +43,9 @@ export class MarketplaceService {
           bio: true,
           skills: true,
           hourlyRate: true,
+          location: true,
+          category: true,
+          proLevel: true,
           reviewsReceived: {
             select: { rating: true },
           },

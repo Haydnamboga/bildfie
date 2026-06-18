@@ -79,4 +79,36 @@ export class MilestonesService {
 
     await prisma.milestone.delete({ where: { id: milestoneId } });
   }
+
+  async submitForReview(userId: string, projectId: string, milestoneId: string, notes?: string) {
+    await this.assertMember(userId, projectId);
+    const milestone = await prisma.milestone.findUnique({ where: { id: milestoneId } });
+    if (!milestone || milestone.projectId !== projectId) throw new NotFoundException();
+    if (milestone.status !== "ACTIVE") throw new BadRequestException("Milestone must be ACTIVE to submit");
+    const autoReleaseAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
+    await prisma.milestone.update({ where: { id: milestoneId }, data: { status: "SUBMITTED" } });
+    return prisma.milestoneSubmission.create({
+      data: { milestoneId, submittedById: userId, notes, autoReleaseAt },
+    });
+  }
+
+  async approveSubmission(userId: string, projectId: string, milestoneId: string) {
+    const project = await prisma.project.findUnique({ where: { id: projectId } });
+    if (!project || project.ownerId !== userId) throw new NotFoundException();
+    await prisma.milestoneSubmission.update({
+      where: { milestoneId },
+      data: { status: "APPROVED", reviewedAt: new Date() },
+    });
+    return prisma.milestone.update({ where: { id: milestoneId }, data: { status: "COMPLETED" } });
+  }
+
+  async requestRevision(userId: string, projectId: string, milestoneId: string) {
+    const project = await prisma.project.findUnique({ where: { id: projectId } });
+    if (!project || project.ownerId !== userId) throw new NotFoundException();
+    await prisma.milestoneSubmission.update({
+      where: { milestoneId },
+      data: { status: "REVISION_REQUESTED", reviewedAt: new Date() },
+    });
+    return prisma.milestone.update({ where: { id: milestoneId }, data: { status: "ACTIVE" } });
+  }
 }

@@ -17,6 +17,8 @@ import { ReviewsModule } from "./modules/reviews/reviews.module";
 import { NotificationsModule } from "./modules/notifications/notifications.module";
 import { AdminModule } from "./modules/admin/admin.module";
 import { SystemModule } from "./modules/system/system.module";
+import { JobsModule } from "./modules/jobs/jobs.module";
+import { ProposalsModule } from "./modules/proposals/proposals.module";
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { SystemModule } from "./modules/system/system.module";
     NotificationsModule,
     AdminModule,
     SystemModule,
+    JobsModule,
+    ProposalsModule,
   ],
   controllers: [HealthController],
   providers: [

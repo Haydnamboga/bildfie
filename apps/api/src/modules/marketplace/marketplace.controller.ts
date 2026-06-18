@@ -14,6 +14,8 @@ export class MarketplaceController {
     @Query("skill") skill?: string,
     @Query("minRate") minRate?: string,
     @Query("maxRate") maxRate?: string,
+    @Query("category") category?: string,
+    @Query("location") location?: string,
     @Query("page") page?: string,
     @Query("pageSize") pageSize?: string,
   ) {
@@ -22,6 +24,8 @@ export class MarketplaceController {
       skill,
       minRate: minRate ? Number(minRate) : undefined,
       maxRate: maxRate ? Number(maxRate) : undefined,
+      category,
+      location,
       page: page ? Number(page) : undefined,
       pageSize: pageSize ? Number(pageSize) : undefined,
     });
