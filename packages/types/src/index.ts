@@ -6,6 +6,7 @@ export interface SessionUser {
   fullName: string;
   role: UserRole;
   mfaVerified?: boolean;
+  proLevel?: string;
 }
 
 export interface ApiError {

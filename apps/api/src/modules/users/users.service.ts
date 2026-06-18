@@ -12,6 +12,9 @@ const PUBLIC_SELECT = {
   hourlyRate: true,
   emailVerified: true,
   mfaEnabled: true,
+  location: true,
+  category: true,
+  proLevel: true,
   createdAt: true,
 } as const;
 
@@ -54,6 +57,8 @@ export class UsersService {
       bio?: string;
       skills?: string[];
       hourlyRate?: number;
+      location?: string;
+      category?: string;
     },
   ) {
     return prisma.user.update({
