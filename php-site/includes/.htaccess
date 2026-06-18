@@ -1,0 +1,2 @@
+# Never serve include files directly
+Require all denied

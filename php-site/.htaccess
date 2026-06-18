@@ -1,0 +1,13 @@
+# bildfie — Apache config
+Options -Indexes
+DirectoryIndex index.php
+
+# Block direct access to sensitive files
+<FilesMatch "^(config\.php|database\.sql)$">
+  Require all denied
+</FilesMatch>
+
+# Protect dotfiles
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
