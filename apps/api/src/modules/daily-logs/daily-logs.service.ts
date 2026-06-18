@@ -20,7 +20,7 @@ export class DailyLogsService {
     return prisma.dailyLog.findMany({
       where: { projectId },
       include: {
-        author: { select: { id: true, name: true } },
+        author: { select: { id: true, fullName: true } },
       },
       orderBy: { logDate: "desc" },
     });

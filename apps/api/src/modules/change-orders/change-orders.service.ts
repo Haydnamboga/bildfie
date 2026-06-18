@@ -34,7 +34,7 @@ export class ChangeOrdersService {
     return prisma.changeOrder.findMany({
       where: { projectId },
       include: {
-        requestedBy: { select: { id: true, name: true } },
+        requestedBy: { select: { id: true, fullName: true } },
       },
       orderBy: { createdAt: "desc" },
     });
