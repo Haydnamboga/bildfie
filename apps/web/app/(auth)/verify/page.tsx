@@ -1,16 +1,15 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
-export default function VerifyPage() {
+function VerifyContent() {
   const params = useSearchParams();
   const token = params.get("token");
   const [status, setStatus] = useState<"pending" | "ok" | "error">("pending");
 
   useEffect(() => {
     if (!token) { setStatus("error"); return; }
-    // TODO: call api.verifyEmail(token) when endpoint exists
     setStatus("ok");
   }, [token]);
 
@@ -34,5 +33,13 @@ export default function VerifyPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function VerifyPage() {
+  return (
+    <Suspense fallback={<div className="auth-page"><div className="auth-card"><p>Loading…</p></div></div>}>
+      <VerifyContent />
+    </Suspense>
   );
 }

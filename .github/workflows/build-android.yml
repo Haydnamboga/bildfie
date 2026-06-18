@@ -36,17 +36,18 @@ jobs:
 
       - name: Install Android SDK platform & build tools
         run: |
-          sdkmanager "platforms;android-34" "build-tools;34.0.0" "ndk;25.1.8937393"
+          sdkmanager "platforms;android-34" "build-tools;34.0.0"
 
-      - name: Set up Node.js
+      - name: Set up Node.js 20 with corepack
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
+      - name: Enable corepack and install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@9 --activate
+          pnpm --version
 
       - name: Get pnpm store directory
         id: pnpm-cache
@@ -68,7 +69,7 @@ jobs:
           API_URL="${{ github.event.inputs.api_url || 'https://bildfie-api.up.railway.app' }}"
           echo "EXPO_PUBLIC_API_URL=${API_URL}" >> apps/mobile/.env
 
-      - name: Generate Prisma client (needed for workspace packages)
+      - name: Generate Prisma client
         run: pnpm --filter @bildfie/db generate
         env:
           DATABASE_URL: 'postgresql://localhost:5432/placeholder'
@@ -101,26 +102,23 @@ jobs:
         run: ./gradlew assembleDebug --no-daemon
         env:
           ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
-          JAVA_HOME: ${{ env.JAVA_HOME }}
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: bildfie-android-debug
           path: apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk
-          retention-days: 7
+          retention-days: 14
 
       - name: Build summary
         run: |
           echo "## Android APK Built Successfully" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Download the APK from the **Artifacts** section above." >> $GITHUB_STEP_SUMMARY
+          echo "Download **bildfie-android-debug** from the Artifacts section above." >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Installing on your phone" >> $GITHUB_STEP_SUMMARY
-          echo "1. Download \`bildfie-android-debug.zip\` from Artifacts" >> $GITHUB_STEP_SUMMARY
-          echo "2. Unzip to get \`app-debug.apk\`" >> $GITHUB_STEP_SUMMARY
-          echo "3. On your Android phone: Settings → Security → Enable **Unknown Sources** (or **Install unknown apps**)" >> $GITHUB_STEP_SUMMARY
-          echo "4. Transfer APK to phone (via email, Google Drive, or USB)" >> $GITHUB_STEP_SUMMARY
-          echo "5. Open the APK file on your phone to install" >> $GITHUB_STEP_SUMMARY
+          echo "### Install on Android phone" >> $GITHUB_STEP_SUMMARY
+          echo "1. Download and unzip the artifact" >> $GITHUB_STEP_SUMMARY
+          echo "2. Transfer \`app-debug.apk\` to your phone" >> $GITHUB_STEP_SUMMARY
+          echo "3. Open the APK file → tap Install (allow unknown sources if prompted)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "API URL configured: \`${{ github.event.inputs.api_url || 'https://bildfie-api.up.railway.app' }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "API URL: \`${{ github.event.inputs.api_url || 'https://bildfie-api.up.railway.app' }}\`" >> $GITHUB_STEP_SUMMARY

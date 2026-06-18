@@ -29,7 +29,7 @@ export function decodeToken(token: string): { role?: string; sub?: string; fullN
   try {
     const parts = token.split(".");
     if (parts.length !== 3) return null;
-    const payload = JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")));
+    const payload = JSON.parse(atob((parts[1] ?? "").replace(/-/g, "+").replace(/_/g, "/")));
     if (payload.exp && Math.floor(Date.now() / 1000) > payload.exp) return null;
     return payload;
   } catch {

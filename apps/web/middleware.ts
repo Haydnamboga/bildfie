@@ -23,7 +23,7 @@ function getRole(req: NextRequest): UserRole | null {
   try {
     const parts = token.split(".");
     if (parts.length !== 3) return null;
-    const payload = JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")));
+    const payload = JSON.parse(atob((parts[1] ?? "").replace(/-/g, "+").replace(/_/g, "/")));
     if (payload.exp && Math.floor(Date.now() / 1000) > payload.exp) return null;
     return (payload.role as UserRole) ?? null;
   } catch {
