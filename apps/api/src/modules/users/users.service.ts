@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { prisma } from "@bildfie/db";
+import { TradeCategory } from "@bildfie/db";
 
 const PUBLIC_SELECT = {
   id: true,
@@ -58,7 +59,7 @@ export class UsersService {
       skills?: string[];
       hourlyRate?: number;
       location?: string;
-      category?: string;
+      category?: TradeCategory;
     },
   ) {
     return prisma.user.update({

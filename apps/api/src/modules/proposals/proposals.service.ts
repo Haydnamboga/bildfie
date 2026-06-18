@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException, ConflictException } from "@nestjs/common";
 import { prisma } from "@bildfie/db";
-import { JobPostStatus, ProposalStatus } from "@prisma/client";
+import { JobPostStatus, ProposalStatus } from "@bildfie/db";
 import type { CreateProposalDto } from "./dto/create-proposal.dto";
 
 @Injectable()

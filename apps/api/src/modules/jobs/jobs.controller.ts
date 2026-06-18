@@ -5,7 +5,7 @@ import { CurrentUser } from "../../common/decorators/current-user.decorator";
 import type { SessionUser } from "@bildfie/types";
 import { CreateJobPostDto } from "./dto/create-job-post.dto";
 import { UpdateJobPostDto } from "./dto/update-job-post.dto";
-import { JobPostStatus, TradeCategory } from "@prisma/client";
+import { JobPostStatus, TradeCategory } from "@bildfie/db";
 
 @Controller("jobs")
 export class JobsController {

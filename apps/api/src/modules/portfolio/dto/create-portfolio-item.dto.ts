@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty, IsOptional, IsEnum, IsUrl, IsDateString } from "class-validator";
-import { TradeCategory } from "@prisma/client";
+import { TradeCategory } from "@bildfie/db";
 
 export class CreatePortfolioItemDto {
   @IsString() @IsNotEmpty() title: string;

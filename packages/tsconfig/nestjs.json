@@ -10,6 +10,7 @@
     "target": "ES2022",
     "outDir": "./dist",
     "declaration": false,
+    "declarationMap": false,
     "isolatedModules": false
   }
 }

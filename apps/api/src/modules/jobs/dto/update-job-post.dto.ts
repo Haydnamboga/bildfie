@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty, IsEnum, IsOptional, IsNumber, IsDateString, MinLength } from "class-validator";
-import { TradeCategory, JobPostStatus } from "@prisma/client";
+import { TradeCategory, JobPostStatus } from "@bildfie/db";
 
 export class UpdateJobPostDto {
   @IsOptional()

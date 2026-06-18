@@ -58,7 +58,11 @@ export class TasksService {
     return prisma.task.update({
       where: { id: taskId },
       data: {
-        ...dto,
+        title: dto.title,
+        description: dto.description,
+        status: dto.status as Parameters<typeof prisma.task.update>[0]["data"]["status"],
+        assigneeId: dto.assigneeId,
+        milestoneId: dto.milestoneId,
         dueDate: dto.dueDate ? new Date(dto.dueDate) : undefined,
       },
     });

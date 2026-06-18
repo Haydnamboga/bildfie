@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, ForbiddenException } from "@nestjs/common";
 import { prisma } from "@bildfie/db";
 import { CreateChangeOrderDto } from "./dto/create-change-order.dto";
-import { ChangeOrderStatus } from "@prisma/client";
+import { ChangeOrderStatus } from "@bildfie/db";
 
 @Injectable()
 export class ChangeOrdersService {

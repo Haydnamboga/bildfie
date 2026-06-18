@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from "@nestjs/common";
 import { prisma } from "@bildfie/db";
-import { JobPostStatus, TradeCategory } from "@prisma/client";
+import { JobPostStatus, TradeCategory } from "@bildfie/db";
 import type { CreateJobPostDto } from "./dto/create-job-post.dto";
 import type { UpdateJobPostDto } from "./dto/update-job-post.dto";
 
