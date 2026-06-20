@@ -1,83 +1,97 @@
 <?php
-require_once __DIR__ . '/includes/functions.php';
-$page_title = 'Hire trusted trade professionals';
-
-// A few featured pros + recent jobs for the landing page
-$pros = $mysqli->query(
-  "SELECT id, full_name, headline, category, location, pro_level
-   FROM users WHERE is_pro = 1 ORDER BY created_at DESC LIMIT 6"
-)->fetch_all(MYSQLI_ASSOC);
-
-$jobs = $mysqli->query(
-  "SELECT id, title, category, location, budget_min, budget_max, created_at
-   FROM job_posts WHERE status = 'OPEN' ORDER BY created_at DESC LIMIT 4"
-)->fetch_all(MYSQLI_ASSOC);
-
-require __DIR__ . '/includes/header.php';
+require_once __DIR__ . '/config/app.php';
+require_once __DIR__ . '/config/auth.php';
+$page_title = 'Find and hire verified construction professionals';
+$nav = 'home';
 ?>
-<section class="hero">
-  <h1>Build with the right <span class="hl">trade pros</span>.</h1>
-  <p>bildfie connects clients with verified electricians, plumbers, carpenters,
-     masons and more — post a job, compare proposals, and hire with confidence.</p>
-  <div class="hero-actions">
-    <a class="btn btn-primary" href="<?= e(url('post-job.php')) ?>">Post a Job</a>
-    <a class="btn btn-light" href="<?= e(url('marketplace.php')) ?>">Browse Professionals</a>
-  </div>
-  <div class="cats">
-    <?php foreach (trade_categories() as $c): ?>
-      <a class="cat-chip" href="<?= e(url('marketplace.php?category=' . $c)) ?>"><?= e(nice($c)) ?></a>
-    <?php endforeach; ?>
+<?php include __DIR__ . '/includes/head.php'; ?>
+<?php include __DIR__ . '/includes/navbar.php'; ?>
+
+<!-- ═══════════════════════════════════════════
+     HOMEPAGE — honest hero (developer spec §2.3)
+     No statistics. No activity feed. No accreditation logos.
+═══════════════════════════════════════════ -->
+<section class="bf-home-hero">
+  <div class="container">
+    <div class="bf-home-hero-inner">
+      <h1 class="bf-home-headline">Find and hire verified construction professionals.</h1>
+      <p class="bf-home-sub">Post a project. Contractors bid. Pay only when work is approved.</p>
+      <div class="bf-home-cta">
+        <a href="/pages/projects/create.php" class="bf-home-btn bf-home-btn-primary">Post a Project</a>
+        <a href="/pages/auth/register.php" class="bf-home-btn bf-home-btn-secondary">Join as a Professional</a>
+      </div>
+    </div>
   </div>
 </section>
 
-<section style="margin-top:48px">
-  <div class="spread">
-    <h2 class="section-title">Featured professionals</h2>
-    <a class="back-link" href="<?= e(url('marketplace.php')) ?>">View all →</a>
-  </div>
-  <?php if (!$pros): ?>
-    <div class="empty"><h3>No professionals yet</h3><p>Be the first — <a href="<?= e(url('register.php')) ?>">create a pro profile</a>.</p></div>
-  <?php else: ?>
-    <div class="grid grid-3">
-      <?php foreach ($pros as $p): ?>
-        <a class="card card-link" href="<?= e(url('professional.php?id=' . $p['id'])) ?>">
-          <div class="row">
-            <div class="avatar"><?= e(strtoupper(substr($p['full_name'],0,1))) ?></div>
-            <div>
-              <h3><?= e($p['full_name']) ?></h3>
-              <div class="meta"><?= e($p['headline'] ?: nice($p['category'])) ?></div>
-            </div>
-          </div>
-          <div class="spread" style="margin-top:12px">
-            <span class="muted">📍 <?= e($p['location'] ?: 'Remote') ?></span>
-            <?= badge($p['pro_level']) ?>
-          </div>
-        </a>
-      <?php endforeach; ?>
-    </div>
-  <?php endif; ?>
-</section>
+<style>
+  /* Mobile-first (developer spec §9 — "Mobile first") */
+  .bf-home-hero {
+    min-height: calc(100vh - 64px);
+    display: flex;
+    align-items: center;
+    background: var(--white, #ffffff);
+    padding: 48px 0;
+  }
+  .bf-home-hero-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 0 4px;
+  }
+  .bf-home-headline {
+    font-size: 32px;
+    line-height: 1.15;
+    font-weight: 800;
+    color: var(--ink, #0f172a);
+    margin: 0 0 18px;
+    letter-spacing: -0.02em;
+  }
+  .bf-home-sub {
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--ink-4, #475569);
+    margin: 0 0 32px;
+  }
+  .bf-home-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  .bf-home-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 28px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .bf-home-btn:active { transform: translateY(1px); }
+  .bf-home-btn-primary {
+    background: var(--accent, #c0392b);
+    color: #ffffff;
+  }
+  .bf-home-btn-primary:hover { box-shadow: 0 8px 22px rgba(192,57,43,.28); color:#fff; }
+  .bf-home-btn-secondary {
+    background: transparent;
+    color: var(--ink, #0f172a);
+    border: 2px solid var(--line, #e2e8f0);
+  }
+  .bf-home-btn-secondary:hover { border-color: var(--ink, #0f172a); color: var(--ink, #0f172a); }
 
-<section style="margin-top:48px">
-  <div class="spread">
-    <h2 class="section-title">Recent jobs</h2>
-    <a class="back-link" href="<?= e(url('jobs.php')) ?>">View all →</a>
-  </div>
-  <?php if (!$jobs): ?>
-    <div class="empty"><h3>No open jobs</h3><p><a href="<?= e(url('post-job.php')) ?>">Post the first job →</a></p></div>
-  <?php else: ?>
-    <div class="grid grid-2">
-      <?php foreach ($jobs as $j): ?>
-        <a class="card card-link" href="<?= e(url('job.php?id=' . $j['id'])) ?>">
-          <div class="spread">
-            <h3><?= e($j['title']) ?></h3>
-            <?= badge($j['category']) ?>
-          </div>
-          <div class="meta">📍 <?= e($j['location']) ?> · <?= e(time_ago($j['created_at'])) ?></div>
-          <div class="muted">Budget: <?= e(money($j['budget_min'])) ?> – <?= e(money($j['budget_max'])) ?></div>
-        </a>
-      <?php endforeach; ?>
-    </div>
-  <?php endif; ?>
-</section>
-<?php require __DIR__ . '/includes/footer.php'; ?>
+  /* Tablet / desktop: buttons side by side, larger type */
+  @media (min-width: 576px) {
+    .bf-home-cta { flex-direction: row; justify-content: center; }
+    .bf-home-btn { min-width: 200px; }
+  }
+  @media (min-width: 768px) {
+    .bf-home-headline { font-size: 48px; margin-bottom: 22px; }
+    .bf-home-sub { font-size: 20px; margin-bottom: 40px; }
+  }
+</style>
+
+<?php include __DIR__ . '/includes/footer.php'; ?>

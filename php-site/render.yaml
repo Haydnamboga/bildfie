@@ -1,0 +1,67 @@
+services:
+  - type: web
+    name: bildfie
+    runtime: node
+    plan: free               # upgrade to starter ($7/mo) for always-on
+    buildCommand: npm install
+    startCommand: node db/migrate.js && node server.js
+    healthCheckPath: /api/health
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000          # Render's default internal port
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bildfie-db
+          property: connectionString
+      - key: SESSION_SECRET
+        generateValue: true   # Render generates a random value automatically
+      - key: APP_URL
+        sync: false           # fill in after first deploy — use https://www.bildfie.com
+      - key: ALLOWED_ORIGINS
+        sync: false           # same as APP_URL
+
+      # One-time admin bootstrap — set both, visit /api/setup-admin?secret=<value>, then DELETE both vars
+      - key: ADMIN_BOOTSTRAP_SECRET
+        sync: false
+      - key: ADMIN_BOOTSTRAP_EMAIL
+        sync: false           # the email you registered with on the live site
+
+      # M-Pesa (fill in Render dashboard — never commit real values)
+      - key: MPESA_ENV
+        value: production
+      - key: MPESA_TRANSACTION_TYPE
+        value: CustomerBuyGoodsOnline
+      - key: MPESA_CONSUMER_KEY
+        sync: false
+      - key: MPESA_CONSUMER_SECRET
+        sync: false
+      - key: MPESA_SHORTCODE
+        sync: false
+      - key: MPESA_PASSKEY
+        sync: false
+      - key: MPESA_CALLBACK_URL
+        sync: false           # https://www.bildfie.com/api/mpesa/callback
+      - key: MPESA_HEAD_OFFICE_SHORTCODE
+        sync: false
+
+      # Transactional email — nodemailer SMTP
+      # Works with Gmail App Password, SendGrid, Mailgun, Resend SMTP, etc.
+      # Without these, emails are silently dropped in production.
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        sync: false           # e.g. Bildfie <noreply@bildfie.com>
+
+databases:
+  - name: bildfie-db
+    databaseName: bildfie
+    plan: free               # 1 GB, 256 MB RAM — plenty for launch
