@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { api } from "@/lib/api";
 import { getCurrentUser } from "@/lib/auth";
-import { AppNav } from "@/components/AppNav";
 
 type ChangeOrder = {
   id: string;
@@ -76,7 +75,7 @@ export default function ChangeOrdersPage() {
 
   return (
     <>
-      <AppNav />
+      
       <div className="container" style={{ padding: "32px 20px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
           <div className="page-header" style={{ marginBottom: 0 }}>

@@ -1,76 +1,118 @@
-<footer style="background:#0d0d0d;color:#9b9b9b;padding:64px 0 32px;">
+<footer class="bf-footer mt-auto">
   <div class="container">
-    <div class="row g-4 mb-5">
-      <!-- Brand column -->
-      <div class="col-12 col-md-4">
-        <div class="d-flex align-items-center gap-2 mb-3">
-          <i class="bi bi-building-fill-up" style="font-size:20px;color:#c9a84c;"></i>
-          <span style="font-weight:800;font-size:1.1rem;color:#ffffff;letter-spacing:-.5px;">bildfie</span>
+    <div class="row g-4 g-lg-5">
+
+      <!-- Brand col -->
+      <div class="col-12 col-lg-3">
+        <div class="bf-footer-brand d-flex align-items-center gap-2 mb-3">
+          <i class="bi bi-building-fill-up"></i> bildfie
         </div>
-        <p style="font-size:.875rem;line-height:1.7;max-width:280px;color:#9b9b9b;">
-          Build Smarter. Connect Better.<br>
-          Africa's construction professional marketplace.
+        <p style="font-size:13px;color:rgba(255,255,255,.45);line-height:1.7;max-width:220px;">
+          A construction marketplace connecting verified professionals with quality projects.
         </p>
-        <div class="d-flex gap-3 mt-3">
-          <a href="#" style="color:#6b6b6b;font-size:1.1rem;" title="Twitter/X"><i class="bi bi-twitter-x"></i></a>
-          <a href="#" style="color:#6b6b6b;font-size:1.1rem;" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
-          <a href="#" style="color:#6b6b6b;font-size:1.1rem;" title="Instagram"><i class="bi bi-instagram"></i></a>
-          <a href="#" style="color:#6b6b6b;font-size:1.1rem;" title="Facebook"><i class="bi bi-facebook"></i></a>
+        <div class="mt-4" style="font-size:11px;color:rgba(255,255,255,.25);line-height:1.8;">
+          <div>🇰🇪 Kenya</div>
+          <div class="mt-1"><a href="mailto:hello@bildfie.com" style="color:rgba(255,255,255,.35);">hello@bildfie.com</a></div>
         </div>
       </div>
 
-      <!-- For Clients -->
-      <div class="col-6 col-md-2">
-        <h6 style="color:#ffffff;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:16px;">For Clients</h6>
-        <ul class="list-unstyled" style="font-size:.875rem;">
-          <li class="mb-2"><a href="/pages/projects/create.php" style="color:#9b9b9b;text-decoration:none;">Post a Project</a></li>
-          <li class="mb-2"><a href="#" style="color:#9b9b9b;text-decoration:none;">How it works</a></li>
-          <li class="mb-2"><a href="/pages/professionals/" style="color:#9b9b9b;text-decoration:none;">Browse Professionals</a></li>
-          <li class="mb-2"><a href="#" style="color:#9b9b9b;text-decoration:none;">Pricing</a></li>
-        </ul>
+      <!-- Marketplace -->
+      <div class="col-6 col-sm-4 col-lg-2">
+        <div class="bf-footer-heading">Marketplace</div>
+        <?php foreach ([
+          'Professionals' => '/pages/marketplace/professionals.php',
+          'Open Bids' => '/pages/bids/index.php',
+        ] as $l => $h): ?>
+        <a href="<?= $h ?>" class="bf-footer-link"><?= $l ?></a>
+        <?php endforeach; ?>
       </div>
 
-      <!-- For Professionals -->
-      <div class="col-6 col-md-2">
-        <h6 style="color:#ffffff;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:16px;">For Pros</h6>
-        <ul class="list-unstyled" style="font-size:.875rem;">
-          <li class="mb-2"><a href="/pages/auth/register.php" style="color:#9b9b9b;text-decoration:none;">Join as a Pro</a></li>
-          <li class="mb-2"><a href="/pages/dashboard/" style="color:#9b9b9b;text-decoration:none;">Dashboard</a></li>
-          <li class="mb-2"><a href="/pages/account/" style="color:#9b9b9b;text-decoration:none;">Build Your Profile</a></li>
-          <li class="mb-2"><a href="#" style="color:#9b9b9b;text-decoration:none;">Success Stories</a></li>
-        </ul>
+      <!-- Platform -->
+      <div class="col-6 col-sm-4 col-lg-2">
+        <div class="bf-footer-heading">Platform</div>
+        <?php foreach ([
+          'How it Works' => '#',
+          'Pricing & Plans' => '/pages/account/subscription.php',
+          'Dashboard' => '/pages/dashboard/index.php',
+          'Post a Project' => '/pages/projects/create.php',
+          'API & Integrations' => '#',
+          'Mobile App' => '#',
+          'For Enterprises' => '#',
+        ] as $l => $h): ?>
+        <a href="<?= $h ?>" class="bf-footer-link"><?= $l ?></a>
+        <?php endforeach; ?>
       </div>
 
       <!-- Company -->
-      <div class="col-6 col-md-2">
-        <h6 style="color:#ffffff;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:16px;">Company</h6>
-        <ul class="list-unstyled" style="font-size:.875rem;">
-          <li class="mb-2"><a href="#" style="color:#9b9b9b;text-decoration:none;">About</a></li>
-          <li class="mb-2"><a href="#" style="color:#9b9b9b;text-decoration:none;">Contact</a></li>
-          <li class="mb-2"><a href="#" style="color:#9b9b9b;text-decoration:none;">Blog</a></li>
-          <li class="mb-2"><a href="#" style="color:#9b9b9b;text-decoration:none;">Careers</a></li>
-        </ul>
+      <div class="col-6 col-sm-4 col-lg-2">
+        <div class="bf-footer-heading">Company</div>
+        <?php foreach ([
+          'About bildfie' => '#',
+          'Careers' => '#',
+          'Press & Media' => '#',
+          'Blog & Insights' => '#',
+          'Partner Program' => '#',
+          'Contact Us' => '#',
+          'Sitemap' => '#',
+        ] as $l => $h): ?>
+        <a href="<?= $h ?>" class="bf-footer-link"><?= $l ?></a>
+        <?php endforeach; ?>
       </div>
 
-      <!-- Legal -->
-      <div class="col-6 col-md-2">
-        <h6 style="color:#ffffff;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:16px;">Legal</h6>
-        <ul class="list-unstyled" style="font-size:.875rem;">
-          <li class="mb-2"><a href="#" style="color:#9b9b9b;text-decoration:none;">Privacy Policy</a></li>
-          <li class="mb-2"><a href="#" style="color:#9b9b9b;text-decoration:none;">Terms of Service</a></li>
-          <li class="mb-2"><a href="#" style="color:#9b9b9b;text-decoration:none;">Cookie Policy</a></li>
-        </ul>
+      <!-- Newsletter + trust -->
+      <div class="col-12 col-lg-3">
+        <div class="bf-footer-heading">Stay Updated</div>
+        <p style="font-size:12.5px;color:rgba(255,255,255,.4);margin-bottom:14px;line-height:1.6;">Market prices, new listings, regulatory updates and platform news — straight to your inbox, weekly.</p>
+        <form class="bf-news-signup" action="#" onsubmit="return false;">
+          <div class="bf-news-field">
+            <i class="bi bi-envelope-at"></i>
+            <input type="email" placeholder="Enter your email" aria-label="Email address">
+            <button type="submit"><span class="d-none d-sm-inline">Subscribe</span><i class="bi bi-send-fill"></i></button>
+          </div>
+          <div class="bf-news-note"><i class="bi bi-shield-check"></i> Weekly digest · No spam, unsubscribe anytime.</div>
+        </form>
+      </div>
+
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="bf-footer-bottom-row" style="border-top:1px solid rgba(255,255,255,.07);padding-top:24px;margin-top:48px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;">
+      <span style="font-size:11.5px;color:rgba(255,255,255,.22);">&copy; <?= date('Y') ?> bildfie · A Remissionary Studio product · All rights reserved.</span>
+      <div class="d-flex flex-wrap gap-4">
+        <?php foreach (['Privacy Policy'=>'#','Terms of Service'=>'#','Cookie Policy'=>'#','Accessibility'=>'#','Security'=>'#'] as $l=>$h): ?>
+        <a href="<?= $h ?>" style="font-size:11.5px;color:rgba(255,255,255,.25);text-decoration:none;transition:color .15s;" onmouseover="this.style.color='rgba(255,255,255,.55)'" onmouseout="this.style.color='rgba(255,255,255,.25)'"><?= $l ?></a>
+        <?php endforeach; ?>
       </div>
     </div>
 
-    <div style="border-top:1px solid #1e1e1e;padding-top:24px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;">
-      <span style="font-size:.8rem;">&copy; <?= date('Y') ?> bildfie. All rights reserved.</span>
-      <span style="font-size:.8rem;">Made with <i class="bi bi-heart-fill" style="color:#c0392b;font-size:.7rem;"></i> in Nairobi, Kenya.</span>
-    </div>
   </div>
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="<?= ASSETS_URL ?>/js/app.js"></script>
-<?php if (!empty($extra_js)) echo $extra_js; ?>
-</body>
-</html>
+
+<!-- Cookie consent (lower third) -->
+<div id="bfCookie" class="bf-cookie" style="display:none;" role="dialog" aria-label="Cookie consent">
+  <div class="bf-cookie-card">
+    <div class="bf-cookie-ic"><i class="bi bi-cookie"></i></div>
+    <div class="bf-cookie-body">
+      <div class="bf-cookie-title">We value your privacy</div>
+      <p class="bf-cookie-text">We use cookies to improve your experience, analyse traffic and personalise content. <a href="#">Learn more</a>.</p>
+    </div>
+    <div class="bf-cookie-actions">
+      <button type="button" class="bf-cookie-btn ghost" data-cookie="reject">Reject</button>
+      <button type="button" class="bf-cookie-btn solid" data-cookie="accept">Accept</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='bf_cookie_consent', box=document.getElementById('bfCookie');
+  if(!box) return;
+  try { if(localStorage.getItem(KEY)) return; } catch(_){}
+  box.style.display='flex';
+  box.querySelectorAll('[data-cookie]').forEach(function(b){
+    b.addEventListener('click', function(){
+      try { localStorage.setItem(KEY, b.getAttribute('data-cookie')); } catch(_){}
+      box.style.display='none';
+    });
+  });
+})();
+</script>

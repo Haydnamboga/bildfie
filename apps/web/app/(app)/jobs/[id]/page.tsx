@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { api } from "@/lib/api";
 import { getCurrentUser } from "@/lib/auth";
-import { AppNav } from "@/components/AppNav";
 
 type JobPost = {
   id: string;
@@ -90,14 +89,14 @@ export default function JobDetailPage() {
     }
   }
 
-  if (loading) return <><AppNav /><div className="container" style={{ padding: 32 }}>Loading…</div></>;
-  if (error || !job) return <><AppNav /><div className="container" style={{ padding: 32 }}><p className="error">{error || "Job not found."}</p></div></>;
+  if (loading) return <><div className="container" style={{ padding: 32 }}>Loading…</div></>;
+  if (error || !job) return <><div className="container" style={{ padding: 32 }}><p className="error">{error || "Job not found."}</p></div></>;
 
   const isOwner = user && job.ownerId === user.id;
 
   return (
     <>
-      <AppNav />
+      
       <div className="container" style={{ padding: "32px 20px", maxWidth: 800 }}>
         {/* Job Details */}
         <div className="page-header">

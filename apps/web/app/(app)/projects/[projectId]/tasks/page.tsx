@@ -1,7 +1,6 @@
 "use client";
 import { use, useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { AppNav } from "@/components/AppNav";
 
 type Task = { id: string; title: string; status: string; assigneeId?: string; description?: string };
 
@@ -35,7 +34,7 @@ export default function TasksPage({ params }: { params: Promise<{ projectId: str
 
   return (
     <>
-      <AppNav />
+      
       <div className="container" style={{ padding: "32px 20px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
           <div className="page-header" style={{ marginBottom: 0 }}><h1>Tasks</h1></div>

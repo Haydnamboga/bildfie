@@ -1,127 +1,58 @@
 <?php
-/**
- * POST /api/engage.php
- * JSON API for provider engagement (quote, hire/invite) and reviews.
- * Requires X-Requested-With: fetch header.
- */
 require_once __DIR__ . '/../config/app.php';
 require_once __DIR__ . '/../config/auth.php';
 require_once __DIR__ . '/../config/engage.php';
-require_once __DIR__ . '/../config/db.php';
-
 header('Content-Type: application/json');
 
-// Only accept fetch (AJAX) requests
-if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') !== 'fetch') {
-    http_response_code(400);
-    echo json_encode(['ok' => false, 'error' => 'Direct access not allowed.']);
-    exit;
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); echo json_encode(['ok' => false, 'error' => 'Method not allowed.']); exit; }
+if (!is_logged_in()) { echo json_encode(['ok' => false, 'error' => 'Please sign in to continue.', 'login' => true]); exit; }
+
+$u    = current_user();
+$type = $_POST['type'] ?? '';
+$pid  = (int)($_POST['provider_id'] ?? 0);
+$prov = $pid ? db_one("SELECT id, user_id, name FROM providers WHERE id=? AND status<>'suspended' LIMIT 1", [$pid]) : null;
+
+if (!$prov)                                       { echo json_encode(['ok' => false, 'error' => 'This professional is not available right now.']); exit; }
+if ((int)$prov['user_id'] === (int)$u['id'])      { echo json_encode(['ok' => false, 'error' => "That's your own profile — you can't do this here."]); exit; }
+
+$msg = trim($_POST['message'] ?? '');
+
+// validate the linked project (must belong to the requester)
+$projectId = (int) ($_POST['project_id'] ?? 0);
+$projName  = '';
+if ($projectId) {
+    $pr = db_one("SELECT id,name FROM projects WHERE id=? AND owner_user_id=? LIMIT 1", [$projectId, (int)$u['id']]);
+    if ($pr) $projName = $pr['name']; else $projectId = 0;
 }
 
-// Must be logged in
-if (!is_logged_in()) {
-    echo json_encode(['ok' => false, 'login' => true]);
-    exit;
-}
+switch ($type) {
+    case 'invite':
+        $role = trim($_POST['role'] ?? '');
+        $subject = trim(($role ?: 'Invitation') . ($projName ? ' · ' . $projName : ''));
+        engage_create('invite', $pid, (int)$u['id'], $u['name'], ['subject' => $subject, 'message' => $msg, 'project_id' => $projectId ?: null]);
+        echo json_encode(['ok' => true, 'message' => 'Invite sent to ' . $prov['name'] . ($projName ? ' for ' . $projName : '') . '.']);
+        break;
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['ok' => false, 'error' => 'POST required.']);
-    exit;
-}
-
-$u      = current_user();
-$userId = (int) $u['id'];
-$action = trim($_POST['action'] ?? '');
-
-// Resolve provider_id (numeric or public_id)
-$providerKey = trim($_POST['provider_id'] ?? '');
-if ($providerKey === '') {
-    echo json_encode(['ok' => false, 'error' => 'provider_id is required.']);
-    exit;
-}
-
-$provider = is_numeric($providerKey)
-    ? db_one("SELECT * FROM providers WHERE id=? LIMIT 1", [(int)$providerKey])
-    : db_one("SELECT * FROM providers WHERE public_id=? LIMIT 1", [$providerKey]);
-
-if (!$provider) {
-    echo json_encode(['ok' => false, 'error' => 'Provider not found.']);
-    exit;
-}
-$providerId = (int) $provider['id'];
-
-// Cannot engage with yourself
-if ((int) $provider['user_id'] === $userId) {
-    echo json_encode(['ok' => false, 'error' => 'You cannot send an engagement to yourself.']);
-    exit;
-}
-
-try {
-    if ($action === 'quote') {
-        $message = trim($_POST['message'] ?? '');
-        if ($message === '') {
-            echo json_encode(['ok' => false, 'error' => 'Message is required.']);
-            exit;
-        }
-        engage_create('quote', $providerId, $userId, $u['name'], [
-            'subject'    => trim($_POST['subject']    ?? ''),
-            'message'    => $message,
-            'location'   => trim($_POST['location']   ?? ''),
-            'budget'     => trim($_POST['budget']     ?? '') ?: null,
-            'needed_by'  => trim($_POST['needed_by']  ?? '') ?: null,
-            'project_id' => null,
+    case 'quote':
+        if ($msg === '') { echo json_encode(['ok' => false, 'error' => 'Tell the professional what you need a price for.']); exit; }
+        engage_create('quote', $pid, (int)$u['id'], $u['name'], [
+            'message'   => $msg,
+            'location'  => trim($_POST['location'] ?? '') ?: null,
+            'budget'    => trim($_POST['budget'] ?? '') ?: null,
+            'needed_by' => trim($_POST['needed_by'] ?? '') ?: null,
+            'project_id'=> $projectId ?: null,
         ]);
-        echo json_encode(['ok' => true]);
+        echo json_encode(['ok' => true, 'message' => 'Quote request sent.']);
+        break;
 
-    } elseif ($action === 'hire' || $action === 'invite') {
-        $message = trim($_POST['message'] ?? '');
-        if ($message === '') {
-            echo json_encode(['ok' => false, 'error' => 'Message is required.']);
-            exit;
-        }
-        engage_create('invite', $providerId, $userId, $u['name'], [
-            'subject'    => trim($_POST['subject']    ?? 'Hire invitation'),
-            'message'    => $message,
-            'location'   => trim($_POST['location']   ?? ''),
-            'budget'     => trim($_POST['budget']     ?? '') ?: null,
-            'needed_by'  => null,
-            'project_id' => null,
-        ]);
-        echo json_encode(['ok' => true]);
+    case 'review':
+        $rating = (int)($_POST['rating'] ?? 0);
+        if ($rating < 1)   { echo json_encode(['ok' => false, 'error' => 'Please pick a star rating.']); exit; }
+        if ($msg === '')   { echo json_encode(['ok' => false, 'error' => 'Please write a few words about your experience.']); exit; }
+        review_create($pid, (int)$u['id'], $u['name'], $rating, trim($_POST['project'] ?? '') ?: null, $msg);
+        echo json_encode(['ok' => true, 'message' => 'Thanks for your review!']);
+        break;
 
-    } elseif ($action === 'review') {
-        $rating = (int) ($_POST['rating'] ?? 0);
-        if ($rating < 1 || $rating > 5) {
-            echo json_encode(['ok' => false, 'error' => 'Rating must be between 1 and 5.']);
-            exit;
-        }
-        review_create(
-            $providerId,
-            $userId,
-            $u['name'],
-            $rating,
-            trim($_POST['project'] ?? '') ?: null,
-            trim($_POST['body']    ?? '') ?: null
-        );
-        echo json_encode(['ok' => true]);
-
-    } elseif ($action === 'engage') {
-        // Generic engage — alias for invite
-        engage_create('invite', $providerId, $userId, $u['name'], [
-            'subject'    => trim($_POST['subject']    ?? ''),
-            'message'    => trim($_POST['message']    ?? ''),
-            'location'   => trim($_POST['location']   ?? ''),
-            'budget'     => trim($_POST['budget']     ?? '') ?: null,
-            'needed_by'  => trim($_POST['needed_by']  ?? '') ?: null,
-            'project_id' => null,
-        ]);
-        echo json_encode(['ok' => true]);
-
-    } else {
-        echo json_encode(['ok' => false, 'error' => 'Unknown action: ' . htmlspecialchars($action)]);
-    }
-} catch (Throwable $e) {
-    error_log('[engage.php] ' . $e->getMessage());
-    echo json_encode(['ok' => false, 'error' => 'Server error. Please try again.']);
+    default:
+        echo json_encode(['ok' => false, 'error' => 'Unknown action.']);
 }

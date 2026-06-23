@@ -1,0 +1,243 @@
+<%- include('../partials/head', { title: "bildfie — Find and hire verified construction professionals", description: "Post a construction project, get fixed-price bids from verified professionals, and pay only when the work is approved. Milestone escrow on every job." }) %>
+<%- include('../partials/navbar', { activePage: "", user: locals.user }) %>
+
+
+<!-- HERO ──────────────────────────────────────────────────────────── -->
+<section class="bl-hero">
+  <div class="bl-hero-texture"></div>
+  <div class="bl-hero-glow"></div>
+  <div class="container-xl position-relative">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7">
+        <div class="bl-hero-badge mb-4"><span></span>Construction marketplace · Kenya</div>
+        <h1 class="bl-hero-h">Find and hire <i>verified</i> construction professionals.</h1>
+        <p class="bl-hero-sub">Post a project. Contractors bid. Pay only when work is approved.</p>
+
+        <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
+          <a href="/login?next=/dashboard" class="btn btn-primary btn-lg">Post a Project</a>
+          <a href="/register" class="btn btn-outline-light btn-lg">Join as a Professional</a>
+        </div>
+
+        <!-- Honest mechanics, not invented statistics -->
+        <div class="d-flex flex-wrap gap-3 bl-hero-assure">
+          <span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Payments held in escrow</span>
+          <span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Released by milestone</span>
+          <span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg> Photo-verified work</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- HOW IT WORKS ──────────────────────────────────────────────────── -->
+<section id="how" class="py-5" style="background:var(--bl-navy)">
+  <div class="container-xl">
+    <div class="text-center mb-5 bl-rv">
+      <div class="bl-sec-label" style="justify-content:center;color:var(--bl-accent)">How it works</div>
+      <h2 class="bl-sec-h text-white text-center">From posted job to paid in five steps</h2>
+    </div>
+    <div class="bl-hiw-grid">
+      <div class="bl-hiw-c bl-rv bl-stagger-1" data-n="01">
+        <div class="bl-hiw-ico" style="font-weight:800;font-size:26px">01</div>
+        <div class="bl-hiw-t">Post your project</div>
+        <div class="bl-hiw-d">Describe the work, set a fixed budget in KES, add photos of the site, and pick a start date.</div>
+      </div>
+      <div class="bl-hiw-c bl-rv bl-stagger-2" data-n="02">
+        <div class="bl-hiw-ico" style="font-weight:800;font-size:26px">02</div>
+        <div class="bl-hiw-t">Compare bids</div>
+        <div class="bl-hiw-d">Verified contractors in your trade and area send a fixed quote, a timeline, and a short pitch. You pick one.</div>
+      </div>
+      <div class="bl-hiw-c bl-rv bl-stagger-3" data-n="03">
+        <div class="bl-hiw-ico" style="font-weight:800;font-size:26px">03</div>
+        <div class="bl-hiw-t">Fund escrow</div>
+        <div class="bl-hiw-d">Pay the agreed amount into escrow via M-Pesa. Work only begins once the funds are safely held.</div>
+      </div>
+      <div class="bl-hiw-c bl-rv bl-stagger-4" data-n="04">
+        <div class="bl-hiw-ico" style="font-weight:800;font-size:26px">04</div>
+        <div class="bl-hiw-t">Track by milestone</div>
+        <div class="bl-hiw-d">The contractor uploads site photos as each milestone is reached. You see progress from anywhere.</div>
+      </div>
+      <div class="bl-hiw-c bl-rv bl-stagger-4" data-n="05">
+        <div class="bl-hiw-ico" style="font-weight:800;font-size:26px">05</div>
+        <div class="bl-hiw-t">Approve &amp; release</div>
+        <div class="bl-hiw-d">Approve a milestone and its share of the escrow releases automatically. No manual step, no chasing payment.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- PROTECTION ────────────────────────────────────────────────────── -->
+<section class="py-5 bg-light">
+  <div class="container-xl">
+    <div class="text-center mb-5 bl-rv">
+      <div class="bl-sec-label" style="justify-content:center">Why bildfie</div>
+      <h2 class="bl-sec-h text-center">Protection built into every job</h2>
+      <p class="bl-sec-sub text-center mx-auto" style="max-width:620px">No deposits handed over on trust. No disputes over what was agreed. The platform enforces the rules so both sides are protected.</p>
+    </div>
+    <div class="row g-3">
+      <div class="col-sm-6 col-lg-3">
+        <div class="bl-trust-card bl-rv bl-stagger-1">
+          <div class="bl-trust-t">Milestone escrow</div>
+          <div class="bl-trust-d">Every project is split into 2–5 milestones. Each holds its own slice of the escrow, released only when you approve that stage.</div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="bl-trust-card bl-rv bl-stagger-2">
+          <div class="bl-trust-t">Photo proof of work</div>
+          <div class="bl-trust-d">A milestone can't be marked complete without site photos from the contractor. Proof is enforced by the system, not by trust.</div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="bl-trust-card bl-rv bl-stagger-3">
+          <div class="bl-trust-t">All on platform</div>
+          <div class="bl-trust-d">Owners and contractors message inside bildfie. Every conversation is logged, creating an audit trail if anything is disputed.</div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="bl-trust-card bl-rv bl-stagger-4">
+          <div class="bl-trust-t">One simple fee</div>
+          <div class="bl-trust-d">bildfie takes 2.5%, deducted only when payment releases. Deposit KES 35,000 → the contractor receives KES 34,125.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- TRUST BADGES ──────────────────────────────────────────────────── -->
+<section class="py-5">
+  <div class="container-xl">
+    <div class="text-center mb-5 bl-rv">
+      <div class="bl-sec-label" style="justify-content:center">Verification</div>
+      <h2 class="bl-sec-h text-center">Three badges — earned, not bought</h2>
+      <p class="bl-sec-sub text-center mx-auto" style="max-width:620px">bildfie keeps verification simple and hard to fake. There are only three badges a professional can hold.</p>
+    </div>
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-4">
+        <div class="bl-trust-card bl-rv bl-stagger-1 h-100">
+          <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width:44px;height:44px;border-radius:12px;background:rgba(27,79,114,.08);color:var(--bl-navy)">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="bl-trust-t">NCA Verified</div>
+          <div class="bl-trust-d">The contractor's National Construction Authority licence number is confirmed against the NCA register.</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="bl-trust-card bl-rv bl-stagger-2 h-100">
+          <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width:44px;height:44px;border-radius:12px;background:rgba(230,126,34,.1);color:var(--bl-accent)">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.6 5.8 21 7 14 2 9.3 9 8.5 12 2"/></svg>
+          </div>
+          <div class="bl-trust-t">bildfie Vetted</div>
+          <div class="bl-trust-d">Awarded automatically after 10+ completed jobs on bildfie with an average rating of 4.5 or higher.</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="bl-trust-card bl-rv bl-stagger-3 h-100">
+          <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width:44px;height:44px;border-radius:12px;background:rgba(39,174,96,.1);color:#27ae60">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 7-9 11-9 11s-9-4-9-11V5l9-3 9 3z"/></svg>
+          </div>
+          <div class="bl-trust-t">Insured</div>
+          <div class="bl-trust-d">A valid Contractor All Risk insurance certificate has been uploaded and reviewed, with an expiry date on file.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- FEATURED PROFESSIONALS (real data, honest empty state) ─────────── -->
+<section class="py-5 bg-light">
+  <div class="container-xl">
+    <div class="d-flex align-items-end justify-content-between mb-4 bl-rv">
+      <div>
+        <div class="bl-sec-label">Professionals</div>
+        <h2 class="bl-sec-h">Verified professionals on bildfie</h2>
+        <p class="bl-sec-sub">Browse by trade — masons, electricians, plumbers, carpenters and more.</p>
+      </div>
+      <a href="/professionals" class="bl-see-all d-none d-md-block">Browse all &rarr;</a>
+    </div>
+    <div class="row g-3" id="home-pros"></div>
+  </div>
+</section>
+
+
+<!-- FINAL CTA ─────────────────────────────────────────────────────── -->
+<div class="bl-cta bl-rv">
+  <div class="bl-cta-glow"></div>
+  <div class="container-xl position-relative">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7">
+        <h2 class="bl-cta-h">Have a job that needs <i>doing right?</i></h2>
+        <p class="bl-cta-sub">Post your project today and start receiving fixed-price bids from verified professionals near you.</p>
+      </div>
+      <div class="col-lg-5">
+        <div class="d-flex align-items-center gap-3 flex-wrap justify-content-lg-end">
+          <a href="/login?next=/dashboard" class="btn btn-primary btn-lg">Post a Project</a>
+          <a href="/register" class="btn btn-outline-light btn-lg">Join as a Professional</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+<script>
+/* Featured professionals — real API data only, with an honest empty state.
+   Never falls back to demo data. */
+(async () => {
+  const grid = document.getElementById('home-pros');
+  if (!grid) return;
+
+  const emptyState = `
+    <div class="col-12">
+      <div class="text-center p-5 rounded-4" style="background:#fff;border:1px dashed var(--bl-line,#e3e8ee)">
+        <div class="fw-bold mb-1" style="font-size:16px">No professionals listed yet</div>
+        <p class="text-muted small mb-3">bildfie is just getting started. Be one of the first verified professionals.</p>
+        <a href="/register" class="btn btn-primary btn-sm">Join as a Professional</a>
+      </div>
+    </div>`;
+
+  const card = p => {
+    const initials = (p.name || '?').trim().split(/\s+/).map(s => s[0]).slice(0,2).join('').toUpperCase();
+    const avatar = p.avatar
+      ? `<img src="${p.avatar}" alt="" style="width:46px;height:46px;border-radius:12px;object-fit:cover">`
+      : `<div class="d-flex align-items-center justify-content-center" style="width:46px;height:46px;border-radius:12px;background:var(--bl-navy);color:#fff;font-weight:700;font-size:14px">${initials}</div>`;
+    const rating = Number(p.rating) > 0 ? `★ ${Number(p.rating).toFixed(1)}` : 'New';
+    const verified = p.verified ? `<span class="badge text-bg-light border" style="font-size:9px">Verified</span>` : '';
+    return `
+      <div class="col-sm-6 col-lg-3">
+        <a href="/professionals" class="text-decoration-none">
+          <div class="p-3 rounded-4 h-100" style="background:#fff;border:1px solid var(--bl-line,#e3e8ee)">
+            <div class="d-flex align-items-center gap-2 mb-2">${avatar}
+              <div class="overflow-hidden">
+                <div class="fw-bold text-dark text-truncate" style="font-size:13px">${p.name || 'Professional'}</div>
+                <div class="text-muted text-truncate" style="font-size:11px">${p.trade || ''}</div>
+              </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="text-muted" style="font-size:11px">${p.location || ''}</span>
+              <span class="fw-semibold" style="font-size:11px;color:var(--bl-accent)">${rating}</span>
+            </div>
+            <div class="mt-2">${verified}</div>
+          </div>
+        </a>
+      </div>`;
+  };
+
+  try {
+    const res = await fetch('/api/professionals?limit=4');
+    if (!res.ok) throw new Error('request failed');
+    const data = await res.json();
+    const pros = data.professionals || [];
+    grid.innerHTML = pros.length ? pros.map(card).join('') : emptyState;
+  } catch (e) {
+    grid.innerHTML = emptyState;
+  }
+})();
+</script>
+</body>
+</html>

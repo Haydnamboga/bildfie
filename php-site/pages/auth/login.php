@@ -1,122 +1,109 @@
 <?php
 require_once __DIR__ . '/../../config/app.php';
 require_once __DIR__ . '/../../config/auth.php';
-
-// Already logged in
-if (is_logged_in()) {
-    header('Location: ' . ($_GET['redirect'] ?? '/pages/dashboard/'));
-    exit;
-}
-
-$error      = '';
-$unverified = false;
-$unver_email = '';
-$redirect   = $_GET['redirect'] ?? '/pages/dashboard/';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email    = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
-    $result   = user_login($email, $password);
-
-    if ($result['ok']) {
-        session_regenerate_id(true);
-        header('Location: ' . $redirect);
-        exit;
-    } elseif (!empty($result['unverified'])) {
-        $unverified  = true;
-        $unver_email = $result['email'] ?? $email;
-        $error       = $result['error'];
-    } else {
-        $error = $result['error'];
-    }
-}
-
-// Resend verification
-$resent = false;
-if (isset($_GET['resend']) && !empty($_GET['email'])) {
-    resend_verification(trim($_GET['email']));
-    $resent = true;
-}
-
-$page_title = 'Sign in';
+if (is_logged_in()) { header('Location: /'); exit; }
+$page_title = 'Sign In';
+$err         = htmlspecialchars($_GET['error'] ?? '');
+$unverified  = !empty($_GET['unverified']);
+$verifyEmail = htmlspecialchars($_GET['email'] ?? '', ENT_QUOTES);
+$verifySent  = !empty($_GET['verify_sent']);
+$verified    = !empty($_GET['verified']);
+$resetOk     = !empty($_GET['reset']);
 ?>
-<?php require_once __DIR__ . '/../../includes/head.php'; ?>
-<style>
-.bf-auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--surface); padding: 32px 16px; }
-.bf-auth-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 40px 40px 36px; width: 100%; max-width: 420px; }
-@media (max-width: 480px) { .bf-auth-card { padding: 28px 20px 24px; } }
-</style>
+<?php include __DIR__ . '/../../includes/head.php'; ?>
 
-<div class="bf-auth-wrap">
-  <div class="bf-auth-card">
-    <!-- Logo -->
+<div class="bf-login">
+  <span class="bf-login-blob navy"></span>
+  <span class="bf-login-blob red"></span>
+  <span class="bf-login-blob amber"></span>
+
+  <div class="bf-login-card">
+
+    <!-- Brand -->
     <div class="text-center mb-4">
-      <a href="/" class="d-inline-flex align-items-center gap-2 text-decoration-none">
-        <i class="bi bi-building-fill-up" style="font-size:24px;color:#1e3a5f;"></i>
-        <span style="font-weight:800;font-size:1.2rem;color:#0d0d0d;letter-spacing:-.5px;">bildfie</span>
+      <a href="/" class="bf-brand text-decoration-none d-inline-flex align-items-center mb-1" style="font-size:24px;">
+        <i class="bi bi-building-fill-up"></i>bildfie
       </a>
-      <h1 class="mt-3 mb-1" style="font-size:1.4rem;font-weight:700;">Welcome back</h1>
-      <p class="text-muted" style="font-size:.875rem;">Sign in to your bildfie account</p>
+      <div style="font-size:12px;color:var(--ink-3);"><?= APP_TAG ?></div>
     </div>
 
-    <?php if ($resent): ?>
-      <div class="alert alert-success alert-sm py-2 px-3" style="font-size:.85rem;">
-        <i class="bi bi-check-circle me-2"></i>Verification email resent — check your inbox.
-      </div>
-    <?php endif; ?>
+    <!-- Panel -->
+    <div class="bf-login-panel">
+      <div class="bf-section-eyebrow mb-2">Sign In</div>
+      <h1 style="font-size:24px;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin:0 0 5px;">Welcome back</h1>
+      <p style="font-size:13px;color:var(--ink-3);margin:0 0 22px;">Sign in to your account to continue.</p>
 
-    <?php if ($unverified): ?>
-      <div class="alert alert-warning py-2 px-3" style="font-size:.85rem;">
-        <i class="bi bi-envelope-exclamation me-2"></i>
-        <?= htmlspecialchars($error) ?>
-        <div class="mt-2">
-          <a href="?resend=1&email=<?= urlencode($unver_email) ?>" class="alert-link">
-            Resend verification email
-          </a>
+      <?php if ($err): ?>
+      <div class="d-flex align-items-center gap-2 mb-3"
+           style="background:#fef2f2;border:1px solid #fecaca;color:#c0392b;border-radius:10px;padding:10px 14px;font-size:12.5px;">
+        <i class="bi bi-exclamation-circle-fill"></i><?= $err ?>
+      </div>
+      <?php endif; ?>
+
+      <?php if ($unverified): ?>
+      <form method="post" action="/pages/auth/verify-email.php" style="background:#fffbeb;border:1px solid #fde68a;color:#92400e;border-radius:10px;padding:11px 14px;font-size:12.5px;margin-bottom:14px;line-height:1.5;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><i class="bi bi-envelope-exclamation"></i> Your email isn't verified yet.</div>
+        <input type="hidden" name="action" value="resend">
+        <input type="hidden" name="email" value="<?= $verifyEmail ?>">
+        <button type="submit" style="background:none;border:none;padding:0;color:#92400e;font-weight:800;text-decoration:underline;cursor:pointer;font-size:12.5px;">Resend verification link</button>
+      </form>
+      <?php elseif ($verifySent): ?>
+      <div style="background:#eaf0f6;border:1px solid #d6e2ee;color:#1e3a5f;border-radius:10px;padding:11px 14px;font-size:12.5px;margin-bottom:14px;line-height:1.55;">
+        <i class="bi bi-envelope-check"></i> Account created! We've emailed a verification link<?= $verifyEmail ? ' to <strong>'.$verifyEmail.'</strong>' : '' ?> — click it to activate your account, then sign in.
+      </div>
+      <?php elseif ($verified): ?>
+      <div class="d-flex align-items-center gap-2 mb-3" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;border-radius:10px;padding:10px 14px;font-size:12.5px;"><i class="bi bi-check-circle-fill"></i> Email verified — you can sign in now.</div>
+      <?php elseif ($resetOk): ?>
+      <div class="d-flex align-items-center gap-2 mb-3" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;border-radius:10px;padding:10px 14px;font-size:12.5px;"><i class="bi bi-check-circle-fill"></i> Password updated — sign in with your new password.</div>
+      <?php endif; ?>
+
+      <form action="/api/auth/login.php" method="POST">
+        <div class="mb-3">
+          <label style="font-size:12px;font-weight:700;color:var(--ink);display:block;margin-bottom:7px;">Email address</label>
+          <div class="bf-login-field">
+            <i class="bi bi-envelope"></i>
+            <input type="email" name="email" placeholder="you@email.com" required autofocus>
+          </div>
         </div>
-      </div>
-    <?php elseif ($error): ?>
-      <div class="alert alert-danger py-2 px-3" style="font-size:.85rem;">
-        <i class="bi bi-exclamation-circle me-2"></i><?= htmlspecialchars($error) ?>
-      </div>
-    <?php endif; ?>
+        <input type="hidden" name="redirect" value="<?= htmlspecialchars($_GET['redirect'] ?? '/', ENT_QUOTES) ?>">
 
-    <form method="POST" action="" novalidate>
-      <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirect) ?>">
-
-      <div class="mb-3">
-        <label for="email" class="form-label fw-600" style="font-size:.875rem;">Email address</label>
-        <input type="email" id="email" name="email" class="form-control"
-               value="<?= htmlspecialchars($unver_email ?: ($_POST['email'] ?? '')) ?>"
-               placeholder="you@example.com" required autocomplete="email" autofocus>
-      </div>
-
-      <div class="mb-3">
-        <div class="d-flex justify-content-between align-items-center mb-1">
-          <label for="password" class="form-label fw-600 mb-0" style="font-size:.875rem;">Password</label>
-          <a href="/pages/auth/forgot-password.php" style="font-size:.8rem;color:#1e3a5f;">Forgot password?</a>
+        <div class="mb-3">
+          <label style="font-size:12px;font-weight:700;color:var(--ink);display:block;margin-bottom:7px;">Password</label>
+          <div class="bf-login-field">
+            <i class="bi bi-lock"></i>
+            <input type="password" name="password" id="loginPassword" placeholder="••••••••" required>
+            <i class="bi bi-eye" id="togglePw" style="cursor:pointer;" onclick="(function(){var p=document.getElementById('loginPassword');var i=document.getElementById('togglePw');var s=p.type==='password';p.type=s?'text':'password';i.className=s?'bi bi-eye-slash':'bi bi-eye';})()"></i>
+          </div>
         </div>
-        <input type="password" id="password" name="password" class="form-control"
-               placeholder="Your password" required autocomplete="current-password">
+
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <label class="bf-login-check"><input type="checkbox" name="remember" value="1"> Remember me</label>
+          <a href="/pages/auth/forgot-password.php" class="bf-login-link">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="bf-login-btn">
+          <i class="bi bi-box-arrow-in-right"></i>Sign In
+        </button>
+      </form>
+
+      <div class="bf-login-divider"><span>or continue with</span></div>
+
+      <div class="d-flex gap-2">
+        <a href="#" class="bf-login-social"><i class="bi bi-google" style="color:#ea4335;"></i> Google</a>
+        <a href="#" class="bf-login-social"><i class="bi bi-apple" style="color:var(--ink);"></i> Apple</a>
       </div>
 
-      <div class="mb-3 form-check">
-        <input type="checkbox" class="form-check-input" id="remember" name="remember">
-        <label class="form-check-label" for="remember" style="font-size:.875rem;">Keep me signed in</label>
+      <div style="border-top:1px solid var(--line);margin:22px 0 0;padding-top:18px;text-align:center;">
+        <span style="font-size:13px;color:var(--ink-3);">New to bildfie? </span>
+        <a href="/pages/auth/register.php" class="bf-login-link" style="font-size:13px;">Create an account</a>
       </div>
+    </div>
 
-      <button type="submit" class="bf-btn-dark w-100" style="justify-content:center;padding:12px;">
-        Sign in
-      </button>
-    </form>
-
-    <p class="text-center mt-4 mb-0" style="font-size:.875rem;color:#6b6b6b;">
-      Don't have an account?
-      <a href="/pages/auth/register.php" style="color:#1e3a5f;font-weight:600;">Create one free</a>
+    <p class="text-center mt-4 mb-0" style="font-size:11.5px;color:var(--ink-4);">
+      &copy; <?= date('Y') ?> bildfie · <a href="#" style="color:var(--ink-4);">Privacy</a> · <a href="#" style="color:var(--ink-4);">Terms</a>
     </p>
+
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<?php include __DIR__ . '/../../includes/scripts.php'; ?>

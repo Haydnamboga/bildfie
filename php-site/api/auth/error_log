@@ -1,0 +1,20 @@
+[15-Jun-2026 15:53:22 Africa/Nairobi] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'remissio_bildfie2.users' doesn't exist in /home/remissio/bildfie.com/config/db.php:41
+Stack trace:
+#0 /home/remissio/bildfie.com/config/db.php(41): mysqli->prepare('SELECT * FROM u...')
+#1 /home/remissio/bildfie.com/config/db.php(55): db_stmt('SELECT * FROM u...', Array)
+#2 /home/remissio/bildfie.com/config/db.php(64): db_all('SELECT * FROM u...', Array)
+#3 /home/remissio/bildfie.com/config/auth.php(53): db_one('SELECT * FROM u...', Array)
+#4 /home/remissio/bildfie.com/config/auth.php(66): user_find('ambogahaydn@gma...')
+#5 /home/remissio/bildfie.com/api/auth/login.php(10): user_login('ambogahaydn@gma...', 'Haydn1990')
+#6 {main}
+  thrown in /home/remissio/bildfie.com/config/db.php on line 41
+[15-Jun-2026 15:59:57 Africa/Nairobi] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'remissio_bildfie2.users' doesn't exist in /home/remissio/bildfie.com/config/db.php:41
+Stack trace:
+#0 /home/remissio/bildfie.com/config/db.php(41): mysqli->prepare('SELECT * FROM u...')
+#1 /home/remissio/bildfie.com/config/db.php(55): db_stmt('SELECT * FROM u...', Array)
+#2 /home/remissio/bildfie.com/config/db.php(64): db_all('SELECT * FROM u...', Array)
+#3 /home/remissio/bildfie.com/config/auth.php(53): db_one('SELECT * FROM u...', Array)
+#4 /home/remissio/bildfie.com/config/auth.php(66): user_find('')
+#5 /home/remissio/bildfie.com/api/auth/login.php(10): user_login('', '')
+#6 {main}
+  thrown in /home/remissio/bildfie.com/config/db.php on line 41

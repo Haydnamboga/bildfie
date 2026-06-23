@@ -1,201 +1,123 @@
 <?php
-/**
- * Bids Received — shows all hire invites and quote requests sent to the
- * current user's provider listing.
- */
 require_once __DIR__ . '/../../config/app.php';
 require_once __DIR__ . '/../../config/auth.php';
-require_once __DIR__ . '/../../config/engage.php';
-
-require_login();
-$u   = current_user();
-$uid = (int) $u['id'];
-
-$msg = '';
-if (!empty($_SESSION['flash'])) { $msg = $_SESSION['flash']; unset($_SESSION['flash']); }
-
-// Fetch all engagements for the current user's provider listing
-$all_bids = provider_engagements_for_user($uid);
-
-// Filter by type / search
-$type_filter = trim($_GET['type'] ?? '');
-$q_filter    = trim($_GET['q'] ?? '');
-
-$bids = array_filter($all_bids, function ($b) use ($type_filter, $q_filter) {
-    if ($type_filter !== '' && $b['type'] !== $type_filter) return false;
-    if ($q_filter !== '') {
-        $hay = strtolower(($b['from_name'] ?? '') . ' ' . ($b['subject'] ?? '') . ' ' . ($b['message'] ?? '') . ' ' . ($b['location'] ?? ''));
-        if (strpos($hay, strtolower($q_filter)) === false) return false;
-    }
-    return true;
-});
-$bids = array_values($bids);
-
-// KPI counts
-$total_cnt = count($all_bids);
-$quote_cnt = count(array_filter($all_bids, fn($b) => $b['type'] === 'quote'));
-$invite_cnt= count(array_filter($all_bids, fn($b) => $b['type'] === 'invite'));
-$new_cnt   = count(array_filter($all_bids, fn($b) => ($b['status'] ?? 'new') === 'new'));
-
-$sp           = 'bids';
-$topbar_title = 'Bids Received';
-$page_title   = 'Bids Received';
-
-function bid_type_badge(string $t): string {
-    if ($t === 'quote') {
-        return '<span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:.72rem;font-weight:600;color:#1e40af;background:#eff6ff;">Quote Request</span>';
-    }
-    return '<span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:.72rem;font-weight:600;color:#166534;background:#dcfce7;">Hire Invite</span>';
-}
-
-function bid_status_badge(string $s): string {
-    $map = [
-        'new'       => ['New',       '#b45309', '#fffbeb'],
-        'seen'      => ['Seen',      '#1e40af', '#eff6ff'],
-        'replied'   => ['Replied',   '#166534', '#dcfce7'],
-        'declined'  => ['Declined',  '#b91c1c', '#fef2f2'],
-        'accepted'  => ['Accepted',  '#15803d', '#f0fdf4'],
-    ];
-    [$l, $c, $bg] = $map[$s] ?? [ucfirst($s), '#6b6b6b', '#f4f4f2'];
-    return '<span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:.72rem;font-weight:600;color:'.$c.';background:'.$bg.';">'.htmlspecialchars($l).'</span>';
-}
+$page_title = 'Open Bids';
+$nav = 'bids';
 ?>
-<?php require_once __DIR__ . '/../../includes/head.php'; ?>
-<style>
-.bf-layout{display:flex;min-height:100vh;}
-.bf-main{flex:1;display:flex;flex-direction:column;min-width:0;margin-left:var(--sidebar-w);}
-@media(max-width:991px){.bf-main{margin-left:0;}}
-.bf-body{flex:1;padding:28px 24px;background:var(--surface);}
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:24px;}
-.kpi-tile{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;}
-.kpi-val{font-size:1.3rem;font-weight:800;color:#0d0d0d;letter-spacing:-.04em;line-height:1.1;}
-.kpi-lbl{font-size:.72rem;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em;margin-top:4px;}
-.bf-pf-card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;}
-.bid-card{border-bottom:1px solid var(--line);padding:18px 20px;transition:background .12s;}
-.bid-card:last-child{border-bottom:none;}
-.bid-card:hover{background:#fafaf8;}
-</style>
+<?php include __DIR__ . '/../../includes/head.php'; ?>
+<?php include __DIR__ . '/../../includes/navbar.php'; ?>
 
-<div class="bf-layout">
-<?php require_once __DIR__ . '/../../includes/sidebar.php'; ?>
-<div class="bf-main">
-<?php require_once __DIR__ . '/../../includes/topbar.php'; ?>
-<div class="bf-body">
+<div style="background:var(--surface);border-bottom:1px solid var(--line);padding:36px 0 28px;">
+  <div class="container">
+    <div class="d-flex align-items-start justify-content-between flex-wrap gap-3">
+      <div>
+        <div class="bf-section-eyebrow mb-2"><i class="bi bi-megaphone" style="color:#c0392b;"></i> Open Bids</div>
+        <h1 style="font-size:clamp(22px,3vw,30px);font-weight:800;color:var(--ink);margin:0 0 6px;">Projects seeking your skills now</h1>
+        <p style="font-size:13px;color:var(--ink-3);margin:0;">Live project postings from verified owners — submit your bid directly, no middlemen.</p>
+      </div>
+      <a href="/pages/projects/create.php" class="bf-btn-accent">Post a project</a>
+    </div>
 
-  <?php if ($msg): ?>
-    <div class="alert alert-success py-2 px-3 mb-3" style="font-size:.85rem;">
-      <i class="bi bi-check-circle me-2"></i><?= htmlspecialchars($msg) ?>
+    <!-- Search + filters -->
+    <div class="bf-searchbar-v2 mt-4" style="max-width:600px;">
+      <span class="bf-searchbar-v2-icon"><i class="bi bi-search"></i></span>
+      <input type="text" placeholder="Search projects by trade, location, keyword…">
+      <div class="bf-searchbar-v2-divider"></div>
+      <select><option>All Trades</option><option>Architecture</option><option>Civil</option><option>MEP</option><option>Structural</option><option>QS</option><option>Interior</option></select>
+      <button class="bf-searchbar-v2-btn">Search</button>
     </div>
-  <?php endif; ?>
-
-  <!-- KPI Row -->
-  <div class="kpi-grid">
-    <div class="kpi-tile">
-      <div class="kpi-val"><?= $total_cnt ?></div>
-      <div class="kpi-lbl">Total Received</div>
-    </div>
-    <div class="kpi-tile">
-      <div class="kpi-val" style="color:#b45309;"><?= $new_cnt ?></div>
-      <div class="kpi-lbl">Unread / New</div>
-    </div>
-    <div class="kpi-tile">
-      <div class="kpi-val" style="color:#166534;"><?= $invite_cnt ?></div>
-      <div class="kpi-lbl">Hire Invites</div>
-    </div>
-    <div class="kpi-tile">
-      <div class="kpi-val" style="color:#1e40af;"><?= $quote_cnt ?></div>
-      <div class="kpi-lbl">Quote Requests</div>
-    </div>
-  </div>
-
-  <!-- Filter -->
-  <div class="d-flex flex-wrap gap-2 align-items-center justify-content-between mb-3">
-    <form method="GET" class="d-flex gap-2 flex-wrap align-items-center">
-      <input type="text" name="q" class="form-control form-control-sm"
-             placeholder="Search bids…" value="<?= htmlspecialchars($q_filter) ?>" style="width:220px;">
-      <select name="type" class="form-select form-select-sm" style="width:150px;">
-        <option value="">All Types</option>
-        <option value="invite" <?= $type_filter === 'invite' ? 'selected' : '' ?>>Hire Invites</option>
-        <option value="quote"  <?= $type_filter === 'quote'  ? 'selected' : '' ?>>Quote Requests</option>
-      </select>
-      <button type="submit" class="btn btn-sm" style="background:#1e3a5f;color:#fff;border-radius:8px;">Filter</button>
-      <?php if ($q_filter || $type_filter): ?>
-        <a href="/pages/bids/" class="btn btn-sm btn-light" style="border-radius:8px;">Clear</a>
-      <?php endif; ?>
-    </form>
-  </div>
-
-  <!-- Bids List -->
-  <?php if (!$all_bids): ?>
-    <!-- No provider listing yet or no bids -->
-    <div class="bf-pf-card">
-      <div class="text-center py-5">
-        <i class="bi bi-inbox" style="font-size:2.5rem;color:var(--line);display:block;margin-bottom:12px;"></i>
-        <p style="color:var(--ink-3);margin-bottom:4px;font-weight:600;">No bids yet</p>
-        <p style="color:var(--ink-4);font-size:.875rem;margin-bottom:20px;">
-          When clients send you hire invitations or quote requests, they'll appear here.
-        </p>
-        <a href="/pages/account/" class="btn btn-sm" style="background:#1e3a5f;color:#fff;border-radius:8px;padding:6px 18px;font-weight:600;text-decoration:none;">
-          <i class="bi bi-person-lines-fill me-1"></i>Complete Your Profile
-        </a>
+    <div class="d-flex flex-wrap gap-2 mt-3 align-items-center">
+      <?php foreach (['All','🔴 Hot','New Today','Closing Soon','High Budget','Government','Residential','Commercial','Infrastructure'] as $i=>$f): ?>
+      <button class="bf-search-tag" style="<?= $i===0?'background:#1e3a5f;color:#fff;border-color:#1e3a5f;':'' ?>"><?= $f ?></button>
+      <?php endforeach; ?>
+      <div class="ms-auto d-flex gap-2">
+        <select class="form-select form-select-sm" style="font-size:12px;width:auto;border-color:var(--line);">
+          <option>Sort: Newest</option><option>Closing soonest</option><option>Budget: High→Low</option><option>Most bids</option>
+        </select>
+        <select class="form-select form-select-sm" style="font-size:12px;width:auto;border-color:var(--line);">
+          <option>All countries</option><option>Kenya</option><option>Nigeria</option><option>Ghana</option><option>UAE</option>
+        </select>
       </div>
     </div>
-  <?php elseif (empty($bids)): ?>
-    <div class="bf-pf-card">
-      <div class="text-center py-5">
-        <i class="bi bi-search" style="font-size:2rem;color:var(--line);display:block;margin-bottom:12px;"></i>
-        <p style="color:var(--ink-3);">No bids match your filters.</p>
-        <a href="/pages/bids/" class="btn btn-sm btn-light" style="border-radius:8px;">Clear filters</a>
-      </div>
-    </div>
-  <?php else: ?>
-    <div class="bf-pf-card">
-      <?php foreach ($bids as $bid): ?>
-      <div class="bid-card">
-        <div class="d-flex align-items-start justify-content-between gap-3">
-          <div style="flex:1;min-width:0;">
-            <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
-              <?= bid_type_badge($bid['type']) ?>
-              <?= bid_status_badge($bid['status'] ?? 'new') ?>
-              <?php if ($bid['budget']): ?>
-                <span style="font-size:.75rem;color:var(--ink-3);background:#f4f4f2;border-radius:20px;padding:2px 10px;font-weight:600;">
-                  Budget: <?= htmlspecialchars($bid['budget']) ?>
-                </span>
-              <?php endif; ?>
-            </div>
-            <div style="font-weight:700;color:#0d0d0d;font-size:.95rem;margin-bottom:2px;">
-              <?= htmlspecialchars($bid['subject'] ?: '(No subject)') ?>
-            </div>
-            <div style="font-size:.8rem;color:var(--ink-3);margin-bottom:8px;">
-              From: <strong style="color:var(--ink-2);"><?= htmlspecialchars($bid['from_name'] ?? 'Anonymous') ?></strong>
-              <?php if ($bid['location']): ?>
-                &nbsp;·&nbsp;<i class="bi bi-geo-alt" style="color:var(--ink-4);"></i> <?= htmlspecialchars($bid['location']) ?>
-              <?php endif; ?>
-              <?php if ($bid['needed_by']): ?>
-                &nbsp;·&nbsp;<i class="bi bi-calendar3" style="color:var(--ink-4);"></i> Needed by <?= htmlspecialchars($bid['needed_by']) ?>
-              <?php endif; ?>
-            </div>
-            <?php if ($bid['message']): ?>
-            <div style="font-size:.875rem;color:var(--ink-2);background:#f8f8f6;border-left:3px solid #1e3a5f;border-radius:0 6px 6px 0;padding:10px 14px;margin-bottom:0;max-width:720px;">
-              <?= nl2br(htmlspecialchars(mb_substr($bid['message'], 0, 400))) ?><?= mb_strlen($bid['message']) > 400 ? '…' : '' ?>
-            </div>
-            <?php endif; ?>
+  </div>
+</div>
+
+<div class="container" style="padding-top:36px;padding-bottom:60px;">
+
+  <!-- Bids grid -->
+  <div class="row g-3">
+    <?php
+    // Live from the database (public open projects)
+    $bids = [];
+    foreach (db_all("SELECT * FROM projects WHERE visibility='public' AND status='open' ORDER BY created_at DESC, id DESC") as $r) {
+      $bids[] = [$r['segment'] ?: 'commercial', $r['name'], $r['urgency'], $r['owner_name'], $r['owner_label'], $r['location'],
+        $r['budget_display'], $r['duration'], $r['start_label'], ((int)$r['bids_count'] . ' submitted'), $r['deadline_label'], $r['remaining'],
+        ($r['trades'] ? explode(',', $r['trades']) : []), $r['description']];
+    }
+
+    $typeColors = ['commercial'=>'#1e3a5f','residential'=>'#f59e0b','infrastructure'=>'#22c55e','government'=>'#ef4444'];
+    $urgencyClasses = ['hot'=>'hot','closing'=>'closing','new'=>'new-bid'];
+
+    foreach ($bids as [$type,$title,$urgency,$owner,$ownerType,$loc,$budget,$dur,$start,$bidsSubmit,$deadline,$remaining,$tags,$desc]): ?>
+    <div class="col-md-6 col-xl-4">
+      <div class="bf-bid-v2 <?= $urgencyClasses[$urgency] ?> h-100">
+        <!-- Urgency badge -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <?php if ($urgency==='hot'): ?>
+          <span style="font-size:9px;font-weight:800;letter-spacing:.08em;background:#fef2f2;color:#c0392b;padding:3px 9px;border-radius:4px;">🔴 HOT · HIGH DEMAND</span>
+          <?php elseif ($urgency==='closing'): ?>
+          <span style="font-size:9px;font-weight:800;letter-spacing:.08em;background:#fff7ed;color:#c2410c;padding:3px 9px;border-radius:4px;">⏰ CLOSING SOON</span>
+          <?php else: ?>
+          <span style="font-size:9px;font-weight:800;letter-spacing:.08em;background:#f0fdf4;color:#166534;padding:3px 9px;border-radius:4px;">✨ JUST POSTED</span>
+          <?php endif; ?>
+          <span style="font-size:10px;font-weight:700;color:var(--ink-4);"><?= $bidsSubmit ?></span>
+        </div>
+
+        <!-- Title -->
+        <?php $bidUrl = '/pages/bids/view.php?title='.urlencode($title).'&owner='.urlencode($owner).'&ownerType='.urlencode($ownerType).'&loc='.urlencode($loc).'&budget='.urlencode($budget).'&dur='.urlencode($dur).'&deadline='.urlencode($deadline).'&bids='.urlencode($bidsSubmit).'&type='.urlencode($type).'&remaining='.urlencode($remaining); ?>
+        <a href="<?= $bidUrl ?>" style="font-size:13.5px;font-weight:800;color:var(--ink);line-height:1.3;margin-bottom:8px;display:block;text-decoration:none;"><?= $title ?></a>
+        <div style="font-size:11px;color:var(--ink-3);margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+          <span style="width:8px;height:8px;border-radius:50%;background:<?= $typeColors[$type] ?>;display:inline-block;flex-shrink:0;"></span>
+          <?= $owner ?> · <?= $ownerType ?>
+          <i class="bi bi-geo-alt-fill" style="font-size:9px;color:#c0392b;margin-left:4px;"></i><?= $loc ?>
+        </div>
+
+        <!-- Description -->
+        <div style="font-size:11.5px;color:var(--ink-3);line-height:1.6;margin-bottom:14px;flex:1;"><?= $desc ?></div>
+
+        <!-- Stats 2×2 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+          <?php foreach ([['Budget',$budget,'#c0392b'],['Duration',$dur,'var(--ink)'],['Start',$start,'var(--ink)'],['Bid Deadline',$deadline,'var(--ink)']] as [$k,$v,$vc]): ?>
+          <div style="background:var(--surface);border-radius:8px;padding:8px 10px;">
+            <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-4);margin-bottom:2px;"><?= $k ?></div>
+            <div style="font-size:12px;font-weight:700;color:<?= $vc ?>;"><?= $v ?></div>
           </div>
-          <div style="flex-shrink:0;text-align:right;">
-            <div style="font-size:.75rem;color:var(--ink-4);">
-              <?= $bid['created_at'] ? date('d M Y', strtotime($bid['created_at'])) : '' ?>
-            </div>
-            <div style="margin-top:8px;">
-              <a href="/pages/messages/" class="btn btn-xs btn-light" style="font-size:.75rem;padding:4px 10px;border-radius:6px;">
-                <i class="bi bi-reply me-1"></i>Reply
-              </a>
-            </div>
-          </div>
+          <?php endforeach; ?>
+        </div>
+
+        <!-- Tags -->
+        <div class="d-flex flex-wrap gap-1 mb-3">
+          <?php foreach ($tags as $t): ?>
+          <span style="font-size:10px;font-weight:600;background:var(--surface);border:1px solid var(--line);padding:2px 8px;border-radius:4px;color:var(--ink-3);"><?= $t ?></span>
+          <?php endforeach; ?>
+        </div>
+
+        <!-- Footer -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--line-2);">
+          <div style="font-size:11px;color:var(--ink-4);"><i class="bi bi-clock" style="color:#f59e0b;"></i> <?= $remaining ?> remaining</div>
+          <a href="<?= $bidUrl ?>" class="bf-action-dark" style="font-size:11px;padding:6px 18px;background:#c0392b;text-decoration:none;">View &amp; Bid →</a>
         </div>
       </div>
-      <?php endforeach; ?>
     </div>
-  <?php endif; ?>
+    <?php endforeach; ?>
+  </div>
 
-</div></div></div>
-<?php require_once __DIR__ . '/../../includes/footer-dashboard.php'; ?>
+  <!-- Load more -->
+  <div style="text-align:center;margin-top:36px;">
+    <button class="bf-btn-outline" style="padding:12px 36px;font-size:13px;">Load more projects</button>
+    <div style="font-size:12px;color:var(--ink-4);margin-top:10px;">Showing 6 of 186 open projects</div>
+  </div>
+</div>
+
+<?php include __DIR__ . '/../../includes/footer.php'; ?>
+<?php include __DIR__ . '/../../includes/scripts.php'; ?>

@@ -1,10 +1,9 @@
 "use client";
-import { AppNav } from "@/components/AppNav";
 
 export default function PaymentsPage() {
   return (
     <>
-      <AppNav />
+      
       <div className="container" style={{ padding: "32px 20px" }}>
         <div className="page-header">
           <h1>Payments</h1>

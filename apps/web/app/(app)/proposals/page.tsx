@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { AppNav } from "@/components/AppNav";
 
 type Proposal = {
   id: string;
@@ -42,7 +41,7 @@ export default function MyProposalsPage() {
 
   return (
     <>
-      <AppNav />
+      
       <div className="container" style={{ padding: "32px 20px" }}>
         <div className="page-header">
           <h1>My Proposals</h1>

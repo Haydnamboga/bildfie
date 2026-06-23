@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { AppNav } from "@/components/AppNav";
 
 type Offer = { id: string; status: string; message?: string; amount?: string; createdAt: string; fromUser?: { fullName: string }; toUser?: { fullName: string } };
 
@@ -46,7 +45,7 @@ export default function OffersPage() {
 
   return (
     <>
-      <AppNav />
+      
       <div className="container" style={{ padding: "32px 20px" }}>
         <div className="page-header"><h1>Offers</h1></div>
         <div className="grid-2">

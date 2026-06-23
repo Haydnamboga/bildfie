@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { AppNav } from "@/components/AppNav";
 
 const TRADE_CATEGORIES = [
   "ELECTRICAL", "PLUMBING", "CARPENTRY", "CIVIL", "TILING",
@@ -43,11 +42,11 @@ export default function ProfilePage() {
     }
   }
 
-  if (!profile) return <><AppNav /><div className="container" style={{ padding: 32 }}>Loading…</div></>;
+  if (!profile) return <><div className="container" style={{ padding: 32 }}>Loading…</div></>;
 
   return (
     <>
-      <AppNav />
+      
       <div className="container" style={{ padding: "32px 20px", maxWidth: 640 }}>
         <div className="page-header">
           <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>

@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { api } from "@/lib/api";
-import { AppNav } from "@/components/AppNav";
 
 const TRADE_CATEGORIES = [
   "ELECTRICAL", "PLUMBING", "CARPENTRY", "CIVIL", "TILING",
@@ -90,7 +89,7 @@ export default function JobsPage() {
 
   return (
     <>
-      <AppNav />
+      
       <div className="container" style={{ padding: "32px 20px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
           <div className="page-header" style={{ marginBottom: 0 }}>

@@ -2,7 +2,6 @@
 import { use, useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { getCurrentUser } from "@/lib/auth";
-import { AppNav } from "@/components/AppNav";
 
 type Milestone = { id: string; title: string; amount: string; status: string; dueDate?: string; _count?: { tasks: number }; payment?: { status: string } | null };
 type Project = { id: string; ownerId: string };
@@ -66,7 +65,7 @@ export default function MilestonesPage({ params }: { params: Promise<{ projectId
 
   return (
     <>
-      <AppNav />
+      
       <div className="container" style={{ padding: "32px 20px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
           <div className="page-header" style={{ marginBottom: 0 }}><h1>Milestones</h1></div>

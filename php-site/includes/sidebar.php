@@ -1,77 +1,88 @@
-<?php
-$_su = current_user();
-$sp  = $sp ?? '';
-$_avatar_url = user_avatar($_su, 40);
-
-// Sidebar nav items: [key, icon, label, href]
-$_sidebar_items = [
-  ['section', 'Overview'],
-  ['dashboard',  'bi-grid-1x2',         'Dashboard',         '/pages/dashboard/'],
-  ['section', 'Projects'],
-  ['projects',   'bi-kanban',            'My Projects',       '/pages/projects/'],
-  ['create_project','bi-plus-circle',    'Post Project',      '/pages/projects/create.php'],
-  ['bids',       'bi-inbox',             'Bids Received',     '/pages/bids/'],
-  ['section', 'Marketplace'],
-  ['marketplace','bi-search',            'Find Professionals','/pages/professionals/'],
-  ['messages',   'bi-chat-dots',         'Messages',          '/pages/messages/'],
-  ['section', 'Finance'],
-  ['invoices',   'bi-receipt',           'Invoices',          '/pages/dashboard/invoices.php'],
-  ['estimates',  'bi-calculator',        'Estimates',         '/pages/sales/estimates.php'],
-  ['proposals',  'bi-file-earmark-text', 'Proposals',         '/pages/sales/proposals.php'],
-  ['contracts',  'bi-file-earmark-ruled','Contracts',         '/pages/sales/contracts.php'],
-  ['section', 'Account'],
-  ['profile',    'bi-person',            'Profile',           '/pages/account/'],
-  ['settings',   'bi-gear',              'Settings',          '/pages/account/settings.php'],
-];
-?>
+<?php $sp = $sp ?? ''; $u = current_user(); ?>
+<?php include __DIR__ . '/navbar.php'; ?>
+<div class="bf-side-backdrop" id="bfSideBackdrop"></div>
 <aside class="bf-sidebar" id="bfSidebar">
 
-  <!-- Brand -->
-  <a href="/pages/dashboard/" class="bf-brand d-flex align-items-center gap-2 text-decoration-none"
-     style="padding:0 16px;height:var(--topbar-h);border-bottom:1px solid var(--line);flex-shrink:0;">
-    <i class="bi bi-building-fill-up" style="font-size:20px;color:#1e3a5f;"></i>
-    <span style="font-weight:800;font-size:1.05rem;color:#0d0d0d;letter-spacing:-.5px;">bildfie</span>
-  </a>
+  <nav class="flex-grow-1 overflow-y-auto py-2 px-2">
 
-  <!-- Nav -->
-  <nav class="bf-sidebar-nav" style="flex:1;overflow-y:auto;padding:12px 8px;">
-    <?php foreach ($_sidebar_items as $item):
-      if ($item[0] === 'section'): ?>
-        <div class="bf-eyebrow2" style="padding:14px 10px 4px;font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-4);"><?= htmlspecialchars($item[1]) ?></div>
-      <?php continue; endif;
-      [$key, $icon, $label, $href] = $item;
-      $active = ($sp === $key); ?>
-      <a href="<?= htmlspecialchars($href) ?>"
-         class="bf-li d-flex align-items-center gap-2 text-decoration-none mb-0"
-         style="border-radius:8px;padding:8px 10px;margin-bottom:1px;font-size:.875rem;font-weight:<?= $active ? '600':'500' ?>;
-                color:<?= $active ? '#1e3a5f':'#3a3a3a' ?>;background:<?= $active ? '#eaf0f6':'transparent' ?>;
-                transition:background .15s,color .15s;">
-        <i class="bi <?= $icon ?>" style="font-size:1rem;width:18px;text-align:center;color:<?= $active ? '#1e3a5f':'#6b6b6b' ?>;"></i>
-        <?= htmlspecialchars($label) ?>
-      </a>
-    <?php endforeach; ?>
+    <?php
+    // [label, group-icon, [ [key, icon, label, href], … ]]   empty label = plain top-level link.
+    // Groups render as a collapsed accordion (one open at a time; the active group opens on load).
+    $groups = [
+      ['', '', [
+        ['dashboard', 'bi-grid-1x2-fill', 'Dashboard', '/pages/dashboard/index.php'],
+      ]],
+      ['Projects', 'bi-kanban', [
+        ['projects',   'bi-kanban',              'Projects',   '/pages/projects/index.php'],
+        ['tasks',      'bi-check2-square',       'Tasks',      '#'],
+        ['milestones', 'bi-flag',                'Milestones', '#'],
+        ['timelines',  'bi-bar-chart-steps',     'Timelines',  '#'],
+        ['kanban',     'bi-layout-three-columns','Kanban',     '#'],
+        ['team',       'bi-people',              'Teams',      '/pages/team/index.php'],
+      ]],
+      ['Sales', 'bi-cash-coin', [
+        ['orders',        'bi-bag',                    'Orders',        '#'],
+        ['proposals',     'bi-file-earmark-text',      'Proposals',     '/pages/sales/proposals.php'],
+        ['estimates',     'bi-calculator',             'Estimates',     '/pages/sales/estimates.php'],
+        ['contracts',     'bi-file-earmark-ruled',     'Contracts',     '/pages/contracts/index.php'],
+        ['invoices',      'bi-receipt',                'Invoices',      '/pages/dashboard/invoices.php'],
+        ['credit-notes',  'bi-arrow-counterclockwise', 'Credit Notes',  '/pages/sales/credit-notes.php'],
+        ['subscriptions', 'bi-stars',                  'Subscriptions', '/pages/subscriptions/index.php'],
+        ['sales-reports', 'bi-graph-up-arrow',         'Sales Reports', '#'],
+      ]],
+      ['Utilities', 'bi-tools', [
+        ['files',       'bi-folder2',            'Files & Documents', '#'],
+        ['media',       'bi-images',             'Media',             '#'],
+        ['calendar',    'bi-calendar3',          'Calendar',          '#'],
+        ['u-contracts', 'bi-file-earmark-ruled', 'Contracts',         '/pages/contracts/index.php'],
+        ['u-team',      'bi-people',             'Teams',             '/pages/team/index.php'],
+      ]],
+      ['Reports & Analytics', 'bi-bar-chart-line', [
+        ['exec-dashboard',  'bi-speedometer2',   'Executive Dashboard', '#'],
+        ['r-sales',         'bi-graph-up',       'Sales Reports',       '#'],
+        ['financial',       'bi-cash-stack',     'Financial Reports',   '#'],
+        ['project-reports', 'bi-clipboard-data', 'Project Reports',     '#'],
+        ['team-reports',    'bi-people',         'Team Reports',        '#'],
+        ['marketing',       'bi-megaphone',      'Marketing Reports',   '#'],
+        ['support',         'bi-life-preserver', 'Support Reports',     '#'],
+      ]],
+    ];
+    $opened = false;   // accordion: open only the first group containing the active page
+    foreach ($groups as [$label, $gicon, $links]):
+      if ($label === ''):
+        foreach ($links as [$k,$i,$l,$h]): ?>
+        <a href="<?= $h ?>" class="bf-link <?= $sp===$k ? 'active' : '' ?>"><i class="bi <?= $i ?>"></i><span class="bf-sl"><?= $l ?></span></a>
+        <?php endforeach;
+      else:
+        $hasActive = false;
+        if (!$opened) { foreach ($links as $lk) { if ($sp === $lk[0]) { $hasActive = true; $opened = true; break; } } } ?>
+        <div class="bf-grp <?= $hasActive ? 'open' : '' ?>">
+          <button type="button" class="bf-grp-h"><i class="bi <?= $gicon ?> lead"></i><span class="bf-sl"><?= htmlspecialchars($label) ?></span><i class="bi bi-chevron-right chev bf-sl"></i></button>
+          <div class="bf-grp-body">
+            <?php foreach ($links as [$k,$i,$l,$h]): ?>
+            <a href="<?= $h ?>" class="bf-link <?= $sp===$k ? 'active' : '' ?>"><i class="bi <?= $i ?>"></i><span class="bf-sl"><?= $l ?></span></a>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      <?php endif;
+    endforeach; ?>
+
   </nav>
 
-  <!-- User area -->
-  <div style="border-top:1px solid var(--line);padding:12px 12px;display:flex;align-items:center;gap:10px;flex-shrink:0;">
-    <img src="<?= htmlspecialchars($_avatar_url) ?>"
-         alt="<?= htmlspecialchars($_su['name']) ?>"
-         width="32" height="32"
-         style="border-radius:50%;object-fit:cover;border:2px solid var(--line);flex-shrink:0;">
-    <div style="flex:1;min-width:0;">
-      <div style="font-size:.8rem;font-weight:600;color:#0d0d0d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-        <?= htmlspecialchars($_su['name']) ?>
-      </div>
-      <div style="font-size:.72rem;color:var(--ink-3);">Member</div>
-    </div>
-    <a href="/pages/auth/logout.php" title="Sign out" style="color:var(--ink-4);font-size:1rem;flex-shrink:0;">
-      <i class="bi bi-box-arrow-right"></i>
-    </a>
+  <div class="px-2 pb-3 pt-2" style="border-top:1px solid rgba(0,0,0,.06);">
+    <a href="/pages/account/settings.php" class="bf-link <?= $sp==='settings'?'active':'' ?>"><i class="bi bi-gear"></i><span class="bf-sl">Settings</span></a>
   </div>
 
-</aside>
+  <script>
+  (function(){
+    document.querySelectorAll('#bfSidebar .bf-grp-h').forEach(function(h){
+      h.addEventListener('click', function(){
+        var grp = h.parentElement, wasOpen = grp.classList.contains('open');
+        document.querySelectorAll('#bfSidebar .bf-grp').forEach(function(g){ g.classList.remove('open'); });
+        if (!wasOpen) grp.classList.add('open');
+      });
+    });
+  })();
+  </script>
 
-<!-- Sidebar overlay for mobile -->
-<div class="bf-sidebar-overlay d-lg-none" id="bfSidebarOverlay"
-     style="display:none!important;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:299;"
-     onclick="document.getElementById('bfSidebar').classList.remove('open');this.style.display='none';"></div>
+</aside>

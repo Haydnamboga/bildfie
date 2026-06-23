@@ -1,0 +1,118 @@
+<%- include('../partials/head', { title: "Sign In — Bildfie", extraHead: '<style>body{background:#fff!important;padding:0}</style>' }) %>
+<%- include('../partials/navbar', { activePage: "", user: locals.user }) %>
+
+<div class="bl-auth-wrap">
+
+  <!-- LEFT — Branding Panel -->
+  <div class="bl-auth-left">
+    <div class="bl-auth-left-content">
+      <a href="/" class="d-flex align-items-center gap-2 text-decoration-none mb-5">
+        <div style="width:34px;height:34px;background:var(--bl-accent);border-radius:8px;display:grid;place-items:center;flex-shrink:0">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <span class="bl-auth-brand" style="margin:0;font-size:22px">Bildfie</span>
+      </a>
+      <div class="bl-auth-tagline">Africa's leading construction marketplace. Connect, collaborate, and build smarter.</div>
+      <div class="bl-auth-stat">
+        <div class="bl-auth-stat-num">48K+</div>
+        <div class="bl-auth-stat-lbl">Verified professionals<br>ready to work</div>
+      </div>
+      <div class="bl-auth-stat">
+        <div class="bl-auth-stat-num">12K+</div>
+        <div class="bl-auth-stat-lbl">Projects completed<br>on the platform</div>
+      </div>
+      <div class="bl-auth-stat">
+        <div class="bl-auth-stat-num">KES 1.2B</div>
+        <div class="bl-auth-stat-lbl">Total value delivered<br>through Bildfie</div>
+      </div>
+      <div class="mt-5 p-4 rounded-3" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)">
+        <div class="text-white mb-2" style="font-size:13px;line-height:1.6">"Bildfie completely transformed how we manage our construction projects. From hiring professionals to ordering materials — all in one place."</div>
+        <div class="d-flex align-items-center gap-2">
+          <img src="https://i.pravatar.cc/100?img=22" style="width:30px;height:30px;border-radius:50%;object-fit:cover" alt="">
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#fff">John Kariuki</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.5)">Property Developer, Nairobi</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT — Form -->
+  <div class="bl-auth-right">
+    <div class="bl-auth-form-wrap">
+      <div class="d-flex align-items-center gap-2 mb-4 d-md-none">
+        <div style="width:28px;height:28px;background:var(--bl-accent);border-radius:7px;display:grid;place-items:center">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#fff" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <span style="font-family:'Playfair Display',serif;font-size:18px;font-weight:800;color:var(--bl-navy)">Bildfie</span>
+      </div>
+
+      <div class="bl-auth-title">Welcome back</div>
+      <div class="bl-auth-sub">Sign in to your Bildfie account to continue</div>
+
+      <div id="auth-err" class="bl-auth-err"></div>
+
+      <form id="login-form" autocomplete="on">
+        <div class="mb-3">
+          <label class="form-label fw-500" style="font-size:13px">Email address</label>
+          <input type="email" id="email" class="form-control" placeholder="you@example.com" autocomplete="email" required style="border-radius:10px;padding:11px 14px;font-size:14px">
+        </div>
+        <div class="mb-1">
+          <label class="form-label fw-500" style="font-size:13px">Password</label>
+          <div class="position-relative">
+            <input type="password" id="password" class="form-control" placeholder="••••••••" autocomplete="current-password" required style="border-radius:10px;padding:11px 14px;font-size:14px;padding-right:44px">
+            <button type="button" class="btn position-absolute end-0 top-50 translate-middle-y pe-3" onclick="togglePwd('password',this)" tabindex="-1" style="background:none;border:none;color:var(--bl-muted);font-size:12px">Show</button>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end mb-4">
+          <a href="#" class="text-decoration-none" style="font-size:12px;color:var(--bl-accent)" onclick="showForgot(event)">Forgot password?</a>
+        </div>
+        <button type="submit" id="login-btn" class="btn btn-primary w-100 fw-700" style="border-radius:10px;padding:12px;font-size:14px">
+          Sign In
+        </button>
+      </form>
+
+      <div class="bl-auth-divider">or continue with</div>
+      <div class="d-flex gap-2 mb-4">
+        <button class="btn btn-outline-secondary flex-fill" style="border-radius:10px;font-size:13px" onclick="showToast('Google sign-in coming soon','warning')">
+          Google
+        </button>
+        <button class="btn btn-outline-secondary flex-fill" style="border-radius:10px;font-size:13px" onclick="showToast('Microsoft sign-in coming soon','warning')">
+          Microsoft
+        </button>
+      </div>
+
+      <div class="text-center" style="font-size:13px;color:var(--bl-muted)">
+        Don't have an account? <a href="/register" class="fw-700 text-decoration-none" style="color:var(--bl-accent)">Create one free</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Forgot Password Modal -->
+<div class="modal fade" id="forgotModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered" style="max-width:400px">
+    <div class="modal-content border-0 shadow-lg" style="border-radius:16px">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold" style="font-family:'Playfair Display',serif;color:var(--bl-navy)">Reset Password</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body px-4">
+        <p class="text-muted small">Enter your email and we'll send a reset link.</p>
+        <input type="email" class="form-control" id="forgot-email" placeholder="your@email.com" style="border-radius:10px">
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary" onclick="submitForgot()">Send Reset Link</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+</body>
+</html>

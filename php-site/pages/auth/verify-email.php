@@ -2,79 +2,58 @@
 require_once __DIR__ . '/../../config/app.php';
 require_once __DIR__ . '/../../config/auth.php';
 
-$token   = trim($_GET['token'] ?? '');
-$result  = ['ok' => false, 'error' => 'No token provided.'];
-$resent  = false;
+$token  = $_GET['token'] ?? '';
+$resent = false;
+$result = null;
 
-if ($token !== '') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'resend') {
+    resend_verification(trim($_POST['email'] ?? ''));
+    $resent = true;
+} elseif ($token !== '') {
     $result = email_verify($token);
 }
-
-// Resend form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['resend_email'])) {
-    resend_verification(trim($_POST['resend_email']));
-    $resent = true;
-}
-
-$page_title = 'Verify Email';
+$page_title = 'Verify email';
 ?>
-<?php require_once __DIR__ . '/../../includes/head.php'; ?>
-<style>
-.bf-auth-wrap { min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--surface);padding:32px 16px; }
-.bf-auth-card { background:#fff;border:1px solid var(--line);border-radius:14px;padding:40px 40px 36px;width:100%;max-width:420px;text-align:center; }
-</style>
-
-<div class="bf-auth-wrap">
-  <div class="bf-auth-card">
-    <a href="/" class="d-inline-flex align-items-center gap-2 text-decoration-none mb-4">
-      <i class="bi bi-building-fill-up" style="font-size:24px;color:#1e3a5f;"></i>
-      <span style="font-weight:800;font-size:1.2rem;color:#0d0d0d;letter-spacing:-.5px;">bildfie</span>
-    </a>
-
-    <?php if ($result['ok']): ?>
-      <div style="width:56px;height:56px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
-        <i class="bi bi-check-lg" style="font-size:1.8rem;color:#16a34a;"></i>
-      </div>
-      <h1 style="font-size:1.3rem;font-weight:700;margin-bottom:8px;">Email verified!</h1>
-      <p style="font-size:.875rem;color:#6b6b6b;margin-bottom:24px;">
-        Your email address has been confirmed. You can now sign in to your bildfie account.
-      </p>
-      <a href="/pages/auth/login.php" class="bf-btn-dark" style="justify-content:center;width:100%;">Sign in now</a>
-
-    <?php else: ?>
-      <div style="width:56px;height:56px;background:#fee2e2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
-        <i class="bi bi-x-lg" style="font-size:1.6rem;color:#c0392b;"></i>
-      </div>
-      <h1 style="font-size:1.3rem;font-weight:700;margin-bottom:8px;">Link expired or invalid</h1>
-      <p style="font-size:.875rem;color:#6b6b6b;margin-bottom:24px;">
-        <?= htmlspecialchars($result['error'] ?? 'This verification link is no longer valid.') ?>
-        Enter your email below to request a new one.
-      </p>
-
-      <?php if ($resent): ?>
-        <div class="alert alert-success py-2 px-3 text-start" style="font-size:.85rem;">
-          <i class="bi bi-check-circle me-2"></i>If that email is registered and unverified, we've sent a new link.
+<?php include __DIR__ . '/../../includes/head.php'; ?>
+<div class="bf-login">
+  <span class="bf-login-blob navy"></span>
+  <span class="bf-login-blob red"></span>
+  <span class="bf-login-blob amber"></span>
+  <div class="bf-login-card">
+    <div class="text-center mb-4">
+      <a href="/" class="bf-brand text-decoration-none d-inline-flex align-items-center mb-1" style="font-size:24px;"><i class="bi bi-building-fill-up"></i>bildfie</a>
+      <div style="font-size:12px;color:var(--ink-3);"><?= APP_TAG ?></div>
+    </div>
+    <div class="bf-login-panel">
+      <?php if ($result && $result['ok']): ?>
+        <div style="text-align:center;">
+          <div style="width:56px;height:56px;border-radius:50%;background:#f0fdf4;color:#16a34a;font-size:28px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;"><i class="bi bi-check-lg"></i></div>
+          <h1 style="font-size:22px;font-weight:800;color:var(--ink);margin:0 0 6px;">Email verified!</h1>
+          <p style="font-size:13px;color:var(--ink-3);margin:0 0 20px;">Your account is now active. You can sign in.</p>
+          <a href="/pages/auth/login.php?verified=1" class="bf-login-btn" style="text-decoration:none;"><i class="bi bi-box-arrow-in-right"></i>Sign in</a>
+        </div>
+      <?php elseif ($resent): ?>
+        <div style="text-align:center;">
+          <div style="width:56px;height:56px;border-radius:50%;background:#eaf0f6;color:#1e3a5f;font-size:26px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;"><i class="bi bi-envelope-check"></i></div>
+          <h1 style="font-size:21px;font-weight:800;color:var(--ink);margin:0 0 6px;">Check your inbox</h1>
+          <p style="font-size:13px;color:var(--ink-3);margin:0 0 18px;">If that email is registered and not yet verified, a fresh verification link is on its way (check spam too).</p>
+          <a href="/pages/auth/login.php" class="bf-login-link">Back to sign in</a>
+        </div>
+      <?php else: ?>
+        <div class="bf-section-eyebrow mb-2">Verify email</div>
+        <h1 style="font-size:22px;font-weight:800;color:var(--ink);margin:0 0 5px;">Link didn't work</h1>
+        <p style="font-size:13px;color:var(--ink-3);margin:0 0 16px;"><?= htmlspecialchars($result['error'] ?? 'No verification token was provided.') ?></p>
+        <form method="post">
+          <input type="hidden" name="action" value="resend">
+          <label style="font-size:12px;font-weight:700;color:var(--ink);display:block;margin-bottom:7px;">Your email</label>
+          <div class="bf-login-field"><i class="bi bi-envelope"></i><input type="email" name="email" placeholder="you@email.com" required autofocus></div>
+          <button type="submit" class="bf-login-btn" style="margin-top:14px;"><i class="bi bi-arrow-repeat"></i>Resend verification link</button>
+        </form>
+        <div style="border-top:1px solid var(--line);margin:18px 0 0;padding-top:16px;text-align:center;">
+          <a href="/pages/auth/login.php" class="bf-login-link" style="font-size:13px;">Back to sign in</a>
         </div>
       <?php endif; ?>
-
-      <form method="POST" action="" class="text-start">
-        <div class="mb-3">
-          <label for="resend_email" class="form-label" style="font-size:.875rem;font-weight:600;">Your email address</label>
-          <input type="email" id="resend_email" name="resend_email" class="form-control"
-                 placeholder="you@example.com" required>
-        </div>
-        <button type="submit" class="bf-btn-dark w-100" style="justify-content:center;">
-          Resend verification link
-        </button>
-      </form>
-
-      <p class="mt-3 mb-0" style="font-size:.85rem;color:#6b6b6b;">
-        Already verified? <a href="/pages/auth/login.php" style="color:#1e3a5f;font-weight:600;">Sign in</a>
-      </p>
-    <?php endif; ?>
+    </div>
   </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<?php include __DIR__ . '/../../includes/scripts.php'; ?>

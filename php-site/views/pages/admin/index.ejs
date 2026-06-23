@@ -1,0 +1,2478 @@
+<%- include('../../partials/head', { title: 'Admin — Bildfie', extraHead: `
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --sb-w: 220px; --tb-h: 54px;
+  --sb-bg: #0c1428; --sb-bg2: #111d38; --sb-border: rgba(255,255,255,.06);
+  --sb-text: rgba(255,255,255,.78); --sb-muted: rgba(255,255,255,.38);
+  --sb-hover: rgba(255,255,255,.05); --sb-active-bg: rgba(196,49,0,.14);
+  --sb-active-border: #C43100; --accent: #C43100; --navy: #011D47;
+  --bg: #f2f4f8; --card: #fff; --rule: #e4e7ef; --muted: #6b7280; --text: #1e293b;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);font-size:13px}
+
+/* SIDEBAR */
+#sb{position:fixed;top:0;left:0;width:var(--sb-w);height:100vh;background:var(--sb-bg);z-index:400;
+    display:flex;flex-direction:column;overflow:hidden;transition:width .25s}
+#sb.collapsed{width:54px}
+#sb.collapsed .sb-lbl,#sb.collapsed .sb-logo-txt,#sb.collapsed .sb-badge{display:none!important}
+#sb.collapsed .sb-link{justify-content:center;padding:9px 0}
+
+.sb-logo{display:flex;align-items:center;gap:10px;padding:15px 16px 13px;
+         border-bottom:1px solid var(--sb-border);text-decoration:none;flex-shrink:0}
+.sb-logo-mark{width:28px;height:28px;border-radius:7px;background:var(--accent);
+              display:grid;place-items:center;flex-shrink:0}
+.sb-logo-mark svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2.3;stroke-linecap:round}
+.sb-logo-name{font-family:'Playfair Display',serif;font-size:14px;font-weight:800;color:#fff;line-height:1}
+.sb-logo-sub{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-top:2px}
+
+.sb-nav{flex:1;overflow-y:auto;padding:8px 0 16px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent}
+.sb-nav::-webkit-scrollbar{width:3px}
+.sb-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
+.sb-grp{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+        color:var(--sb-muted);padding:13px 16px 3px}
+.sb-link{display:flex;align-items:center;gap:9px;padding:8px 16px;color:var(--sb-text);
+         font-size:12px;font-weight:500;cursor:pointer;border-left:3px solid transparent;
+         text-decoration:none;transition:background .12s,border-color .12s,color .12s;user-select:none}
+.sb-link:hover{background:var(--sb-hover);color:#fff}
+.sb-link.active{background:var(--sb-active-bg);border-left-color:var(--sb-active-border);color:#fff;font-weight:600}
+.sb-link svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;flex-shrink:0;opacity:.75}
+.sb-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:9px;font-weight:700;
+          padding:2px 6px;border-radius:100px;min-width:18px;text-align:center}
+.sb-div{height:1px;background:var(--sb-border);margin:8px 16px}
+.sb-footer{padding:10px 14px;border-top:1px solid var(--sb-border);flex-shrink:0}
+.sb-user{display:flex;align-items:center;gap:9px}
+.sb-avatar{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;
+           display:grid;place-items:center;font-size:11px;font-weight:700;flex-shrink:0}
+
+/* TOPBAR */
+#tb{position:fixed;top:0;left:var(--sb-w);right:0;height:var(--tb-h);background:var(--card);
+    border-bottom:1px solid var(--rule);z-index:300;display:flex;align-items:center;
+    padding:0 20px;gap:12px;transition:left .25s}
+#sb.collapsed~#tb{left:54px}
+#sb.collapsed~#tb~#main{margin-left:54px}
+.tb-toggle{width:30px;height:30px;border:1px solid var(--rule);border-radius:7px;background:none;
+           cursor:pointer;display:grid;place-items:center;flex-shrink:0;color:var(--muted);transition:background .12s}
+.tb-toggle:hover{background:var(--bg)}
+.tb-toggle svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.tb-bc{font-size:10.5px;color:var(--muted)}
+.tb-bc strong{font-size:13px;font-weight:700;color:var(--navy)}
+.tb-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.tb-user{display:flex;align-items:center;gap:7px;padding:4px 8px;border-radius:8px;cursor:default}
+.tb-user-name{font-size:12px;font-weight:600;color:var(--navy)}
+.tb-user-role{font-size:9.5px;color:var(--muted)}
+.tb-avatar{width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;
+           display:grid;place-items:center;font-size:11px;font-weight:700;flex-shrink:0}
+
+/* MAIN */
+#main{margin-left:var(--sb-w);padding-top:var(--tb-h);min-height:100vh;transition:margin-left .25s}
+.adm-page{padding:20px 22px}
+.pg-head{margin-bottom:18px}
+.pg-head h1{font-size:18px;font-weight:700;color:var(--navy);line-height:1.2}
+.pg-head p{font-size:11.5px;color:var(--muted);margin-top:3px}
+.pg-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+
+/* KPI */
+.kpi{background:var(--card);border-radius:12px;padding:16px 18px;border:1px solid var(--rule);height:100%}
+.kpi-icon{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;margin-bottom:10px}
+.kpi-icon svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round}
+.kpi-val{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:var(--navy);line-height:1}
+.kpi-lbl{font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.07em}
+
+/* CARD */
+.card2{background:var(--card);border:1px solid var(--rule);border-radius:12px;overflow:hidden}
+.card2-head{padding:13px 16px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between}
+.card2-title{font-size:12.5px;font-weight:700;color:var(--navy)}
+.card2-action{font-size:11px;color:var(--accent);font-weight:600;cursor:pointer}
+.card2-action:hover{text-decoration:underline}
+
+/* TABLE */
+.adm-tbl{width:100%;border-collapse:collapse}
+.adm-tbl th{padding:8px 13px;font-size:9.5px;font-weight:700;text-transform:uppercase;
+            letter-spacing:.09em;color:var(--muted);background:var(--bg);
+            border-bottom:1px solid var(--rule);text-align:left}
+.adm-tbl td{padding:10px 13px;border-bottom:1px solid var(--rule);color:var(--text);vertical-align:middle}
+.adm-tbl tr:last-child td{border-bottom:none}
+.adm-tbl tbody tr:hover td{background:#fafbfd}
+
+/* BADGES */
+.bdg{display:inline-flex;align-items:center;padding:2px 7px;border-radius:100px;font-size:9.5px;font-weight:600;white-space:nowrap}
+.bdg-admin{background:#eff6ff;color:#1e40af}
+.bdg-professional{background:#f0fdf4;color:#166534}
+.bdg-client{background:#f9fafb;color:#6b7280;border:1px solid var(--rule)}
+.bdg-supplier{background:#fefce8;color:#854d0e}
+.bdg-banned{background:#fef2f2;color:#991b1b}
+.bdg-ok{background:#f0fdf4;color:#166534}
+.bdg-pending{background:#fff7ed;color:#9a3412}
+.bdg-done{background:#eff6ff;color:#1e40af}
+.bdg-neutral{background:#f9fafb;color:#6b7280;border:1px solid var(--rule)}
+.bdg-err{background:#fef2f2;color:#991b1b}
+
+/* VTABS */
+.vtab{padding:5px 14px;border:1px solid var(--rule);border-radius:7px;background:#fff;
+      color:var(--muted);font-size:11.5px;font-weight:600;cursor:pointer;transition:background .12s}
+.vtab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:900;
+               overflow-y:auto;padding:32px 16px}
+.modal-box{background:#fff;border-radius:14px;max-width:680px;margin:0 auto;overflow:hidden;
+           box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal-head{background:var(--navy);padding:18px 22px;display:flex;align-items:center;gap:13px}
+.modal-head-info{flex:1}
+.modal-head-name{font-size:15px;font-weight:700;color:#fff}
+.modal-head-email{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px}
+.modal-close{background:none;border:none;color:rgba(255,255,255,.5);cursor:pointer;
+             font-size:20px;line-height:1;padding:2px 6px}
+.modal-close:hover{color:#fff}
+.modal-body{padding:18px 22px;max-height:65vh;overflow-y:auto}
+.modal-foot{padding:14px 22px;border-top:1px solid var(--rule);background:var(--bg);
+            display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:18px}
+.info-item label{display:block;font-size:9.5px;color:var(--muted);text-transform:uppercase;
+                 letter-spacing:.06em;margin-bottom:2px}
+.info-item span{font-size:12.5px;font-weight:500}
+.sec-hd{font-size:11.5px;font-weight:700;color:var(--navy);border-bottom:1px solid var(--rule);
+         padding-bottom:6px;margin-bottom:10px}
+.pw-box{background:var(--bg);border-radius:9px;padding:12px 14px;margin-bottom:18px}
+
+/* ALERT */
+.adm-alert{background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;padding:10px 14px;
+           font-size:12px;color:#9a3412;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.adm-alert a{color:var(--accent);font-weight:600;cursor:pointer;text-decoration:underline}
+
+/* TOAST */
+#toast{position:fixed;bottom:20px;right:20px;padding:10px 18px;border-radius:9px;color:#fff;
+       font-size:12.5px;font-weight:600;z-index:9999;display:none;max-width:320px;
+       box-shadow:0 4px 20px rgba(0,0,0,.25)}
+
+/* MINI STAT */
+.mini-stat{background:var(--card);border:1px solid var(--rule);border-radius:10px;
+           padding:13px 15px;display:flex;align-items:center;gap:11px}
+.mini-ico{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;flex-shrink:0}
+.mini-ico svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.mini-val{font-size:17px;font-weight:800;color:var(--navy);line-height:1}
+.mini-lbl{font-size:10px;color:var(--muted);margin-top:2px}
+
+/* INPUT */
+.adm-input{padding:7px 10px;border:1px solid var(--rule);border-radius:7px;font-size:12px;
+           font-family:'Sora',sans-serif;background:#fff;color:var(--text);outline:none}
+.adm-input:focus{border-color:#94a3b8}
+.adm-select{padding:7px 10px;border:1px solid var(--rule);border-radius:7px;font-size:12px;
+            font-family:'Sora',sans-serif;background:#fff;color:var(--text);outline:none;cursor:pointer}
+
+/* PAGER */
+.pager{padding:11px 16px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;
+       align-items:center;font-size:11px;color:var(--muted)}
+
+/* PROG */
+.prog{height:4px;background:var(--rule);border-radius:4px;overflow:hidden;margin-top:4px}
+.prog-fill{height:100%;border-radius:4px}
+
+/* RESPONSIVE */
+@media(max-width:991px){
+  #sb{transform:translateX(-100%);transition:transform .25s}
+  #sb.mob-open{transform:translateX(0)}
+  #tb,#main{left:0!important;margin-left:0!important}
+}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:4px}
+
+/* COLLAPSIBLE SIDEBAR GROUPS */
+.sb-grp-items{transition:none}
+.sb-grp-items.collapsed{display:none}
+.grp-arr{font-size:9px;opacity:.5;transition:transform .2s}
+.grp-arr.up{transform:rotate(-90deg)}
+</style>
+` }) %>
+
+<body>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SIDEBAR
+════════════════════════════════════════════════════════════════ -->
+<aside id="sb">
+  <a href="/" class="sb-logo">
+    <div class="sb-logo-mark">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <div class="sb-logo-txt">
+      <div class="sb-logo-name">Bildfie</div>
+      <div class="sb-logo-sub">Admin Panel</div>
+    </div>
+  </a>
+
+  <nav class="sb-nav">
+
+    <!-- COMMAND CENTER -->
+    <div class="sb-grp sb-lbl" onclick="toggleGrp('grp-cmd')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+      <span>Command Center</span><span class="grp-arr">▾</span>
+    </div>
+    <div id="grp-cmd" class="sb-grp-items">
+      <a id="nav-overview" class="sb-link active" onclick="showSection('overview')">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span class="sb-lbl">Overview</span>
+      </a>
+      <a id="nav-system" class="sb-link" onclick="showSection('system')">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        <span class="sb-lbl">System Health</span>
+      </a>
+    </div>
+
+    <!-- USERS & IDENTITY -->
+    <div class="sb-grp sb-lbl" onclick="toggleGrp('grp-usr')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+      <span>Users &amp; Identity</span><span class="grp-arr">▾</span>
+    </div>
+    <div id="grp-usr" class="sb-grp-items">
+      <a id="nav-users" class="sb-link" onclick="showSection('users')">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        <span class="sb-lbl">User Management</span>
+      </a>
+      <a id="nav-talent" class="sb-link" onclick="showSection('talent')">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span class="sb-lbl">Talent Registry</span>
+      </a>
+      <a id="nav-verifications" class="sb-link" onclick="showSection('verifications')">
+        <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span class="sb-lbl">Verifications</span>
+        <span class="sb-badge" id="sb-verif-badge" style="display:none">0</span>
+      </a>
+    </div>
+
+    <!-- MARKETPLACE -->
+    <div class="sb-grp sb-lbl" onclick="toggleGrp('grp-mkt')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+      <span>Marketplace</span><span class="grp-arr">▾</span>
+    </div>
+    <div id="grp-mkt" class="sb-grp-items">
+      <a id="nav-bids" class="sb-link" onclick="showSection('bids')">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span class="sb-lbl">Bids &amp; Jobs</span>
+      </a>
+      <a id="nav-projects" class="sb-link" onclick="showSection('projects')">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span class="sb-lbl">Projects</span>
+      </a>
+      <a id="nav-listings" class="sb-link" onclick="showSection('listings')">
+        <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span class="sb-lbl">Listings</span>
+      </a>
+      <a id="nav-reviews" class="sb-link" onclick="showSection('reviews')">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span class="sb-lbl">Reviews</span>
+      </a>
+    </div>
+
+    <!-- FINANCE & FINTECH -->
+    <div class="sb-grp sb-lbl" onclick="toggleGrp('grp-fin')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+      <span>Finance &amp; Fintech</span><span class="grp-arr">▾</span>
+    </div>
+    <div id="grp-fin" class="sb-grp-items">
+      <a id="nav-finance" class="sb-link" onclick="showSection('finance')">
+        <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        <span class="sb-lbl">Transactions</span>
+      </a>
+      <a id="nav-invoices" class="sb-link" onclick="showSection('invoices')">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        <span class="sb-lbl">Invoices &amp; Escrow</span>
+      </a>
+    </div>
+
+    <!-- CRM & SALES -->
+    <div class="sb-grp sb-lbl" onclick="toggleGrp('grp-crm')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+      <span>CRM &amp; Sales</span><span class="grp-arr">▾</span>
+    </div>
+    <div id="grp-crm" class="sb-grp-items">
+      <a id="nav-crm" class="sb-link" onclick="showSection('crm')">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        <span class="sb-lbl">Client Accounts</span>
+      </a>
+    </div>
+
+    <!-- COMMUNICATIONS -->
+    <div class="sb-grp sb-lbl" onclick="toggleGrp('grp-comm')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+      <span>Communications</span><span class="grp-arr">▾</span>
+    </div>
+    <div id="grp-comm" class="sb-grp-items">
+      <a id="nav-comms" class="sb-link" onclick="showSection('comms')">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        <span class="sb-lbl">Messages &amp; Broadcast</span>
+      </a>
+    </div>
+
+    <!-- ANALYTICS & DATA -->
+    <div class="sb-grp sb-lbl" onclick="toggleGrp('grp-ana')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+      <span>Analytics &amp; Data</span><span class="grp-arr">▾</span>
+    </div>
+    <div id="grp-ana" class="sb-grp-items">
+      <a id="nav-analytics" class="sb-link" onclick="showSection('analytics')">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <span class="sb-lbl">Platform Analytics</span>
+      </a>
+      <a id="nav-growth" class="sb-link" onclick="showSection('growth')">
+        <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        <span class="sb-lbl">Growth Metrics</span>
+      </a>
+    </div>
+
+    <!-- GOVERNANCE -->
+    <div class="sb-grp sb-lbl" onclick="toggleGrp('grp-gov')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+      <span>Governance</span><span class="grp-arr">▾</span>
+    </div>
+    <div id="grp-gov" class="sb-grp-items">
+      <a id="nav-audit" class="sb-link" onclick="showSection('audit')">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span class="sb-lbl">Audit Log</span>
+      </a>
+      <a id="nav-superadmin" class="sb-link" onclick="showSection('superadmin')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M5.34 17.66l-1.41 1.41M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 18.66l1.41-1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 5.34l1.41 1.41"/></svg>
+        <span class="sb-lbl">Superadmin</span>
+      </a>
+    </div>
+
+    <div class="sb-div"></div>
+    <a href="/" class="sb-link" style="opacity:.65">
+      <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      <span class="sb-lbl">View Site</span>
+    </a>
+    <a href="/account" class="sb-link" style="opacity:.65">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>
+      <span class="sb-lbl">My Account</span>
+    </a>
+    <a href="/api/auth/logout" class="sb-link" style="opacity:.65">
+      <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      <span class="sb-lbl">Logout</span>
+    </a>
+  </nav>
+
+  <div class="sb-footer">
+    <div class="sb-user">
+      <div class="sb-avatar"><%= user ? user.name.charAt(0).toUpperCase() : 'A' %></div>
+      <div class="sb-lbl">
+        <div style="font-size:11.5px;font-weight:600;color:rgba(255,255,255,.85)"><%= user ? user.name : 'Admin' %></div>
+        <div style="font-size:9.5px;color:var(--sb-muted)">Super Admin</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ════════════════════════════════════════════════════════════════
+     TOPBAR
+════════════════════════════════════════════════════════════════ -->
+<header id="tb">
+  <button class="tb-toggle" onclick="toggleSidebar()">
+    <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <div>
+    <div class="tb-bc">Admin / <strong id="bc-section">Overview</strong></div>
+  </div>
+  <div class="tb-right">
+    <div style="font-size:11px;color:var(--muted)" id="tb-date"></div>
+    <div style="width:1px;height:20px;background:var(--rule)"></div>
+    <div class="tb-user">
+      <div class="tb-avatar"><%= user ? user.name.charAt(0).toUpperCase() : 'A' %></div>
+      <div>
+        <div class="tb-user-name"><%= user ? user.name : 'Admin' %></div>
+        <div class="tb-user-role">Super Admin</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════════════════════════
+     MAIN
+════════════════════════════════════════════════════════════════ -->
+<main id="main">
+
+<!-- ─── OVERVIEW ─── -->
+<div id="sec-overview" class="adm-page">
+  <div class="pg-head">
+    <h1>Dashboard Overview</h1>
+    <p id="pg-date">Loading…</p>
+  </div>
+
+  <div id="verif-alert" class="adm-alert" style="display:none">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span><strong id="verif-alert-count">0</strong> verification document(s) are waiting for your review.</span>
+    <a onclick="showSection('verifications')">Review now →</a>
+  </div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-6 col-lg-3">
+      <div class="kpi">
+        <div class="kpi-icon" style="background:#eff6ff;color:#2563eb">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="kpi-val" id="kpi-users">—</div>
+        <div class="kpi-lbl">Total Users</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="kpi">
+        <div class="kpi-icon" style="background:#f0fdf4;color:#16a34a">
+          <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        </div>
+        <div class="kpi-val" id="kpi-profs">—</div>
+        <div class="kpi-lbl">Professionals</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="kpi">
+        <div class="kpi-icon" style="background:#fef3c7;color:#d97706">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="kpi-val" id="kpi-revenue">—</div>
+        <div class="kpi-lbl">Total Revenue</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="kpi">
+        <div class="kpi-icon" style="background:#fdf4ff;color:#9333ea">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="kpi-val" id="kpi-bids">—</div>
+        <div class="kpi-lbl">Total Bids</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-6 col-lg-3">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#fff7ed;color:#ea580c">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div><div class="mini-val" id="kpi-projects">—</div><div class="mini-lbl">Projects</div></div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#eff6ff;color:#2563eb">
+          <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <div><div class="mini-val" id="kpi-txns">—</div><div class="mini-lbl">Transactions</div></div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#fef2f2;color:#dc2626">
+          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div><div class="mini-val" id="kpi-pending-verifs">—</div><div class="mini-lbl">Pending Verifs</div></div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#f0fdf4;color:#16a34a">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div><div class="mini-val" style="font-size:13px" id="kpi-revenue2">—</div><div class="mini-lbl">KES Revenue</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card2">
+    <div class="card2-head">
+      <span class="card2-title">Recent Payments</span>
+      <span class="card2-action" onclick="showSection('finance')">View all transactions →</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="adm-tbl">
+        <thead><tr><th>User</th><th>Amount (KES)</th><th>M-Pesa Receipt</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody id="recent-pay-body">
+          <tr><td colspan="5" style="padding:20px;text-align:center;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SYSTEM HEALTH ─── -->
+<div id="sec-system" class="adm-page" style="display:none">
+  <div class="pg-head"><h1>System Health</h1><p>Live server metrics, database status and record counts</p></div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-6 col-lg-3">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#eff6ff;color:#2563eb">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div><div class="mini-val" id="sys-uptime">—</div><div class="mini-lbl">Uptime</div></div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#f0fdf4;color:#16a34a">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div><div class="mini-val" id="sys-node">—</div><div class="mini-lbl">Node.js Version</div></div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#fef3c7;color:#d97706">
+          <svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        </div>
+        <div><div class="mini-val" id="sys-db">—</div><div class="mini-lbl">Database</div></div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#fdf4ff;color:#9333ea">
+          <svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><circle cx="12" cy="12" r="1"/></svg>
+        </div>
+        <div><div class="mini-val" id="sys-env">—</div><div class="mini-lbl">Environment</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-lg-5">
+      <div class="card2">
+        <div class="card2-head"><span class="card2-title">Memory Usage</span></div>
+        <div style="padding:16px 18px" id="sys-mem-body">
+          <div style="text-align:center;padding:16px;color:var(--muted)">Loading…</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-7">
+      <div class="card2">
+        <div class="card2-head"><span class="card2-title">Database Record Counts</span></div>
+        <div style="padding:14px 18px" id="sys-tables-body">
+          <div style="text-align:center;padding:16px;color:var(--muted)">Loading…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── USERS ─── -->
+<div id="sec-users" class="adm-page" style="display:none">
+  <div class="pg-head pg-row">
+    <div><h1>User Management</h1><p>All platform users — click any row to view full profile and take actions</p></div>
+  </div>
+
+  <div class="card2 mb-3" style="border-radius:10px;overflow:visible">
+    <div style="padding:12px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <input type="text" id="user-search" class="adm-input" placeholder="Search name or email…"
+             oninput="debounceUsers()" style="flex:1;min-width:180px">
+      <select id="user-role-filter" class="adm-select" onchange="loadUsers(1)">
+        <option value="">All Roles</option>
+        <option value="client">Client</option>
+        <option value="professional">Professional</option>
+        <option value="supplier">Supplier</option>
+        <option value="admin">Admin</option>
+        <option value="banned">Banned</option>
+      </select>
+      <button onclick="loadUsers(1)" class="btn btn-sm" style="background:var(--navy);color:#fff;border-radius:7px;font-size:11.5px;padding:7px 14px;border:none">Search</button>
+    </div>
+  </div>
+
+  <div class="card2">
+    <div class="card2-head">
+      <span class="card2-title">All Users</span>
+      <span id="users-count" style="font-size:11px;color:var(--muted)"></span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="adm-tbl">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Phone</th>
+            <th>Location</th>
+            <th>Joined</th>
+            <th>Verified</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="users-body">
+          <tr><td colspan="8" style="padding:24px;text-align:center;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pager" id="users-pager" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ─── TALENT REGISTRY ─── -->
+<div id="sec-talent" class="adm-page" style="display:none">
+  <div class="pg-head pg-row">
+    <div><h1>Talent Registry</h1><p>All verified and registered professionals on the platform</p></div>
+  </div>
+
+  <div class="card2 mb-3" style="overflow:visible">
+    <div style="padding:12px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <input type="text" id="talent-search" class="adm-input" placeholder="Search name or email…"
+             oninput="debounceTalent()" style="flex:1;min-width:160px">
+      <select id="talent-trade" class="adm-select" onchange="loadTalent(1)" style="min-width:130px">
+        <option value="">All Trades</option>
+      </select>
+      <select id="talent-avail" class="adm-select" onchange="loadTalent(1)">
+        <option value="">Any Availability</option>
+        <option value="true">Available</option>
+        <option value="false">Unavailable</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card2">
+    <div class="card2-head">
+      <span class="card2-title">Professionals</span>
+      <span id="talent-count" style="font-size:11px;color:var(--muted)"></span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="adm-tbl">
+        <thead>
+          <tr><th>Name</th><th>Trade</th><th>NCA Grade</th><th>Rate/hr</th><th>Jobs Done</th><th>Rating</th><th>Verified</th><th>Available</th><th>Joined</th></tr>
+        </thead>
+        <tbody id="talent-body">
+          <tr><td colspan="9" style="padding:24px;text-align:center;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pager" id="talent-pager" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ─── PROJECTS ─── -->
+<div id="sec-projects" class="adm-page" style="display:none">
+  <div class="pg-head pg-row">
+    <div><h1>Project Management</h1><p>All projects across the platform — lifecycle, budget and team</p></div>
+  </div>
+
+  <div class="card2 mb-3" style="overflow:visible">
+    <div style="padding:12px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <input type="text" id="proj-search" class="adm-input" placeholder="Search project name…"
+             oninput="debounceProjects()" style="flex:1;min-width:160px">
+      <select id="proj-status" class="adm-select" onchange="loadProjects(1)">
+        <option value="">All Status</option>
+        <option value="planning">Planning</option>
+        <option value="active">Active</option>
+        <option value="in_progress">In Progress</option>
+        <option value="completed">Completed</option>
+        <option value="on_hold">On Hold</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card2">
+    <div class="card2-head">
+      <span class="card2-title">All Projects</span>
+      <span id="proj-count" style="font-size:11px;color:var(--muted)"></span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="adm-tbl">
+        <thead>
+          <tr><th>Project</th><th>Owner</th><th>Type</th><th>Status</th><th>Progress</th><th>Budget</th><th>Due</th><th>Created</th></tr>
+        </thead>
+        <tbody id="proj-body">
+          <tr><td colspan="8" style="padding:24px;text-align:center;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pager" id="proj-pager" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ─── LISTINGS ─── -->
+<div id="sec-listings" class="adm-page" style="display:none">
+  <div class="pg-head"><h1>Marketplace Listings</h1><p>Materials, equipment and transport listed by suppliers</p></div>
+
+  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+    <button class="vtab active" id="ltab-materials"  onclick="loadListings('materials',1)">Materials</button>
+    <button class="vtab"        id="ltab-equipment"  onclick="loadListings('equipment',1)">Equipment</button>
+    <button class="vtab"        id="ltab-transport"  onclick="loadListings('transport',1)">Transport</button>
+  </div>
+
+  <div class="card2">
+    <div class="card2-head">
+      <span class="card2-title" id="listings-title">Materials</span>
+      <span id="listings-count" style="font-size:11px;color:var(--muted)"></span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="adm-tbl">
+        <thead id="listings-thead">
+          <tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Location</th><th>Supplier</th><th>Listed</th><th></th></tr>
+        </thead>
+        <tbody id="listings-body">
+          <tr><td colspan="8" style="padding:24px;text-align:center;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pager" id="listings-pager" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ─── REVIEWS ─── -->
+<div id="sec-reviews" class="adm-page" style="display:none">
+  <div class="pg-head pg-row">
+    <div><h1>Reviews &amp; Content Moderation</h1><p>All platform reviews — flag and remove inappropriate content</p></div>
+  </div>
+
+  <div class="card2 mb-3" style="overflow:visible">
+    <div style="padding:12px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <label style="font-size:11.5px;font-weight:600;color:var(--muted)">Filter by max rating:</label>
+      <select id="rev-filter" class="adm-select" onchange="loadReviews(1)">
+        <option value="">All Ratings</option>
+        <option value="2">★★ and below (concern)</option>
+        <option value="1">★ only (critical)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card2">
+    <div class="card2-head">
+      <span class="card2-title">Reviews</span>
+      <span id="rev-count" style="font-size:11px;color:var(--muted)"></span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="adm-tbl">
+        <thead>
+          <tr><th>Reviewer</th><th>Reviewee</th><th>Project</th><th>Rating</th><th>Comment</th><th>Date</th><th></th></tr>
+        </thead>
+        <tbody id="rev-body">
+          <tr><td colspan="7" style="padding:24px;text-align:center;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pager" id="rev-pager" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ─── FINANCE ─── -->
+<div id="sec-finance" class="adm-page" style="display:none">
+  <div class="pg-head"><h1>Finance &amp; Payments</h1><p>All M-Pesa transactions processed on the platform</p></div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-4">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#f0fdf4;color:#16a34a">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div><div class="mini-val" id="fin-revenue">—</div><div class="mini-lbl">Total Revenue (KES)</div></div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#eff6ff;color:#2563eb">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div><div class="mini-val" id="fin-txns">—</div><div class="mini-lbl">Total Transactions</div></div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#fff7ed;color:#d97706">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div><div class="mini-val" id="fin-pending">—</div><div class="mini-lbl">Pending Txns</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card2">
+    <div class="card2-head">
+      <span class="card2-title">M-Pesa Transactions</span>
+      <input type="text" id="fin-search" class="adm-input" placeholder="Search user or receipt…"
+             oninput="debounceFinance()" style="font-size:11.5px;padding:5px 10px">
+    </div>
+    <div style="overflow-x:auto">
+      <table class="adm-tbl">
+        <thead>
+          <tr><th>Date</th><th>User</th><th>Amount</th><th>Phone</th><th>M-Pesa Receipt</th><th>Status</th></tr>
+        </thead>
+        <tbody id="fin-body">
+          <tr><td colspan="6" style="padding:24px;text-align:center;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pager" id="fin-pager" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ─── VERIFICATIONS ─── -->
+<div id="sec-verifications" class="adm-page" style="display:none">
+  <div class="pg-head"><h1>Verification Queue</h1><p>Review professional identity and licence documents</p></div>
+
+  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+    <button class="vtab active" id="vtab-pending"  onclick="loadVerifications('pending')">Pending <span id="vcount-pending"  class="sb-badge" style="background:var(--accent);position:relative;top:-1px">0</span></button>
+    <button class="vtab"        id="vtab-approved" onclick="loadVerifications('approved')">Approved</button>
+    <button class="vtab"        id="vtab-rejected" onclick="loadVerifications('rejected')">Rejected</button>
+  </div>
+
+  <div class="card2">
+    <div style="overflow-x:auto">
+      <table class="adm-tbl">
+        <thead>
+          <tr><th>User</th><th>Trade</th><th>File</th><th>Type</th><th>Uploaded</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="verif-body">
+          <tr><td colspan="6" style="padding:24px;text-align:center;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ─── BIDS ─── -->
+<div id="sec-bids" class="adm-page" style="display:none">
+  <div class="pg-head"><h1>Bid Moderation</h1><p>All bids posted on the marketplace — remove inappropriate listings</p></div>
+
+  <div class="card2">
+    <div class="card2-head">
+      <span class="card2-title">All Bids</span>
+      <span id="bids-count" style="font-size:11px;color:var(--muted)"></span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="adm-tbl">
+        <thead>
+          <tr><th>Title</th><th>Posted By</th><th>Budget (KES)</th><th>Status</th><th>Applications</th><th>Posted</th><th></th></tr>
+        </thead>
+        <tbody id="bids-body">
+          <tr><td colspan="7" style="padding:24px;text-align:center;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pager" id="bids-pager" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ─── INVOICES & ESCROW ─── -->
+<div id="sec-invoices" class="adm-page" style="display:none">
+  <div class="pg-head"><h1>Invoices &amp; Escrow</h1><p>Project invoices, escrow holdings and payment milestones</p></div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-4">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#fef3c7;color:#d97706">
+          <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="12" y2="15"/></svg>
+        </div>
+        <div><div class="mini-val" id="inv-total">—</div><div class="mini-lbl">Total Invoices</div></div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#fff7ed;color:#ea580c">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div><div class="mini-val" id="inv-held">—</div><div class="mini-lbl">In Escrow (KES)</div></div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#f0fdf4;color:#16a34a">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div><div class="mini-val" id="inv-paid">—</div><div class="mini-lbl">Total Paid (KES)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card2">
+    <div class="card2-head">
+      <span class="card2-title">All Invoices</span>
+      <select id="inv-status-filter" class="adm-select" onchange="loadInvoices(1)" style="font-size:11.5px;padding:5px 10px">
+        <option value="">All Status</option>
+        <option value="pending">Pending</option>
+        <option value="paid">Paid</option>
+        <option value="overdue">Overdue</option>
+      </select>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="adm-tbl">
+        <thead>
+          <tr><th>Date</th><th>Issuer</th><th>Recipient</th><th>Project</th><th>Milestone</th><th>Amount</th><th>Status</th><th>Escrow</th></tr>
+        </thead>
+        <tbody id="inv-body">
+          <tr><td colspan="8" style="padding:24px;text-align:center;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pager" id="inv-pager" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ─── CRM ─── -->
+<div id="sec-crm" class="adm-page" style="display:none">
+  <div class="pg-head"><h1>CRM &amp; Client Accounts</h1><p>Client base, project engagement and top accounts</p></div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-6 col-lg-3">
+      <div class="kpi">
+        <div class="kpi-icon" style="background:#eff6ff;color:#2563eb">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        </div>
+        <div class="kpi-val" id="crm-clients">—</div>
+        <div class="kpi-lbl">Total Clients</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="kpi">
+        <div class="kpi-icon" style="background:#fefce8;color:#ca8a04">
+          <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        </div>
+        <div class="kpi-val" id="crm-suppliers">—</div>
+        <div class="kpi-lbl">Suppliers</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="kpi">
+        <div class="kpi-icon" style="background:#f0fdf4;color:#16a34a">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="kpi-val" id="crm-projects">—</div>
+        <div class="kpi-lbl">Active Projects</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="kpi">
+        <div class="kpi-icon" style="background:#fdf4ff;color:#9333ea">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="kpi-val" id="crm-bids">—</div>
+        <div class="kpi-lbl">Open Bids</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card2">
+    <div class="card2-head"><span class="card2-title">Top Clients by Projects</span></div>
+    <div style="overflow-x:auto">
+      <table class="adm-tbl">
+        <thead>
+          <tr><th>Client</th><th>Email</th><th>Location</th><th>Projects</th><th>Member Since</th><th></th></tr>
+        </thead>
+        <tbody id="crm-body">
+          <tr><td colspan="6" style="padding:24px;text-align:center;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ─── COMMUNICATIONS ─── -->
+<div id="sec-comms" class="adm-page" style="display:none">
+  <div class="pg-head"><h1>Communications</h1><p>Platform messaging stats and system-wide broadcast notifications</p></div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-6">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#eff6ff;color:#2563eb">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <div><div class="mini-val" id="comms-total">—</div><div class="mini-lbl">Total Messages</div></div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="mini-stat">
+        <div class="mini-ico" style="background:#fef2f2;color:#dc2626">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </div>
+        <div><div class="mini-val" id="comms-unread">—</div><div class="mini-lbl">Unread Messages</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-lg-5">
+      <div class="card2">
+        <div class="card2-head"><span class="card2-title">Broadcast Notification</span></div>
+        <div style="padding:16px 18px">
+          <p style="font-size:11.5px;color:var(--muted);margin-bottom:14px">Send a system notification to all or selected users</p>
+          <div style="margin-bottom:10px">
+            <label style="display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Title</label>
+            <input type="text" id="bc-title" class="adm-input" placeholder="Notification title" style="width:100%">
+          </div>
+          <div style="margin-bottom:10px">
+            <label style="display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Message</label>
+            <textarea id="bc-body" class="adm-input" rows="3" placeholder="Notification body…" style="width:100%;resize:vertical"></textarea>
+          </div>
+          <div style="margin-bottom:12px">
+            <label style="display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Send To</label>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              <label style="font-size:12px;display:flex;align-items:center;gap:5px;cursor:pointer">
+                <input type="checkbox" id="bc-all" checked onchange="toggleBcAll(this)"> All users
+              </label>
+              <label style="font-size:12px;display:flex;align-items:center;gap:5px;cursor:pointer"><input type="checkbox" class="bc-role" value="client"> Clients</label>
+              <label style="font-size:12px;display:flex;align-items:center;gap:5px;cursor:pointer"><input type="checkbox" class="bc-role" value="professional"> Professionals</label>
+              <label style="font-size:12px;display:flex;align-items:center;gap:5px;cursor:pointer"><input type="checkbox" class="bc-role" value="supplier"> Suppliers</label>
+            </div>
+          </div>
+          <button onclick="doBroadcast()" class="btn btn-sm"
+                  style="background:var(--navy);color:#fff;border:none;border-radius:7px;font-size:12px;padding:8px 18px;width:100%;cursor:pointer">
+            Send Broadcast
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-7">
+      <div class="card2">
+        <div class="card2-head"><span class="card2-title">Recent Messages</span></div>
+        <div style="overflow-x:auto">
+          <table class="adm-tbl">
+            <thead><tr><th>From</th><th>To</th><th>Message</th><th>Date</th><th>Read</th></tr></thead>
+            <tbody id="comms-body">
+              <tr><td colspan="5" style="padding:20px;text-align:center;color:var(--muted)">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── ANALYTICS ─── -->
+<div id="sec-analytics" class="adm-page" style="display:none">
+  <div class="pg-head"><h1>Platform Analytics</h1><p>Revenue and user growth — last 30 days</p></div>
+
+  <div class="row g-3">
+    <div class="col-lg-8">
+      <div class="card2">
+        <div class="card2-head"><span class="card2-title">Revenue (KES) — Last 30 Days</span></div>
+        <div style="padding:16px 18px"><div style="height:250px"><canvas id="chartRevenue"></canvas></div></div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card2">
+        <div class="card2-head"><span class="card2-title">New Signups — Last 30 Days</span></div>
+        <div style="padding:16px 18px"><div style="height:250px"><canvas id="chartSignups"></canvas></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── GROWTH METRICS ─── -->
+<div id="sec-growth" class="adm-page" style="display:none">
+  <div class="pg-head"><h1>Growth &amp; Distribution</h1><p>User acquisition, platform engagement and supply-side growth — last 30 days</p></div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-6 col-lg-3">
+      <div class="kpi">
+        <div class="kpi-icon" style="background:#eff6ff;color:#2563eb">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        </div>
+        <div class="kpi-val" id="grw-users">—</div>
+        <div class="kpi-lbl">New Users (30d)</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="kpi">
+        <div class="kpi-icon" style="background:#f0fdf4;color:#16a34a">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="kpi-val" id="grw-bids">—</div>
+        <div class="kpi-lbl">New Bids (30d)</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="kpi">
+        <div class="kpi-icon" style="background:#fff7ed;color:#ea580c">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="kpi-val" id="grw-projects">—</div>
+        <div class="kpi-lbl">New Projects (30d)</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="kpi">
+        <div class="kpi-icon" style="background:#fdf4ff;color:#9333ea">
+          <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <div class="kpi-val" id="grw-apps">—</div>
+        <div class="kpi-lbl">Applications (30d)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-lg-6">
+      <div class="card2">
+        <div class="card2-head"><span class="card2-title">User Role Breakdown</span></div>
+        <div style="padding:16px 18px" id="grw-roles-body"></div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card2">
+        <div class="card2-head"><span class="card2-title">Top Trades on Platform</span></div>
+        <div style="padding:16px 18px" id="grw-trades-body"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── AUDIT LOG ─── -->
+<div id="sec-audit" class="adm-page" style="display:none">
+  <div class="pg-head pg-row">
+    <div><h1>Audit Log</h1><p>Platform-wide activity trail — verifications, payments, registrations, bids</p></div>
+    <button onclick="loadAudit()" class="btn btn-sm"
+            style="background:var(--navy);color:#fff;border:none;border-radius:7px;font-size:11.5px;padding:7px 14px">↻ Refresh</button>
+  </div>
+
+  <div class="card2">
+    <div id="audit-body" style="padding:8px 0">
+      <div style="padding:24px;text-align:center;color:var(--muted)">Loading…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SUPERADMIN ─── -->
+<div id="sec-superadmin" class="adm-page" style="display:none">
+  <div class="pg-head"><h1>Superadmin Control Plane</h1><p>Global configuration, platform feature flags and emergency controls</p></div>
+
+  <div class="row g-3 mb-3">
+    <!-- System Config -->
+    <div class="col-lg-6">
+      <div class="card2">
+        <div class="card2-head"><span class="card2-title">Platform Configuration</span></div>
+        <div style="padding:14px 18px" id="sa-config-body">
+          <div style="text-align:center;padding:12px;color:var(--muted)">Loading…</div>
+        </div>
+      </div>
+    </div>
+    <!-- Feature Flags -->
+    <div class="col-lg-6">
+      <div class="card2">
+        <div class="card2-head"><span class="card2-title">Feature Flags</span></div>
+        <div style="padding:14px 18px">
+          <p style="font-size:11px;color:var(--muted);margin-bottom:12px">Toggle platform capabilities (UI only — persisted in next deployment via env vars)</p>
+          <div id="sa-flags-body"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Danger Zone -->
+  <div class="card2" style="border-color:#fca5a5">
+    <div class="card2-head" style="background:#fef2f2">
+      <span class="card2-title" style="color:#991b1b">⚠ Danger Zone</span>
+    </div>
+    <div style="padding:16px 20px;display:flex;flex-direction:column;gap:14px">
+
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid var(--rule)">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text)">Broadcast Emergency Notice</div>
+          <div style="font-size:11.5px;color:var(--muted);margin-top:2px">Send an urgent system-wide alert to all active users</div>
+        </div>
+        <button onclick="showSection('comms')"
+                style="background:#fff;color:#991b1b;border:1px solid #fca5a5;border-radius:7px;font-size:11.5px;padding:7px 14px;cursor:pointer;white-space:nowrap">
+          Go to Broadcast →
+        </button>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid var(--rule)">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text)">Force-Reset User Password</div>
+          <div style="font-size:11.5px;color:var(--muted);margin-top:2px">Override any user's password — accessible via User Management</div>
+        </div>
+        <button onclick="showSection('users')"
+                style="background:#fff;color:#991b1b;border:1px solid #fca5a5;border-radius:7px;font-size:11.5px;padding:7px 14px;cursor:pointer;white-space:nowrap">
+          Go to Users →
+        </button>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text)">Admin Account Setup</div>
+          <div style="font-size:11.5px;color:var(--muted);margin-top:2px">The bootstrap endpoint is one-time-use and auto-disables after first call</div>
+        </div>
+        <span class="bdg bdg-ok" style="margin-top:4px">Endpoint disabled after first use</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main><!-- end #main -->
+
+<!-- ════════════════════════════════════════════════════════════════
+     USER MODAL
+════════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-overlay" onclick="maybeCloseModal(event)">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div id="m-avi" style="width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;
+                             display:grid;place-items:center;font-size:16px;font-weight:700;flex-shrink:0;overflow:hidden"></div>
+      <div class="modal-head-info">
+        <div class="modal-head-name" id="m-name">—</div>
+        <div class="modal-head-email" id="m-email">—</div>
+      </div>
+      <span class="bdg" id="m-role-badge" style="margin-right:6px"></span>
+      <button class="modal-close" onclick="document.getElementById('modal-overlay').style.display='none'">✕</button>
+    </div>
+
+    <div class="modal-body" id="modal-body">
+      <div class="info-grid">
+        <div class="info-item"><label>Phone</label><span id="m-phone">—</span></div>
+        <div class="info-item"><label>Location</label><span id="m-location">—</span></div>
+        <div class="info-item"><label>Joined</label><span id="m-joined">—</span></div>
+        <div class="info-item"><label>Verified</label><span id="m-verified">—</span></div>
+        <div class="info-item" id="m-bio-row" style="grid-column:1/-1;display:none">
+          <label>Bio</label><span id="m-bio" style="font-size:12px;color:var(--muted)"></span>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="pw-box">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <label style="display:block;font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Password</label>
+            <span style="font-size:12px;color:var(--muted);font-family:monospace">Protected (bcrypt hash — cannot be read)</span>
+          </div>
+          <button onclick="toggleResetPw()" class="btn btn-sm"
+                  style="background:var(--navy);color:#fff;border:none;border-radius:7px;font-size:11px;padding:5px 12px">Reset Password</button>
+        </div>
+        <div id="reset-pw-form" style="display:none;margin-top:10px;display:none">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <input type="password" id="new-pw" class="adm-input" placeholder="New password (min 8 chars)" style="flex:1;min-width:160px">
+            <button onclick="doResetPw()" class="btn btn-sm"
+                    style="background:var(--accent);color:#fff;border:none;border-radius:7px;font-size:11px;padding:5px 12px">Set</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Professional -->
+      <div id="m-prof" style="display:none;margin-bottom:18px">
+        <div class="sec-hd">Professional Profile</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+          <div class="info-item"><label>Trade</label><span id="m-trade"></span></div>
+          <div class="info-item"><label>NCA Grade</label><span id="m-nca"></span></div>
+          <div class="info-item"><label>Hourly Rate</label><span id="m-rate"></span></div>
+          <div class="info-item"><label>Experience</label><span id="m-exp"></span></div>
+          <div class="info-item"><label>Jobs Done</label><span id="m-jobs"></span></div>
+          <div class="info-item"><label>Rating</label><span id="m-rating"></span></div>
+        </div>
+      </div>
+
+      <!-- Documents -->
+      <div>
+        <div class="sec-hd">Documents (<span id="m-docs-count">0</span>)</div>
+        <div id="m-docs-list"></div>
+      </div>
+    </div>
+
+    <div class="modal-foot">
+      <select id="m-role-sel" class="adm-select" style="flex:1;min-width:130px">
+        <option value="client">Client</option>
+        <option value="professional">Professional</option>
+        <option value="supplier">Supplier</option>
+        <option value="admin">Admin</option>
+      </select>
+      <button onclick="doChangeRole()" class="btn btn-sm"
+              style="background:var(--navy);color:#fff;border:none;border-radius:7px;font-size:11.5px;padding:7px 14px">Change Role</button>
+      <button id="m-ban-btn" onclick="doBan()" class="btn btn-sm"
+              style="border-radius:7px;font-size:11.5px;padding:7px 14px"></button>
+      <button onclick="document.getElementById('modal-overlay').style.display='none'"
+              class="btn btn-sm" style="border:1px solid var(--rule);background:#fff;border-radius:7px;font-size:11.5px;padding:7px 14px;margin-left:auto">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+'use strict';
+
+/* ── State ────────────────────────────────────────────────────────── */
+let currentUserId = null, currentUserData = null;
+let usersPage = 1, finPage = 1, bidsPage = 1;
+let usersSearch = '', finSearch = '';
+let sectionLoaded = {};
+let verifStatus = 'pending';
+let globalStats = null;
+let bidsCache = {};
+let aCharts = {};
+let userDebounce, finDebounce;
+
+/* ── API helpers ──────────────────────────────────────────────────── */
+async function apiFetch(url) {
+  const r = await fetch(url);
+  const data = await r.json();
+  if (!r.ok) throw new Error(data.error || 'Request failed');
+  return data;
+}
+async function apiCall(method, url, body) {
+  const r = await fetch(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const data = await r.json();
+  if (!r.ok) throw new Error(data.error || 'Error ' + r.status);
+  return data;
+}
+
+/* ── Toast ────────────────────────────────────────────────────────── */
+function toast(msg, isErr) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:20px;right:20px;padding:10px 18px;border-radius:9px;color:#fff;' +
+    'font-size:12.5px;font-weight:600;z-index:9999;max-width:320px;box-shadow:0 4px 20px rgba(0,0,0,.25);' +
+    'background:' + (isErr ? '#dc2626' : '#16a34a');
+  clearTimeout(t._tid);
+  t._tid = setTimeout(() => t.style.cssText += ';display:none', 3200);
+}
+
+/* ── Escape ───────────────────────────────────────────────────────── */
+function esc(s) {
+  if (s == null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtDate(s) {
+  if (!s) return '—';
+  return new Date(s).toLocaleDateString('en-KE',{day:'numeric',month:'short',year:'numeric'});
+}
+function fmtKES(n) {
+  const v = Number(n);
+  if (isNaN(v)) return '—';
+  if (v >= 1e6) return 'KES ' + (v/1e6).toFixed(2) + 'M';
+  if (v >= 1e3) return 'KES ' + (v/1e3).toFixed(0) + 'K';
+  return 'KES ' + v.toLocaleString();
+}
+function roleBdg(role) {
+  const m = {admin:'bdg-admin',professional:'bdg-professional',client:'bdg-client',supplier:'bdg-supplier',banned:'bdg-banned'};
+  return m[role] || 'bdg-neutral';
+}
+function statusBdg(s) {
+  const m = {completed:'bdg-ok',pending:'bdg-pending',failed:'bdg-err',approved:'bdg-ok',rejected:'bdg-err',open:'bdg-ok',closed:'bdg-neutral'};
+  return m[s] || 'bdg-neutral';
+}
+
+/* ── Sidebar group collapse ───────────────────────────────────────── */
+function toggleGrp(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('collapsed');
+  const hdr = el.previousElementSibling;
+  const arr = hdr && hdr.querySelector('.grp-arr');
+  if (arr) arr.classList.toggle('up');
+}
+
+/* ── Section switching ────────────────────────────────────────────── */
+const SECTIONS = [
+  'overview','system',
+  'users','talent','verifications',
+  'bids','projects','listings','reviews',
+  'finance','invoices',
+  'crm','comms',
+  'analytics','growth',
+  'audit','superadmin',
+];
+const LABELS = {
+  overview:'Overview', system:'System Health',
+  users:'User Management', talent:'Talent Registry', verifications:'Verifications',
+  bids:'Bids & Jobs', projects:'Projects', listings:'Listings', reviews:'Reviews',
+  finance:'Transactions', invoices:'Invoices & Escrow',
+  crm:'Client Accounts', comms:'Messages & Broadcast',
+  analytics:'Platform Analytics', growth:'Growth Metrics',
+  audit:'Audit Log', superadmin:'Superadmin Control Plane',
+};
+
+function showSection(name) {
+  SECTIONS.forEach(s => {
+    const el = document.getElementById('sec-'+s);
+    if (el) el.style.display = s === name ? 'block' : 'none';
+    const nav = document.getElementById('nav-'+s);
+    if (nav) nav.classList.toggle('active', s === name);
+  });
+  document.getElementById('bc-section').textContent = LABELS[name] || name;
+  _loadSection(name);
+}
+function _loadSection(name) {
+  switch (name) {
+    case 'overview':      loadOverview(); break;
+    case 'system':        if (!sectionLoaded.system) loadSystem(); break;
+    case 'users':         if (!sectionLoaded.users) loadUsers(1); break;
+    case 'talent':        if (!sectionLoaded.talent) loadTalent(1); break;
+    case 'verifications': loadVerifications('pending'); break;
+    case 'bids':          if (!sectionLoaded.bids) loadBids(1); break;
+    case 'projects':      if (!sectionLoaded.projects) loadProjects(1); break;
+    case 'listings':      if (!sectionLoaded.listings) loadListings('materials',1); break;
+    case 'reviews':       if (!sectionLoaded.reviews) loadReviews(1); break;
+    case 'finance':       if (!sectionLoaded.finance) loadFinance(1); break;
+    case 'invoices':      if (!sectionLoaded.invoices) loadInvoices(1); break;
+    case 'crm':           if (!sectionLoaded.crm) loadCrm(); break;
+    case 'comms':         if (!sectionLoaded.comms) loadComms(); break;
+    case 'analytics':     if (!sectionLoaded.analytics) loadAnalytics(); break;
+    case 'growth':        if (!sectionLoaded.growth) loadGrowth(); break;
+    case 'audit':         if (!sectionLoaded.audit) loadAudit(); break;
+    case 'superadmin':    if (!sectionLoaded.superadmin) loadSuperadmin(); break;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   OVERVIEW
+══════════════════════════════════════════════════════════════════ */
+async function loadOverview() {
+  try {
+    const s = await apiFetch('/api/admin/stats');
+    globalStats = s;
+
+    // KPI cards
+    document.getElementById('kpi-users').textContent    = s.users.toLocaleString();
+    document.getElementById('kpi-profs').textContent    = s.professionals.toLocaleString();
+    document.getElementById('kpi-revenue').textContent  = fmtKES(s.revenue_kes);
+    document.getElementById('kpi-bids').textContent     = s.bids.toLocaleString();
+    document.getElementById('kpi-projects').textContent = s.projects.toLocaleString();
+    document.getElementById('kpi-txns').textContent     = s.transactions.toLocaleString();
+    document.getElementById('kpi-pending-verifs').textContent = s.pending_verifications;
+    document.getElementById('kpi-revenue2').textContent = Number(s.revenue_kes).toLocaleString();
+
+    // Finance KPI mirror
+    document.getElementById('fin-revenue').textContent = Number(s.revenue_kes).toLocaleString();
+    document.getElementById('fin-txns').textContent    = s.transactions.toLocaleString();
+
+    // Pending verif alert
+    if (s.pending_verifications > 0) {
+      document.getElementById('verif-alert').style.display = 'flex';
+      document.getElementById('verif-alert-count').textContent = s.pending_verifications;
+      const badge = document.getElementById('sb-verif-badge');
+      badge.textContent = s.pending_verifications;
+      badge.style.display = '';
+      document.getElementById('vcount-pending').textContent = s.pending_verifications;
+    }
+
+    // Recent payments
+    const tbody = document.getElementById('recent-pay-body');
+    if (!s.recent_payments || !s.recent_payments.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--muted)">No payments yet</td></tr>';
+      return;
+    }
+    tbody.innerHTML = s.recent_payments.map(p => `
+      <tr>
+        <td style="font-size:12.5px;font-weight:600">${esc(p.user_name)}</td>
+        <td style="font-size:13px;font-weight:700;color:var(--navy)">KES ${Number(p.amount).toLocaleString()}</td>
+        <td style="font-size:11px;font-family:monospace;color:var(--muted)">${esc(p.mpesa_receipt||'—')}</td>
+        <td style="font-size:11px;color:var(--muted)">${fmtDate(p.completed_at)}</td>
+        <td><span class="bdg bdg-ok">Completed</span></td>
+      </tr>`).join('');
+  } catch(e) {
+    toast('Failed to load stats: '+e.message, true);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   USERS
+══════════════════════════════════════════════════════════════════ */
+function debounceUsers() {
+  clearTimeout(userDebounce);
+  userDebounce = setTimeout(() => loadUsers(1), 420);
+}
+
+async function loadUsers(page) {
+  usersPage = page || 1;
+  usersSearch = document.getElementById('user-search').value.trim();
+  const role = document.getElementById('user-role-filter').value;
+  const params = new URLSearchParams({ page: usersPage, limit: 25, search: usersSearch, role });
+  const tbody = document.getElementById('users-body');
+  tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--muted)">Loading…</td></tr>';
+
+  try {
+    const { users, total, limit } = await apiFetch('/api/admin/users?' + params);
+    sectionLoaded.users = true;
+    document.getElementById('users-count').textContent = total.toLocaleString() + ' users';
+
+    if (!users.length) {
+      tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--muted)">No users found</td></tr>';
+      document.getElementById('users-pager').style.display = 'none';
+      return;
+    }
+    tbody.innerHTML = users.map(u => `
+      <tr style="cursor:pointer" onclick="openUserModal(${u.id})">
+        <td>
+          <div style="display:flex;align-items:center;gap:9px">
+            <div style="width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;
+                        display:grid;place-items:center;font-size:11px;font-weight:700;flex-shrink:0">
+              ${esc(u.name.charAt(0).toUpperCase())}
+            </div>
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--navy)">${esc(u.name)}</div>
+              ${u.trade ? '<div style="font-size:10px;color:var(--muted)">'+esc(u.trade)+'</div>' : ''}
+            </div>
+          </div>
+        </td>
+        <td style="font-size:11.5px;color:var(--muted)">${esc(u.email)}</td>
+        <td><span class="bdg ${roleBdg(u.role)}">${esc(u.role)}</span></td>
+        <td style="font-size:11.5px">${esc(u.phone||'—')}</td>
+        <td style="font-size:11.5px">${esc(u.location||'—')}</td>
+        <td style="font-size:11px;color:var(--muted)">${fmtDate(u.created_at)}</td>
+        <td>${u.verified
+          ? '<span class="bdg bdg-ok">✓ Verified</span>'
+          : '<span class="bdg bdg-neutral">Unverified</span>'}</td>
+        <td onclick="event.stopPropagation()">
+          <button onclick="openUserModal(${u.id})"
+                  style="background:var(--navy);color:#fff;border:none;border-radius:6px;font-size:10.5px;padding:3px 10px;cursor:pointer">
+            View
+          </button>
+        </td>
+      </tr>`).join('');
+
+    renderPager('users-pager', usersPage, Math.ceil(total/limit), 'loadUsers');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:#dc2626">'+esc(e.message)+'</td></tr>';
+  }
+}
+
+async function openUserModal(id) {
+  currentUserId = id;
+  document.getElementById('modal-overlay').style.display = 'block';
+  document.getElementById('modal-body').style.opacity = '.4';
+  try {
+    const u = await apiFetch('/api/admin/users/' + id);
+    currentUserData = u;
+
+    // Header — show avatar image if available, otherwise initials
+    const aviEl = document.getElementById('m-avi');
+    if (u.avatar) {
+      aviEl.innerHTML = `<img src="${esc(u.avatar)}" alt="${esc(u.name)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    } else {
+      aviEl.textContent = u.name.charAt(0).toUpperCase();
+    }
+    document.getElementById('m-name').textContent  = u.name;
+    document.getElementById('m-email').textContent = u.email;
+    const rb = document.getElementById('m-role-badge');
+    rb.textContent = u.role; rb.className = 'bdg ' + roleBdg(u.role);
+
+    // Info
+    document.getElementById('m-phone').textContent    = u.phone || '—';
+    document.getElementById('m-location').textContent = u.location || '—';
+    document.getElementById('m-joined').textContent   = fmtDate(u.created_at);
+    document.getElementById('m-verified').innerHTML   = u.verified
+      ? '<span class="bdg bdg-ok">✓ '+(u.verification_badge||'Verified')+'</span>'
+      : '<span class="bdg bdg-neutral">Not verified</span>';
+
+    if (u.bio) {
+      document.getElementById('m-bio-row').style.display = '';
+      document.getElementById('m-bio').textContent = u.bio;
+    } else {
+      document.getElementById('m-bio-row').style.display = 'none';
+    }
+
+    // Professional
+    if (u.trade) {
+      document.getElementById('m-prof').style.display = '';
+      document.getElementById('m-trade').textContent = u.trade || '—';
+      document.getElementById('m-nca').textContent   = u.nca_grade || '—';
+      document.getElementById('m-rate').textContent  = u.hourly_rate ? 'KES '+u.hourly_rate+'/hr' : '—';
+      document.getElementById('m-exp').textContent   = u.experience_years ? u.experience_years+' yrs' : '—';
+      document.getElementById('m-jobs').textContent  = u.jobs_done || 0;
+      document.getElementById('m-rating').textContent= u.rating ? u.rating+' ★' : '—';
+    } else {
+      document.getElementById('m-prof').style.display = 'none';
+    }
+
+    // Documents
+    document.getElementById('m-docs-count').textContent = u.documents.length;
+    document.getElementById('m-docs-list').innerHTML = u.documents.length
+      ? u.documents.map(d => `
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--rule)">
+            <div>
+              <div style="font-size:12px;font-weight:500">${esc(d.original_name)}</div>
+              <div style="font-size:10px;color:var(--muted)">${esc(d.document_type)} · ${fmtDate(d.created_at)}</div>
+            </div>
+            <span class="bdg ${statusBdg(d.status)}">${d.status}</span>
+          </div>`).join('')
+      : '<div style="font-size:12px;color:var(--muted);padding:6px 0">No documents uploaded</div>';
+
+    // Footer role select & ban button
+    document.getElementById('m-role-sel').value = (u.role === 'banned') ? 'client' : u.role;
+    const bb = document.getElementById('m-ban-btn');
+    if (u.role === 'banned') {
+      bb.textContent = 'Unban User';
+      bb.style.cssText = 'background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:7px;font-size:11.5px;padding:7px 14px;cursor:pointer';
+    } else {
+      bb.textContent = 'Ban User';
+      bb.style.cssText = 'background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;border-radius:7px;font-size:11.5px;padding:7px 14px;cursor:pointer';
+    }
+
+    // Reset pw form
+    document.getElementById('reset-pw-form').style.display = 'none';
+    document.getElementById('new-pw').value = '';
+  } catch(e) {
+    toast('Failed to load user: '+e.message, true);
+  } finally {
+    document.getElementById('modal-body').style.opacity = '1';
+  }
+}
+
+function maybeCloseModal(e) {
+  if (e.target === document.getElementById('modal-overlay'))
+    document.getElementById('modal-overlay').style.display = 'none';
+}
+
+function toggleResetPw() {
+  const f = document.getElementById('reset-pw-form');
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+
+async function doResetPw() {
+  const pw = document.getElementById('new-pw').value;
+  if (!pw || pw.length < 8) { toast('Password must be at least 8 characters', true); return; }
+  try {
+    const r = await apiCall('POST', '/api/admin/users/'+currentUserId+'/reset-password', { password: pw });
+    toast(r.message);
+    document.getElementById('reset-pw-form').style.display = 'none';
+    document.getElementById('new-pw').value = '';
+  } catch(e) { toast(e.message, true); }
+}
+
+async function doChangeRole() {
+  const role = document.getElementById('m-role-sel').value;
+  try {
+    const r = await apiCall('PUT', '/api/admin/users/'+currentUserId+'/role', { role });
+    toast(r.message);
+    const rb = document.getElementById('m-role-badge');
+    rb.textContent = role; rb.className = 'bdg '+roleBdg(role);
+    if (sectionLoaded.users) loadUsers(usersPage);
+  } catch(e) { toast(e.message, true); }
+}
+
+async function doBan() {
+  const isBanned = currentUserData && currentUserData.role === 'banned';
+  if (!confirm(isBanned ? 'Unban this user?' : 'Ban this user? They will lose access.')) return;
+  try {
+    const r = await apiCall('PUT', '/api/admin/users/'+currentUserId+'/ban', {});
+    toast(r.message);
+    await openUserModal(currentUserId);
+    if (sectionLoaded.users) loadUsers(usersPage);
+  } catch(e) { toast(e.message, true); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   FINANCE
+══════════════════════════════════════════════════════════════════ */
+function debounceFinance() {
+  clearTimeout(finDebounce);
+  finDebounce = setTimeout(() => loadFinance(1), 420);
+}
+
+async function loadFinance(page) {
+  finPage = page || 1;
+  finSearch = document.getElementById('fin-search').value.trim();
+  const params = new URLSearchParams({ page: finPage, limit: 30, search: finSearch });
+  const tbody = document.getElementById('fin-body');
+  tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--muted)">Loading…</td></tr>';
+
+  try {
+    const { transactions, total, limit } = await apiFetch('/api/admin/transactions?'+params);
+    sectionLoaded.finance = true;
+
+    // Count pending in current result set for the mini stat
+    const pending = transactions.filter(t => t.status === 'pending').length;
+    document.getElementById('fin-pending').textContent = pending + (total > limit ? '+' : '');
+
+    if (!transactions.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--muted)">No transactions found</td></tr>';
+      document.getElementById('fin-pager').style.display = 'none';
+      return;
+    }
+    tbody.innerHTML = transactions.map(t => `
+      <tr>
+        <td style="font-size:11px;color:var(--muted)">${fmtDate(t.created_at)}</td>
+        <td>
+          <div style="font-size:12px;font-weight:600">${esc(t.user_name)}</div>
+          <div style="font-size:10.5px;color:var(--muted)">${esc(t.user_email)}</div>
+        </td>
+        <td style="font-size:13px;font-weight:700;color:var(--navy)">KES ${Number(t.amount).toLocaleString()}</td>
+        <td style="font-size:11.5px">${esc(t.phone||'—')}</td>
+        <td style="font-size:11px;font-family:monospace;color:var(--muted)">${esc(t.mpesa_receipt||'—')}</td>
+        <td><span class="bdg ${statusBdg(t.status)}">${t.status}</span></td>
+      </tr>`).join('');
+
+    renderPager('fin-pager', finPage, Math.ceil(total/limit), 'loadFinance');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:#dc2626">'+esc(e.message)+'</td></tr>';
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   VERIFICATIONS
+══════════════════════════════════════════════════════════════════ */
+async function loadVerifications(status) {
+  verifStatus = status || 'pending';
+  ['pending','approved','rejected'].forEach(s => {
+    document.getElementById('vtab-'+s).classList.toggle('active', s === verifStatus);
+  });
+  const tbody = document.getElementById('verif-body');
+  tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--muted)">Loading…</td></tr>';
+  try {
+    const docs = await apiFetch('/api/admin/verifications?status='+verifStatus);
+    if (verifStatus === 'pending') {
+      document.getElementById('vcount-pending').textContent = docs.length;
+    }
+    if (!docs.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--muted)">No '+verifStatus+' documents</td></tr>';
+      return;
+    }
+    tbody.innerHTML = docs.map(d => `
+      <tr>
+        <td>
+          <div style="font-size:12.5px;font-weight:600">${esc(d.user_name)}</div>
+          <div style="font-size:10.5px;color:var(--muted)">${esc(d.user_email)}</div>
+        </td>
+        <td style="font-size:12px">${esc(d.trade||'—')}</td>
+        <td>
+          <div style="font-size:12px;font-weight:500">${esc(d.original_name)}</div>
+          <div style="font-size:10px;color:var(--muted)">${(d.size_bytes/1024).toFixed(0)} KB · ${esc(d.mime_type)}</div>
+        </td>
+        <td><span class="bdg bdg-neutral">${esc(d.document_type.replace(/_/g,' '))}</span></td>
+        <td style="font-size:11px;color:var(--muted)">${fmtDate(d.created_at)}</td>
+        <td>
+          ${verifStatus === 'pending'
+            ? `<button onclick="approveDoc(${d.id})"
+                       style="background:#16a34a;color:#fff;border:none;border-radius:6px;font-size:10.5px;padding:4px 9px;cursor:pointer;margin-right:4px">Approve</button>
+               <button onclick="rejectDoc(${d.id})"
+                       style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;border-radius:6px;font-size:10.5px;padding:4px 9px;cursor:pointer">Reject</button>`
+            : `<span class="bdg ${statusBdg(verifStatus)}">${verifStatus}</span>
+               ${d.rejection_reason ? '<div style="font-size:10px;color:var(--muted);margin-top:3px">'+esc(d.rejection_reason)+'</div>' : ''}`
+          }
+        </td>
+      </tr>`).join('');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:#dc2626">'+esc(e.message)+'</td></tr>';
+  }
+}
+
+async function approveDoc(id) {
+  if (!confirm('Approve this document and mark user as verified?')) return;
+  try {
+    const r = await apiCall('PUT', '/api/admin/verifications/'+id+'/approve', {});
+    toast(r.message);
+    loadVerifications(verifStatus);
+    loadOverview();
+  } catch(e) { toast(e.message, true); }
+}
+
+async function rejectDoc(id) {
+  const reason = prompt('Rejection reason (will be shown to the user):');
+  if (!reason || !reason.trim()) return;
+  try {
+    const r = await apiCall('PUT', '/api/admin/verifications/'+id+'/reject', { reason: reason.trim() });
+    toast(r.message);
+    loadVerifications(verifStatus);
+  } catch(e) { toast(e.message, true); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   BIDS
+══════════════════════════════════════════════════════════════════ */
+async function loadBids(page) {
+  bidsPage = page || 1;
+  const tbody = document.getElementById('bids-body');
+  tbody.innerHTML = '<tr><td colspan="7" style="padding:20px;text-align:center;color:var(--muted)">Loading…</td></tr>';
+  try {
+    const bids = await apiFetch('/api/admin/bids?page='+bidsPage+'&limit=30');
+    sectionLoaded.bids = true;
+    document.getElementById('bids-count').textContent = bids.length + ' bids (this page)';
+    bids.forEach(b => bidsCache[b.id] = b);
+    if (!bids.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="padding:20px;text-align:center;color:var(--muted)">No bids found</td></tr>';
+      return;
+    }
+    tbody.innerHTML = bids.map(b => `
+      <tr>
+        <td>
+          <div style="font-size:12px;font-weight:600;color:var(--navy)">${esc(b.title)}</div>
+          <div style="font-size:10px;color:var(--muted)">${esc(b.location||'—')}</div>
+        </td>
+        <td>
+          <div style="font-size:12px">${esc(b.poster_name)}</div>
+          <div style="font-size:10.5px;color:var(--muted)">${esc(b.poster_email)}</div>
+        </td>
+        <td style="font-size:12px;font-weight:500">
+          ${(b.budget_min && b.budget_max)
+            ? Number(b.budget_min).toLocaleString()+' – '+Number(b.budget_max).toLocaleString()
+            : '—'}
+        </td>
+        <td><span class="bdg ${statusBdg(b.status)}">${b.status}</span></td>
+        <td style="text-align:center;font-size:12px">${b.applications_count||0}</td>
+        <td style="font-size:11px;color:var(--muted)">${fmtDate(b.created_at)}</td>
+        <td>
+          <button onclick="deleteBid(${b.id})"
+                  style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;border-radius:6px;font-size:10.5px;padding:4px 9px;cursor:pointer">Delete</button>
+        </td>
+      </tr>`).join('');
+
+    const pager = document.getElementById('bids-pager');
+    pager.style.display = bids.length === 30 ? 'flex' : 'none';
+    if (bids.length === 30) {
+      pager.innerHTML = '<span style="font-size:11px;color:var(--muted)">Page '+bidsPage+'</span>' +
+        '<div style="display:flex;gap:6px">' +
+        (bidsPage > 1 ? '<button onclick="loadBids('+(bidsPage-1)+')" style="'+pagerBtn+'">← Prev</button>' : '') +
+        '<button onclick="loadBids('+(bidsPage+1)+')" style="'+pagerBtn+'">Next →</button></div>';
+    }
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="7" style="padding:20px;text-align:center;color:#dc2626">'+esc(e.message)+'</td></tr>';
+  }
+}
+
+async function deleteBid(id) {
+  const b = bidsCache[id];
+  const title = b ? b.title : 'this bid';
+  if (!confirm('Delete "'+title+'"? This cannot be undone.')) return;
+  try {
+    const r = await apiCall('DELETE', '/api/admin/bids/'+id, {});
+    toast(r.message);
+    loadBids(bidsPage);
+  } catch(e) { toast(e.message, true); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ANALYTICS
+══════════════════════════════════════════════════════════════════ */
+async function loadAnalytics() {
+  sectionLoaded.analytics = true;
+  try {
+    const { revenueByDay, signupsByDay } = await apiFetch('/api/admin/analytics');
+
+    const rCtx = document.getElementById('chartRevenue').getContext('2d');
+    if (aCharts.revenue) aCharts.revenue.destroy();
+    aCharts.revenue = new Chart(rCtx, {
+      type: 'line',
+      data: {
+        labels: revenueByDay.map(d => d.day.slice(5)),
+        datasets: [{
+          label: 'Revenue KES',
+          data: revenueByDay.map(d => Number(d.total)),
+          borderColor: '#011D47', backgroundColor: 'rgba(1,29,71,0.07)',
+          borderWidth: 2, pointRadius: 3, fill: true, tension: 0.3,
+        }]
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ display:false } },
+        scales:{
+          x:{ grid:{ display:false }, ticks:{ font:{ size:9 }, color:'#9ca3af' } },
+          y:{ grid:{ color:'#f3f4f6' }, border:{ display:false },
+              ticks:{ font:{ size:9 }, color:'#9ca3af', callback: v => 'KES '+v.toLocaleString() } }
+        }
+      }
+    });
+
+    const sCtx = document.getElementById('chartSignups').getContext('2d');
+    if (aCharts.signups) aCharts.signups.destroy();
+    aCharts.signups = new Chart(sCtx, {
+      type: 'bar',
+      data: {
+        labels: signupsByDay.map(d => d.day.slice(5)),
+        datasets: [{
+          label: 'New Users',
+          data: signupsByDay.map(d => Number(d.total)),
+          backgroundColor: 'rgba(196,49,0,0.75)',
+          borderRadius: 4, borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ display:false } },
+        scales:{
+          x:{ grid:{ display:false }, ticks:{ font:{ size:9 }, color:'#9ca3af' } },
+          y:{ grid:{ color:'#f3f4f6' }, border:{ display:false },
+              ticks:{ font:{ size:9 }, color:'#9ca3af', stepSize:1 } }
+        }
+      }
+    });
+
+    if (!revenueByDay.length && !signupsByDay.length) {
+      toast('No analytics data yet — make some transactions and signups first!');
+    }
+  } catch(e) { toast('Analytics error: '+e.message, true); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SYSTEM HEALTH
+══════════════════════════════════════════════════════════════════ */
+async function loadSystem() {
+  sectionLoaded.system = true;
+  try {
+    const s = await apiFetch('/api/admin/system');
+    const hrs  = Math.floor(s.uptime_seconds / 3600);
+    const mins = Math.floor((s.uptime_seconds % 3600) / 60);
+    document.getElementById('sys-uptime').textContent = hrs + 'h ' + mins + 'm';
+    document.getElementById('sys-node').textContent   = s.node_version;
+    document.getElementById('sys-db').textContent     = s.db_type.toUpperCase();
+    document.getElementById('sys-env').textContent    = s.env;
+
+    const mem = s.memory_mb;
+    const heapPct = Math.round((mem.heap_used / mem.heap_total) * 100);
+    document.getElementById('sys-mem-body').innerHTML = `
+      <div style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:4px">
+          <span style="color:var(--muted)">Heap Used</span>
+          <strong>${mem.heap_used} MB / ${mem.heap_total} MB</strong>
+        </div>
+        <div class="prog"><div class="prog-fill" style="width:${heapPct}%;background:${heapPct>80?'#dc2626':heapPct>60?'#d97706':'#16a34a'}"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:4px">
+          <span style="color:var(--muted)">RSS (Resident Memory)</span>
+          <strong>${mem.rss} MB</strong>
+        </div>
+        <div class="prog"><div class="prog-fill" style="width:${Math.min(100,Math.round(mem.rss/256*100))}%;background:#2563eb"></div></div>
+      </div>`;
+
+    const tc = s.table_counts;
+    document.getElementById('sys-tables-body').innerHTML = `
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px">
+        ${Object.entries(tc).map(([k,v]) => `
+          <div style="background:var(--bg);border-radius:8px;padding:10px 12px;text-align:center">
+            <div style="font-size:16px;font-weight:800;color:var(--navy)">${Number(v).toLocaleString()}</div>
+            <div style="font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px">${k}</div>
+          </div>`).join('')}
+      </div>`;
+  } catch(e) { toast('System load failed: '+e.message, true); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   TALENT REGISTRY
+══════════════════════════════════════════════════════════════════ */
+let talentPage = 1, talentDebounce;
+function debounceTalent() { clearTimeout(talentDebounce); talentDebounce = setTimeout(() => loadTalent(1), 420); }
+
+async function loadTalent(page) {
+  talentPage = page || 1;
+  const search = document.getElementById('talent-search').value.trim();
+  const trade  = document.getElementById('talent-trade').value;
+  const avail  = document.getElementById('talent-avail').value;
+  const params = new URLSearchParams({ page: talentPage, limit: 25, search, trade, available: avail });
+  const tbody  = document.getElementById('talent-body');
+  tbody.innerHTML = '<tr><td colspan="9" style="padding:20px;text-align:center;color:var(--muted)">Loading…</td></tr>';
+  try {
+    const { professionals, total, limit, trades } = await apiFetch('/api/admin/professionals?' + params);
+    sectionLoaded.talent = true;
+    document.getElementById('talent-count').textContent = total.toLocaleString() + ' professionals';
+    // Populate trade filter first time
+    const sel = document.getElementById('talent-trade');
+    if (sel.options.length <= 1 && trades) {
+      trades.forEach(t => { const o = new Option(t, t); sel.add(o); });
+    }
+    if (!professionals.length) {
+      tbody.innerHTML = '<tr><td colspan="9" style="padding:20px;text-align:center;color:var(--muted)">No professionals found</td></tr>';
+      document.getElementById('talent-pager').style.display = 'none'; return;
+    }
+    tbody.innerHTML = professionals.map(p => `
+      <tr style="cursor:pointer" onclick="openUserModal(${p.id})">
+        <td>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:10px;font-weight:700;flex-shrink:0">
+              ${esc(p.name.charAt(0).toUpperCase())}
+            </div>
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--navy)">${esc(p.name)}</div>
+              <div style="font-size:10px;color:var(--muted)">${esc(p.email)}</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="bdg bdg-neutral">${esc(p.trade)}</span></td>
+        <td style="font-size:12px">${esc(p.nca_grade||'—')}</td>
+        <td style="font-size:12px">${p.hourly_rate ? 'KES '+Number(p.hourly_rate).toLocaleString() : '—'}</td>
+        <td style="text-align:center;font-size:12px">${p.jobs_done||0}</td>
+        <td style="font-size:12px">${p.rating ? p.rating+' ★' : '—'}</td>
+        <td>${p.verified ? '<span class="bdg bdg-ok">Verified</span>' : '<span class="bdg bdg-neutral">—</span>'}</td>
+        <td>${p.available ? '<span class="bdg bdg-ok">Yes</span>' : '<span class="bdg bdg-err">No</span>'}</td>
+        <td style="font-size:11px;color:var(--muted)">${fmtDate(p.created_at)}</td>
+      </tr>`).join('');
+    renderPager('talent-pager', talentPage, Math.ceil(total/limit), 'loadTalent');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="9" style="padding:20px;text-align:center;color:#dc2626">'+esc(e.message)+'</td></tr>';
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   PROJECTS
+══════════════════════════════════════════════════════════════════ */
+let projPage = 1, projDebounce;
+function debounceProjects() { clearTimeout(projDebounce); projDebounce = setTimeout(() => loadProjects(1), 420); }
+
+async function loadProjects(page) {
+  projPage = page || 1;
+  const search = document.getElementById('proj-search').value.trim();
+  const status = document.getElementById('proj-status').value;
+  const params = new URLSearchParams({ page: projPage, limit: 25, search, status });
+  const tbody  = document.getElementById('proj-body');
+  tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--muted)">Loading…</td></tr>';
+  try {
+    const { projects, total, limit } = await apiFetch('/api/admin/projects?' + params);
+    sectionLoaded.projects = true;
+    document.getElementById('proj-count').textContent = total.toLocaleString() + ' projects';
+    if (!projects.length) {
+      tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--muted)">No projects found</td></tr>';
+      document.getElementById('proj-pager').style.display = 'none'; return;
+    }
+    tbody.innerHTML = projects.map(p => `
+      <tr>
+        <td>
+          <div style="font-size:12.5px;font-weight:600;color:var(--navy)">${esc(p.name)}</div>
+          <div style="font-size:10px;color:var(--muted)">${esc(p.location||'—')}</div>
+        </td>
+        <td>
+          <div style="font-size:12px">${esc(p.owner_name)}</div>
+          <div style="font-size:10.5px;color:var(--muted)">${esc(p.owner_email)}</div>
+        </td>
+        <td style="font-size:12px">${esc(p.type||'—')}</td>
+        <td><span class="bdg ${statusBdg(p.status)}">${esc(p.status||'—')}</span></td>
+        <td style="min-width:90px">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:3px">${p.progress||0}%</div>
+          <div class="prog"><div class="prog-fill" style="width:${p.progress||0}%;background:var(--accent)"></div></div>
+        </td>
+        <td style="font-size:12px">
+          ${(p.budget_min && p.budget_max)
+            ? Number(p.budget_min).toLocaleString()+' – '+Number(p.budget_max).toLocaleString()
+            : '—'}
+        </td>
+        <td style="font-size:11px;color:var(--muted)">${p.due_date ? fmtDate(p.due_date) : '—'}</td>
+        <td style="font-size:11px;color:var(--muted)">${fmtDate(p.created_at)}</td>
+      </tr>`).join('');
+    renderPager('proj-pager', projPage, Math.ceil(total/limit), 'loadProjects');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:#dc2626">'+esc(e.message)+'</td></tr>';
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   LISTINGS
+══════════════════════════════════════════════════════════════════ */
+let listingsType = 'materials', listingsPage = 1;
+
+async function loadListings(type, page) {
+  listingsType = type || listingsType;
+  listingsPage = page || 1;
+  ['materials','equipment','transport'].forEach(t => {
+    document.getElementById('ltab-'+t).classList.toggle('active', t === listingsType);
+  });
+  document.getElementById('listings-title').textContent =
+    listingsType.charAt(0).toUpperCase() + listingsType.slice(1);
+
+  const thead = document.getElementById('listings-thead');
+  if (listingsType === 'materials') {
+    thead.innerHTML = '<tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Location</th><th>Supplier</th><th>Listed</th><th></th></tr>';
+  } else if (listingsType === 'equipment') {
+    thead.innerHTML = '<tr><th>Name</th><th>Category</th><th>Daily Rate</th><th>Available</th><th>Location</th><th>Owner</th><th>Listed</th><th></th></tr>';
+  } else {
+    thead.innerHTML = '<tr><th>Name</th><th>Type</th><th>Rate</th><th>Location</th><th>Owner</th><th>Listed</th><th></th></tr>';
+  }
+
+  const tbody = document.getElementById('listings-body');
+  tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--muted)">Loading…</td></tr>';
+  try {
+    const { data, total, limit } = await apiFetch('/api/admin/listings?type='+listingsType+'&page='+listingsPage+'&limit=25');
+    sectionLoaded.listings = true;
+    document.getElementById('listings-count').textContent = total.toLocaleString() + ' listings';
+    if (!data.length) {
+      tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--muted)">No listings found</td></tr>';
+      document.getElementById('listings-pager').style.display = 'none'; return;
+    }
+    if (listingsType === 'materials') {
+      tbody.innerHTML = data.map(m => `
+        <tr>
+          <td style="font-size:12.5px;font-weight:600">${esc(m.name)}</td>
+          <td><span class="bdg bdg-neutral">${esc(m.category||'—')}</span></td>
+          <td style="font-size:12px;font-weight:500">KES ${Number(m.price).toLocaleString()}</td>
+          <td><span class="bdg ${m.stock_status==='in'?'bdg-ok':'bdg-err'}">${esc(m.stock_status||'—')}</span></td>
+          <td style="font-size:11.5px">${esc(m.location||'—')}</td>
+          <td style="font-size:11.5px">${esc(m.owner_name||'—')}</td>
+          <td style="font-size:11px;color:var(--muted)">${fmtDate(m.created_at)}</td>
+          <td><button onclick="deleteListing('materials',${m.id})"
+              style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;border-radius:6px;font-size:10.5px;padding:3px 9px;cursor:pointer">Remove</button></td>
+        </tr>`).join('');
+    } else if (listingsType === 'equipment') {
+      tbody.innerHTML = data.map(e => `
+        <tr>
+          <td style="font-size:12.5px;font-weight:600">${esc(e.name)}</td>
+          <td><span class="bdg bdg-neutral">${esc(e.category||'—')}</span></td>
+          <td style="font-size:12px">KES ${Number(e.daily_rate).toLocaleString()}/day</td>
+          <td>${e.available ? '<span class="bdg bdg-ok">Yes</span>' : '<span class="bdg bdg-err">No</span>'}</td>
+          <td style="font-size:11.5px">${esc(e.location||'—')}</td>
+          <td style="font-size:11.5px">${esc(e.owner_name||'—')}</td>
+          <td style="font-size:11px;color:var(--muted)">${fmtDate(e.created_at)}</td>
+          <td><button onclick="deleteListing('equipment',${e.id})"
+              style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;border-radius:6px;font-size:10.5px;padding:3px 9px;cursor:pointer">Remove</button></td>
+        </tr>`).join('');
+    } else {
+      tbody.innerHTML = data.map(t => `
+        <tr>
+          <td style="font-size:12.5px;font-weight:600">${esc(t.name)}</td>
+          <td style="font-size:12px">${esc(t.type||'—')}</td>
+          <td style="font-size:12px">${esc(t.rate_text||'—')}</td>
+          <td style="font-size:11.5px">${esc(t.location||'—')}</td>
+          <td style="font-size:11.5px">${esc(t.owner_name||'—')}</td>
+          <td style="font-size:11px;color:var(--muted)">${fmtDate(t.created_at)}</td>
+          <td><button onclick="deleteListing('transport',${t.id})"
+              style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;border-radius:6px;font-size:10.5px;padding:3px 9px;cursor:pointer">Remove</button></td>
+        </tr>`).join('');
+    }
+    // listings uses custom prev/next since type must be passed
+    const lp = document.getElementById('listings-pager');
+    const lt = Math.ceil(total/limit);
+    if (lt <= 1) { lp.style.display='none'; } else {
+      lp.style.display='flex';
+      lp.innerHTML = '<span style="font-size:11px;color:var(--muted)">Page '+listingsPage+' of '+lt+'</span>' +
+        '<div style="display:flex;gap:6px">' +
+        (listingsPage>1 ? '<button onclick="loadListings(\''+listingsType+'\','+(listingsPage-1)+')" style="'+pagerBtn+'">← Prev</button>' : '') +
+        (listingsPage<lt ? '<button onclick="loadListings(\''+listingsType+'\','+(listingsPage+1)+')" style="'+pagerBtn+'">Next →</button>' : '') +
+        '</div>';
+    }
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:#dc2626">'+esc(e.message)+'</td></tr>';
+  }
+}
+
+async function deleteListing(type, id) {
+  if (!confirm('Remove this '+type+' listing? This cannot be undone.')) return;
+  try {
+    const r = await apiCall('DELETE', '/api/admin/listings/'+type+'/'+id, {});
+    toast(r.message);
+    loadListings(listingsType, listingsPage);
+  } catch(e) { toast(e.message, true); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   REVIEWS
+══════════════════════════════════════════════════════════════════ */
+let revPage = 1;
+async function loadReviews(page) {
+  revPage = page || 1;
+  const maxRating = document.getElementById('rev-filter').value;
+  const params = new URLSearchParams({ page: revPage, limit: 25, max_rating: maxRating });
+  const tbody = document.getElementById('rev-body');
+  tbody.innerHTML = '<tr><td colspan="7" style="padding:20px;text-align:center;color:var(--muted)">Loading…</td></tr>';
+  try {
+    const { reviews, total, limit } = await apiFetch('/api/admin/reviews?' + params);
+    sectionLoaded.reviews = true;
+    document.getElementById('rev-count').textContent = total.toLocaleString() + ' reviews';
+    if (!reviews.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="padding:20px;text-align:center;color:var(--muted)">No reviews found</td></tr>';
+      document.getElementById('rev-pager').style.display = 'none'; return;
+    }
+    tbody.innerHTML = reviews.map(r => `
+      <tr>
+        <td>
+          <div style="font-size:12px;font-weight:600">${esc(r.reviewer_name)}</div>
+          <div style="font-size:10px;color:var(--muted)">${esc(r.reviewer_email)}</div>
+        </td>
+        <td style="font-size:12px">${esc(r.reviewee_name)}</td>
+        <td style="font-size:11.5px;color:var(--muted)">${esc(r.project_name||'—')}</td>
+        <td>
+          <span style="font-size:13px;font-weight:700;color:${r.rating<=2?'#dc2626':r.rating<=3?'#d97706':'#16a34a'}">
+            ${'★'.repeat(r.rating||0)}${'☆'.repeat(Math.max(0,5-(r.rating||0)))}
+          </span>
+        </td>
+        <td style="font-size:12px;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+          ${esc(r.comment||'—')}
+        </td>
+        <td style="font-size:11px;color:var(--muted)">${fmtDate(r.created_at)}</td>
+        <td>
+          <button onclick="deleteReview(${r.id})"
+                  style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;border-radius:6px;font-size:10.5px;padding:3px 9px;cursor:pointer">Remove</button>
+        </td>
+      </tr>`).join('');
+    renderPager('rev-pager', revPage, Math.ceil(total/limit), 'loadReviews');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="7" style="padding:20px;text-align:center;color:#dc2626">'+esc(e.message)+'</td></tr>';
+  }
+}
+async function deleteReview(id) {
+  if (!confirm('Remove this review permanently?')) return;
+  try {
+    const r = await apiCall('DELETE', '/api/admin/reviews/'+id, {});
+    toast(r.message);
+    loadReviews(revPage);
+  } catch(e) { toast(e.message, true); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   INVOICES
+══════════════════════════════════════════════════════════════════ */
+let invPage = 1;
+async function loadInvoices(page) {
+  invPage = page || 1;
+  const status = document.getElementById('inv-status-filter').value;
+  const params = new URLSearchParams({ page: invPage, limit: 25, status });
+  const tbody  = document.getElementById('inv-body');
+  tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--muted)">Loading…</td></tr>';
+  try {
+    const { invoices, total, limit, escrow_held_kes, total_paid_kes } = await apiFetch('/api/admin/invoices?' + params);
+    sectionLoaded.invoices = true;
+    document.getElementById('inv-total').textContent = total.toLocaleString();
+    document.getElementById('inv-held').textContent  = Number(escrow_held_kes).toLocaleString();
+    document.getElementById('inv-paid').textContent  = Number(total_paid_kes).toLocaleString();
+    if (!invoices.length) {
+      tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--muted)">No invoices found</td></tr>';
+      document.getElementById('inv-pager').style.display = 'none'; return;
+    }
+    tbody.innerHTML = invoices.map(i => `
+      <tr>
+        <td style="font-size:11px;color:var(--muted)">${fmtDate(i.created_at)}</td>
+        <td style="font-size:12px;font-weight:600">${esc(i.issuer_name)}</td>
+        <td style="font-size:12px">${esc(i.recipient_name)}</td>
+        <td style="font-size:11.5px;color:var(--muted)">${esc(i.project_name||'—')}</td>
+        <td style="font-size:11.5px">${esc(i.milestone||'—')}</td>
+        <td style="font-size:13px;font-weight:700;color:var(--navy)">KES ${Number(i.amount).toLocaleString()}</td>
+        <td><span class="bdg ${statusBdg(i.status)}">${esc(i.status)}</span></td>
+        <td><span class="bdg ${i.escrow_status==='held'?'bdg-pending':'bdg-ok'}">${esc(i.escrow_status||'—')}</span></td>
+      </tr>`).join('');
+    renderPager('inv-pager', invPage, Math.ceil(total/limit), 'loadInvoices');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:#dc2626">'+esc(e.message)+'</td></tr>';
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   CRM
+══════════════════════════════════════════════════════════════════ */
+async function loadCrm() {
+  sectionLoaded.crm = true;
+  const tbody = document.getElementById('crm-body');
+  try {
+    const d = await apiFetch('/api/admin/crm');
+    document.getElementById('crm-clients').textContent   = d.clients.toLocaleString();
+    document.getElementById('crm-suppliers').textContent = d.suppliers.toLocaleString();
+    document.getElementById('crm-projects').textContent  = d.active_projects.toLocaleString();
+    document.getElementById('crm-bids').textContent      = d.open_bids.toLocaleString();
+
+    if (!d.top_clients.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--muted)">No client data yet</td></tr>'; return;
+    }
+    tbody.innerHTML = d.top_clients.map(c => `
+      <tr>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:10px;font-weight:700;flex-shrink:0">
+              ${esc(c.name.charAt(0).toUpperCase())}
+            </div>
+            <span style="font-size:12.5px;font-weight:600;color:var(--navy)">${esc(c.name)}</span>
+          </div>
+        </td>
+        <td style="font-size:11.5px;color:var(--muted)">${esc(c.email)}</td>
+        <td style="font-size:11.5px">${esc(c.location||'—')}</td>
+        <td style="text-align:center">
+          <span style="background:#eff6ff;color:#1e40af;padding:2px 10px;border-radius:100px;font-size:11px;font-weight:700">
+            ${c.project_count}
+          </span>
+        </td>
+        <td style="font-size:11px;color:var(--muted)">${fmtDate(c.created_at)}</td>
+        <td>
+          <button onclick="openUserModal(${c.id})"
+                  style="background:var(--navy);color:#fff;border:none;border-radius:6px;font-size:10.5px;padding:3px 10px;cursor:pointer">View</button>
+        </td>
+      </tr>`).join('');
+  } catch(e) { toast('CRM load failed: '+e.message, true); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   COMMUNICATIONS
+══════════════════════════════════════════════════════════════════ */
+async function loadComms() {
+  sectionLoaded.comms = true;
+  try {
+    const d = await apiFetch('/api/admin/messages/stats');
+    document.getElementById('comms-total').textContent  = d.total.toLocaleString();
+    document.getElementById('comms-unread').textContent = d.unread.toLocaleString();
+
+    const tbody = document.getElementById('comms-body');
+    if (!d.recent.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--muted)">No messages yet</td></tr>'; return;
+    }
+    tbody.innerHTML = d.recent.map(m => `
+      <tr>
+        <td style="font-size:12px;font-weight:600">${esc(m.sender_name)}</td>
+        <td style="font-size:12px">${esc(m.recipient_name)}</td>
+        <td style="font-size:11.5px;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)">
+          ${esc(m.content)}
+        </td>
+        <td style="font-size:11px;color:var(--muted)">${fmtDate(m.created_at)}</td>
+        <td>${m.read ? '<span class="bdg bdg-neutral">Read</span>' : '<span class="bdg bdg-pending">Unread</span>'}</td>
+      </tr>`).join('');
+  } catch(e) { toast('Comms load failed: '+e.message, true); }
+}
+
+function toggleBcAll(cb) {
+  document.querySelectorAll('.bc-role').forEach(r => { r.disabled = cb.checked; r.checked = false; });
+}
+
+async function doBroadcast() {
+  const title = document.getElementById('bc-title').value.trim();
+  const body  = document.getElementById('bc-body').value.trim();
+  if (!title || !body) { toast('Title and body are required', true); return; }
+
+  const allUsers = document.getElementById('bc-all').checked;
+  const roles = allUsers ? [] :
+    Array.from(document.querySelectorAll('.bc-role:checked')).map(el => el.value);
+  if (!allUsers && !roles.length) { toast('Select at least one recipient group', true); return; }
+
+  if (!confirm((allUsers ? 'Send to ALL users?' : 'Send to: '+roles.join(', ')+'?') + ' This will create a notification for each user.')) return;
+  try {
+    const r = await apiCall('POST', '/api/admin/notifications/broadcast', { title, body, roles });
+    toast(r.message);
+    document.getElementById('bc-title').value = '';
+    document.getElementById('bc-body').value  = '';
+  } catch(e) { toast(e.message, true); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   GROWTH
+══════════════════════════════════════════════════════════════════ */
+async function loadGrowth() {
+  sectionLoaded.growth = true;
+  try {
+    const d = await apiFetch('/api/admin/growth');
+    document.getElementById('grw-users').textContent    = d.new_users.toLocaleString();
+    document.getElementById('grw-bids').textContent     = d.new_bids.toLocaleString();
+    document.getElementById('grw-projects').textContent = d.new_projects.toLocaleString();
+    document.getElementById('grw-apps').textContent     = d.applications.toLocaleString();
+
+    // Role breakdown bars
+    const rolesEl = document.getElementById('grw-roles-body');
+    const total   = d.role_breakdown.reduce((s, r) => s + Number(r.cnt), 0);
+    rolesEl.innerHTML = d.role_breakdown.map(r => {
+      const pct = total ? Math.round(Number(r.cnt)/total*100) : 0;
+      const colors = {admin:'#1e40af',professional:'#16a34a',client:'#6b7280',supplier:'#854d0e',banned:'#991b1b'};
+      const c = colors[r.role] || '#9ca3af';
+      return `
+        <div style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:3px">
+            <span style="font-weight:600;text-transform:capitalize">${esc(r.role)}</span>
+            <span style="color:var(--muted)">${Number(r.cnt).toLocaleString()} (${pct}%)</span>
+          </div>
+          <div class="prog"><div class="prog-fill" style="width:${pct}%;background:${c}"></div></div>
+        </div>`;
+    }).join('');
+
+    // Top trades
+    const tradesEl = document.getElementById('grw-trades-body');
+    const maxCnt   = d.top_trades.reduce((m, t) => Math.max(m, Number(t.cnt)), 1);
+    tradesEl.innerHTML = d.top_trades.map(t => {
+      const pct = Math.round(Number(t.cnt)/maxCnt*100);
+      return `
+        <div style="margin-bottom:9px">
+          <div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:3px">
+            <span style="font-weight:600">${esc(t.trade)}</span>
+            <span style="color:var(--muted)">${Number(t.cnt).toLocaleString()}</span>
+          </div>
+          <div class="prog"><div class="prog-fill" style="width:${pct}%;background:var(--accent)"></div></div>
+        </div>`;
+    }).join('') || '<div style="font-size:12px;color:var(--muted)">No trade data yet</div>';
+
+  } catch(e) { toast('Growth load failed: '+e.message, true); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   AUDIT LOG
+══════════════════════════════════════════════════════════════════ */
+async function loadAudit() {
+  sectionLoaded.audit = true;
+  const el = document.getElementById('audit-body');
+  el.innerHTML = '<div style="padding:24px;text-align:center;color:var(--muted)">Loading…</div>';
+  try {
+    const events = await apiFetch('/api/admin/audit?limit=80');
+    if (!events.length) {
+      el.innerHTML = '<div style="padding:24px;text-align:center;color:var(--muted)">No audit events yet</div>'; return;
+    }
+    const icons = {
+      verification: '✓', payment: '💳', user_registered: '👤', bid_posted: '📋',
+    };
+    const colors = {
+      verification: '#16a34a', payment: '#2563eb', user_registered: '#9333ea', bid_posted: '#d97706',
+    };
+    el.innerHTML = events.map(e => `
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 16px;border-bottom:1px solid var(--rule)">
+        <div style="width:28px;height:28px;border-radius:50%;background:${colors[e.event_type]||'#6b7280'}20;
+                    color:${colors[e.event_type]||'#6b7280'};display:grid;place-items:center;
+                    font-size:12px;flex-shrink:0;margin-top:1px">
+          ${icons[e.event_type]||'·'}
+        </div>
+        <div style="flex:1">
+          <div style="font-size:12px;font-weight:600;color:var(--text)">${esc(e.subject||'—')}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">
+            ${esc(e.detail||'—')}
+            ${e.actor ? ' · by <strong>'+esc(e.actor)+'</strong>' : ''}
+          </div>
+        </div>
+        <div style="font-size:10.5px;color:var(--muted);white-space:nowrap;flex-shrink:0">
+          ${fmtDate(e.ts)}
+        </div>
+      </div>`).join('');
+  } catch(e) {
+    el.innerHTML = '<div style="padding:24px;text-align:center;color:#dc2626">'+esc(e.message)+'</div>';
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SUPERADMIN
+══════════════════════════════════════════════════════════════════ */
+async function loadSuperadmin() {
+  sectionLoaded.superadmin = true;
+
+  // Platform config — safe, non-sensitive info only
+  document.getElementById('sa-config-body').innerHTML = `
+    <table class="adm-tbl" style="margin:-1px">
+      <tbody>
+        <tr><td style="width:150px;font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Platform</td><td style="font-size:12.5px;font-weight:600">Bildfie</td></tr>
+        <tr><td style="font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Region</td><td style="font-size:12.5px;font-weight:600">Kenya (KES)</td></tr>
+        <tr><td style="font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Payment</td><td style="font-size:12.5px;font-weight:600">M-Pesa STK Push</td></tr>
+        <tr><td style="font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Auth</td><td style="font-size:12.5px;font-weight:600">Session + bcrypt</td></tr>
+        <tr><td style="font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">DB (prod)</td><td style="font-size:12.5px;font-weight:600">PostgreSQL (Render)</td></tr>
+        <tr><td style="font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">DB (dev)</td><td style="font-size:12.5px;font-weight:600">SQLite (better-sqlite3)</td></tr>
+        <tr><td style="font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Hosting</td><td style="font-size:12.5px;font-weight:600">Render.com (render.yaml)</td></tr>
+        <tr><td style="font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Session TTL</td><td style="font-size:12.5px;font-weight:600">7 days</td></tr>
+      </tbody>
+    </table>`;
+
+  // Feature flags — static display of platform features
+  const flags = [
+    { label:'User Registration',       enabled:true,  note:'Email + password' },
+    { label:'M-Pesa STK Push',          enabled:true,  note:'Live on Daraja API' },
+    { label:'Professional Verification',enabled:true,  note:'Document upload queue' },
+    { label:'Project Management',       enabled:true,  note:'Full CRUD' },
+    { label:'Bid Marketplace',          enabled:true,  note:'Open/closed bids' },
+    { label:'Invoicing & Escrow',       enabled:true,  note:'Invoice lifecycle' },
+    { label:'Messaging System',         enabled:true,  note:'1-to-1 messages' },
+    { label:'Admin Broadcast',          enabled:true,  note:'System notifications' },
+    { label:'AI Matching Engine',       enabled:false, note:'Planned — Phase 2' },
+    { label:'GPS Attendance',           enabled:false, note:'Planned — Phase 3' },
+    { label:'Video / Voice Calls',      enabled:false, note:'Planned — Phase 3' },
+    { label:'Multi-Currency Wallet',    enabled:false, note:'Planned — Phase 4' },
+    { label:'Affiliate / Referral',     enabled:false, note:'Planned — Phase 5' },
+    { label:'Developer API Keys',       enabled:false, note:'Planned — Phase 5' },
+  ];
+  document.getElementById('sa-flags-body').innerHTML = flags.map(f => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--rule)">
+      <div>
+        <div style="font-size:12.5px;font-weight:600;color:${f.enabled?'var(--text)':'var(--muted)'}">${esc(f.label)}</div>
+        <div style="font-size:10.5px;color:var(--muted)">${esc(f.note)}</div>
+      </div>
+      <span class="bdg ${f.enabled?'bdg-ok':'bdg-neutral'}">${f.enabled?'Enabled':'Planned'}</span>
+    </div>`).join('');
+}
+
+/* ── Pagination helper ────────────────────────────────────────────── */
+const pagerBtn = 'padding:4px 10px;border:1px solid var(--rule);border-radius:6px;background:#fff;font-size:10.5px;cursor:pointer';
+function renderPager(id, page, total, fn) {
+  const el = document.getElementById(id);
+  if (total <= 1) { el.style.display='none'; return; }
+  el.style.display = 'flex';
+  el.innerHTML = '<span style="font-size:11px;color:var(--muted)">Page '+page+' of '+total+'</span>' +
+    '<div style="display:flex;gap:6px">' +
+    (page > 1     ? '<button onclick="'+fn+'('+(page-1)+')" style="'+pagerBtn+'">← Prev</button>' : '') +
+    (page < total ? '<button onclick="'+fn+'('+(page+1)+')" style="'+pagerBtn+'">Next →</button>' : '') +
+    '</div>';
+}
+
+/* ── Sidebar toggle ───────────────────────────────────────────────── */
+function toggleSidebar() {
+  document.getElementById('sb').classList.toggle('collapsed');
+}
+
+/* ── Init ─────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  const d = new Date();
+  document.getElementById('pg-date').textContent =
+    d.toLocaleDateString('en-KE',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('tb-date').textContent =
+    d.toLocaleDateString('en-KE',{day:'numeric',month:'short',year:'numeric'});
+  showSection('overview');
+});
+</script>
+</body>
+</html>

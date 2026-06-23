@@ -1,7 +1,6 @@
 "use client";
 import { use, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
-import { AppNav } from "@/components/AppNav";
 import { getCurrentUser } from "@/lib/auth";
 
 type Message = { id: string; body: string; createdAt: string; author: { id: string; fullName: string } };
@@ -29,7 +28,7 @@ export default function MessagesPage({ params }: { params: Promise<{ projectId: 
 
   return (
     <>
-      <AppNav />
+      
       <div className="container" style={{ padding: "32px 20px" }}>
         <div className="page-header"><h1>Messages</h1></div>
         <div className="card" style={{ display: "flex", flexDirection: "column", height: "60vh" }}>
