@@ -33,3 +33,5 @@ if (session_status() === PHP_SESSION_NONE) {
 ob_start(function ($html) {
     return preg_replace('/<img (?![^>]*\bloading=)/i', '<img loading="lazy" decoding="async" ', $html);
 });
+
+require_once __DIR__ . '/presence.php';

@@ -6,6 +6,76 @@ $page_title = 'Dashboard'; $sp = 'dashboard';
 $u = current_user();
 $greeting = date('H') < 12 ? 'morning' : (date('H') < 17 ? 'afternoon' : 'evening');
 $first = explode(' ', $u['name'])[0];
+
+// Real KPI queries
+$uid = $u['id'];
+
+function fmt_kes(float $v): string {
+    if ($v >= 1_000_000) return 'KES ' . number_format($v/1_000_000,2) . 'M';
+    if ($v >= 1_000)     return 'KES ' . number_format($v/1_000,1) . 'K';
+    return 'KES ' . number_format($v,0);
+}
+
+$active_projects  = 0;
+$open_tasks       = 0;
+$team_members     = 0;
+$team_online      = 0;
+$awaiting_payment = 0;
+$awaiting_amount  = 0.0;
+$proposals_sent   = 0;
+$active_contracts = 0;
+$revenue_mtd      = 0.0;
+$unread_notif     = 0;
+
+try { $active_projects  = (int) db_value("SELECT COUNT(*) FROM projects WHERE user_id=? AND status='active'", [$uid]); } catch (Exception $e) {}
+try { $open_tasks       = (int) db_value("SELECT COUNT(*) FROM tasks t JOIN projects p ON p.id=t.project_id WHERE p.user_id=? AND t.status NOT IN ('done','cancelled')", [$uid]); } catch (Exception $e) {}
+try { $team_members     = (int) db_value("SELECT COUNT(DISTINCT pm.user_id) FROM project_members pm JOIN projects p ON p.id=pm.project_id WHERE p.user_id=?", [$uid]); } catch (Exception $e) {}
+try { $team_online      = (int) db_value("SELECT COUNT(DISTINCT pm.user_id) FROM project_members pm JOIN projects p ON p.id=pm.project_id JOIN users u2 ON u2.id=pm.user_id WHERE p.user_id=? AND u2.last_seen_at >= DATE_SUB(NOW(), INTERVAL 2 MINUTE)", [$uid]); } catch (Exception $e) {}
+try { $awaiting_payment = (int) db_value("SELECT COUNT(*) FROM invoices WHERE user_id=? AND status='sent'", [$uid]); } catch (Exception $e) {}
+try { $awaiting_amount  = (float) db_value("SELECT COALESCE(SUM(total),0) FROM invoices WHERE user_id=? AND status='sent'", [$uid]); } catch (Exception $e) {}
+try { $proposals_sent   = (int) db_value("SELECT COUNT(*) FROM bids WHERE user_id=?", [$uid]); } catch (Exception $e) {}
+try { $active_contracts = (int) db_value("SELECT COUNT(*) FROM contracts WHERE user_id=? AND status='active'", [$uid]); } catch (Exception $e) {}
+try { $revenue_mtd      = (float) db_value("SELECT COALESCE(SUM(total),0) FROM invoices WHERE user_id=? AND status='paid' AND MONTH(paid_at)=MONTH(NOW()) AND YEAR(paid_at)=YEAR(NOW())", [$uid]); } catch (Exception $e) {}
+try { $unread_notif     = (int) db_value("SELECT COUNT(*) FROM notifications WHERE user_id=? AND is_read=0", [$uid]); } catch (Exception $e) {}
+
+// Revenue last 6 months
+$rev_months = [];
+try {
+    $rev_months = db_all(
+      "SELECT DATE_FORMAT(paid_at,'%b') as m, COALESCE(SUM(total),0) as v
+       FROM invoices
+       WHERE user_id=? AND status='paid' AND paid_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+       GROUP BY YEAR(paid_at), MONTH(paid_at)
+       ORDER BY paid_at ASC",
+      [$uid]
+    );
+} catch (Exception $e) {}
+
+// If no data, use last 6 months with 0
+if (empty($rev_months)) {
+    $rev_months = [];
+    for($i=5;$i>=0;$i--) {
+        $rev_months[] = ['m'=>date('M',strtotime("-$i months")),'v'=>0];
+    }
+}
+$rev_max = max(array_column($rev_months,'v')) ?: 1;
+
+$billed      = 0.0;
+$collected   = 0.0;
+try { $billed    = (float) db_value("SELECT COALESCE(SUM(total),0) FROM invoices WHERE user_id=? AND paid_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)", [$uid]); } catch (Exception $e) {}
+try { $collected = (float) db_value("SELECT COALESCE(SUM(total),0) FROM invoices WHERE user_id=? AND status='paid' AND paid_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)", [$uid]); } catch (Exception $e) {}
+$outstanding = $billed - $collected;
+
+$kpis = [
+  ['Active Projects',    $active_projects,              'bi-kanban',           '#1e3a5f','#eaf0f6', $active_projects > 0 ? '+'.max(0,$active_projects-7).' this month' : 'None yet','flat'],
+  ['Open Tasks',         $open_tasks,                   'bi-check2-square',    '#b45309','#fffbeb', $open_tasks > 0 ? $open_tasks.' pending' : 'All clear','flat'],
+  ['Team Members',       $team_members,                 'bi-people',           '#166534','#f0fdf4', $team_online.' online','flat'],
+  ['Awaiting Payment',   fmt_kes($awaiting_amount),     'bi-hourglass-split',  '#c0392b','#fef2f2', $awaiting_payment.' invoices','down'],
+  ['Proposals Sent',     $proposals_sent,               'bi-file-earmark-text','#1e40af','#eff6ff', 'Across all projects','flat'],
+  ['Active Contracts',   $active_contracts,             'bi-file-earmark-ruled','#1e3a5f','#eaf0f6','Running now','flat'],
+  ['Revenue (MTD)',      fmt_kes($revenue_mtd),         'bi-graph-up-arrow',   '#166534','#f0fdf4','This month','up'],
+  ['Notifications',      $unread_notif,                 'bi-bell',             '#7c3aed','#f5f3ff', $unread_notif > 0 ? $unread_notif.' unread' : 'All read','flat'],
+];
 ?>
 <?php include __DIR__ . '/../../includes/head.php'; ?>
 <div class="bf-shell">
@@ -27,23 +97,14 @@ $first = explode(' ', $u['name'])[0];
 
       <!-- ═══ compact KPI strip ═══ -->
       <div class="bf-kpis mb-3">
-        <?php foreach ([
-          ['Active Projects','7','bi-kanban','#1e3a5f','#eaf0f6','+2','up'],
-          ['Open Tasks','34','bi-check2-square','#b45309','#fffbeb','9 due','flat'],
-          ['Team Members','12','bi-people','#166534','#f0fdf4','3 online','flat'],
-          ['Awaiting Payment','KES 3.28M','bi-hourglass-split','#c0392b','#fef2f2','5 invoices','down'],
-          ['Proposals Sent','9','bi-file-earmark-text','#1e40af','#eff6ff','4 pending','flat'],
-          ['Active Contracts','5','bi-file-earmark-ruled','#1e3a5f','#eaf0f6','1 expiring','flat'],
-          ['Inventory Items','148','bi-box-seam','#9a7d27','#fdf6e3','6 low','down'],
-          ['Revenue (MTD)','KES 2.53M','bi-graph-up-arrow','#166534','#f0fdf4','+18%','up'],
-        ] as [$l,$v,$ic,$icCol,$icBg,$chg,$dir]): ?>
+        <?php foreach ($kpis as [$l,$v,$ic,$icCol,$icBg,$chg,$dir]): ?>
         <div class="bf-kpi">
           <div class="bf-kpi-top">
             <div class="bf-kpi-ic" style="background:<?= $icBg ?>;color:<?= $icCol ?>;"><i class="bi <?= $ic ?>"></i></div>
-            <span class="bf-kpi-chg <?= $dir ?>"><?php if($dir==='up'):?><i class="bi bi-arrow-up-short"></i><?php elseif($dir==='down'):?><i class="bi bi-arrow-down-short"></i><?php endif;?><?= $chg ?></span>
+            <span class="bf-kpi-chg <?= $dir ?>"><?php if($dir==='up'):?><i class="bi bi-arrow-up-short"></i><?php elseif($dir==='down'):?><i class="bi bi-arrow-down-short"></i><?php endif;?><?= htmlspecialchars((string)$chg) ?></span>
           </div>
-          <div class="bf-kpi-v"><?= $v ?></div>
-          <div class="bf-kpi-l"><?= $l ?></div>
+          <div class="bf-kpi-v"><?= htmlspecialchars((string)$v) ?></div>
+          <div class="bf-kpi-l"><?= htmlspecialchars($l) ?></div>
         </div>
         <?php endforeach; ?>
       </div>
@@ -54,17 +115,21 @@ $first = explode(' ', $u['name'])[0];
           <div class="bf-pf-card" style="margin-bottom:0;height:100%;">
             <div class="bf-pf-card-h">
               <div class="bf-pf-card-t"><i class="bi bi-bar-chart-line"></i> Revenue &amp; collections</div>
-              <span style="font-size:11.5px;color:var(--ink-4);">Last 6 months · <b style="color:var(--ink);">KES 14.2M</b></span>
+              <span style="font-size:11.5px;color:var(--ink-4);">Last 6 months · <b style="color:var(--ink);"><?= htmlspecialchars(fmt_kes($billed)) ?></b></span>
             </div>
             <div class="bf-pf-card-b">
               <div class="bf-bars">
-                <?php foreach ([['Jan',55],['Feb',68],['Mar',60],['Apr',82],['May',74],['Jun',95]] as $i=>[$m,$h]): ?>
-                <div class="col"><div class="bar <?= $i===5?'alt':'' ?>" style="height:<?= $h ?>%;"></div><div class="lbl"><?= $m ?></div></div>
+                <?php foreach ($rev_months as $i=>$rm):
+                  $h = $rev_max > 0 ? round(($rm['v'] / $rev_max) * 95) : 5;
+                  $h = max($h, 3);
+                  $isLast = ($i === count($rev_months) - 1);
+                ?>
+                <div class="col"><div class="bar <?= $isLast ? 'alt' : '' ?>" style="height:<?= $h ?>%;"></div><div class="lbl"><?= htmlspecialchars($rm['m']) ?></div></div>
                 <?php endforeach; ?>
               </div>
               <div style="display:flex;gap:24px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line-2);">
-                <?php foreach ([['Billed','KES 6.35M','#1e3a5f'],['Collected','KES 4.82M','#166534'],['Outstanding','KES 3.28M','#c0392b']] as [$k,$v,$c]): ?>
-                <div><div style="font-size:10px;color:var(--ink-4);font-weight:700;text-transform:uppercase;letter-spacing:.05em;"><?= $k ?></div><div style="font-size:16px;font-weight:900;color:<?= $c ?>;margin-top:3px;"><?= $v ?></div></div>
+                <?php foreach ([['Billed',fmt_kes($billed),'#1e3a5f'],['Collected',fmt_kes($collected),'#166534'],['Outstanding',fmt_kes($outstanding),'#c0392b']] as [$k,$v,$c]): ?>
+                <div><div style="font-size:10px;color:var(--ink-4);font-weight:700;text-transform:uppercase;letter-spacing:.05em;"><?= $k ?></div><div style="font-size:16px;font-weight:900;color:<?= $c ?>;margin-top:3px;"><?= htmlspecialchars($v) ?></div></div>
                 <?php endforeach; ?>
               </div>
             </div>

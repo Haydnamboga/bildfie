@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../../config/app.php';
 require_once __DIR__ . '/../../config/auth.php';
 require_once __DIR__ . '/../../config/companies.php';
+require_once __DIR__ . '/../../config/presence.php';
 $page_title = 'Find Professionals';
 $nav = 'professionals';
 ?>
@@ -136,9 +137,10 @@ $nav = 'professionals';
       <div class="bf-fpc">
         <div class="bf-fpc-ribbon"><span><i class="bi bi-gem"></i> Featured Elite</span><span style="opacity:.9;"><i class="bi bi-trophy-fill"></i> Top-ranked &middot; <?= htmlspecialchars(explode(',', $p['location'])[0] ?: 'Kenya') ?></span></div>
         <div class="bf-fpc-body">
-          <div class="bf-fpc-photo">
+          <div class="bf-fpc-photo" style="position:relative;">
             <img src="<?= $p['photo_url'] ?>" alt="<?= htmlspecialchars($p['name']) ?>">
             <span style="position:absolute;bottom:8px;left:8px;display:inline-flex;align-items:center;gap:4px;font-size:8.5px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;background:rgba(13,31,54,.82);color:#fff;padding:3px 8px;border-radius:20px;"><i class="bi bi-circle-fill" style="font-size:6px;color:<?= $av?'#22c55e':'#f59e0b' ?>;"></i><?= $av?'Available':'Busy' ?></span>
+            <span style="position:absolute;top:8px;right:8px;"><?= user_presence_dot($p['last_seen_at'] ?? null) ?></span>
           </div>
           <div class="bf-fpc-info">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
@@ -205,6 +207,7 @@ $nav = 'professionals';
           <div style="position:relative;flex-shrink:0;">
             <img src="<?= $photo ?>" alt="<?= htmlspecialchars($name) ?>" style="width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid var(--line);">
             <span style="position:absolute;bottom:0;right:0;width:12px;height:12px;border-radius:50%;background:<?= $available?'#22c55e':'#f59e0b' ?>;border:2px solid var(--white);"></span>
+            <span style="position:absolute;top:-2px;right:-2px;"><?= user_presence_dot($p['last_seen_at'] ?? null, false) ?></span>
           </div>
           <div style="flex:1;min-width:0;">
             <div style="font-size:13px;font-weight:800;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><?= htmlspecialchars($name) ?></div>

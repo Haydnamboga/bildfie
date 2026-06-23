@@ -25,10 +25,16 @@ $navLinks = [
     <!-- Right cluster (far-right → left): Profile · Dashboard(icon) · Post a Project · Messages · Notifications · To-do -->
     <div class="bf-nav-right">
       <button id="bfBurger" class="d-xl-none" type="button" aria-label="Open menu" style="border:none;background:none;color:var(--ink);font-size:23px;line-height:1;cursor:pointer;padding:2px 6px;"><i class="bi bi-list"></i></button>
-      <?php if (is_logged_in()): $u = current_user(); ?>
+      <?php if (is_logged_in()): $u = current_user();
+        $uid = $u['id'];
+        $unread_notif = 0;
+        $unread_msgs  = 0;
+        try { $unread_notif = (int) db_value("SELECT COUNT(*) FROM notifications WHERE user_id=? AND is_read=0", [$uid]); } catch (Exception $e) {}
+        try { $unread_msgs  = (int) db_value("SELECT COUNT(*) FROM messages WHERE to_user_id=? AND is_read=0", [$uid]); } catch (Exception $e) {}
+      ?>
         <a href="/pages/dashboard/index.php#tasks" class="bf-nav-ic d-none d-lg-inline-flex bf-nr-todo" title="To-do"><i class="bi bi-check2-square"></i></a>
-        <a href="/pages/dashboard/notifications.php" class="bf-nav-ic d-none d-lg-inline-flex bf-nr-notif" title="Notifications"><i class="bi bi-bell"></i><span class="bf-nav-ic-dot"></span></a>
-        <a href="/pages/dashboard/messages.php" class="bf-nav-ic d-none d-lg-inline-flex bf-nr-msg" title="Messages"><i class="bi bi-chat-dots"></i><span class="bf-nav-ic-cnt">3</span></a>
+        <a href="/pages/dashboard/notifications.php" class="bf-nav-ic d-none d-lg-inline-flex bf-nr-notif" title="Notifications"><i class="bi bi-bell"></i><?php if ($unread_notif > 0): ?><span class="bf-nav-ic-cnt" style="background:#c0392b;"><?= $unread_notif > 99 ? '99+' : $unread_notif ?></span><?php else: ?><span class="bf-nav-ic-dot" style="opacity:0;"></span><?php endif; ?></a>
+        <a href="/pages/dashboard/messages.php" class="bf-nav-ic d-none d-lg-inline-flex bf-nr-msg" title="Messages"><i class="bi bi-chat-dots"></i><?php if ($unread_msgs > 0): ?><span class="bf-nav-ic-cnt"><?= $unread_msgs > 99 ? '99+' : $unread_msgs ?></span><?php endif; ?></a>
         <a href="/pages/projects/create.php" class="bf-btn-accent bf-nr-post">Post a Project</a>
         <a href="/pages/dashboard/index.php" class="bf-nav-ic bf-nr-dash" title="Dashboard"><i class="bi bi-grid-1x2-fill"></i></a>
 
@@ -76,3 +82,12 @@ $navLinks = [
 <script>
 (function(){var b=document.getElementById('bfBurger'),m=document.getElementById('bfMobileMenu');if(b&&m){b.addEventListener('click',function(){m.style.display=(!m.style.display||m.style.display==='none')?'block':'none';});}})();
 </script>
+<?php if (is_logged_in()): ?>
+<script>
+(function(){
+  function ping(){ fetch('/api/presence.php',{method:'POST',credentials:'same-origin'}).catch(function(){}); }
+  ping();
+  setInterval(ping, 30000);
+})();
+</script>
+<?php endif; ?>
