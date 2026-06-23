@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
 const TRADES = [
   "All Trades",
@@ -21,23 +23,28 @@ const TRADES = [
 ];
 
 type Professional = {
-  id: number;
-  name: string;
-  title: string;
-  location: string;
-  rating: number;
-  reviews: number;
-  rate: string;
-  initials: string;
-  coverColor: string;
-  verified: boolean;
-  vetted: boolean;
-  insured: boolean;
-  skills: string[];
-  available: boolean;
+  id: string | number;
+  name?: string;
+  fullName?: string;
+  title?: string;
+  profession?: string;
+  location?: string;
+  rating?: number;
+  reviews?: number;
+  reviewCount?: number;
+  rate?: string;
+  dayRate?: number;
+  initials?: string;
+  coverColor?: string;
+  verified?: boolean;
+  vetted?: boolean;
+  insured?: boolean;
+  skills?: string[];
+  available?: boolean;
 };
 
-const ALL_PROS: Professional[] = [
+// Fallback data shown when API is unavailable
+const FALLBACK_PROS: Professional[] = [
   {
     id: 1,
     name: "James Mwangi",
@@ -154,12 +161,50 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
-function ProCard({ pro }: { pro: Professional }) {
+function ProCardSkeleton() {
   return (
     <div className="bl-pro-card">
-      <div className="bl-pro-card-cover" style={{ background: pro.coverColor }}>
+      <div className="bl-skeleton bl-skeleton-cover" style={{ height: 100 }} />
+      <div style={{ padding: "16px 16px 12px" }}>
+        <div className="bl-skeleton bl-skeleton-text lg" style={{ width: "60%" }} />
+        <div className="bl-skeleton bl-skeleton-text" style={{ width: "80%" }} />
+        <div className="bl-skeleton bl-skeleton-text sm" />
+        <div style={{ marginTop: 10 }}>
+          <div className="bl-skeleton bl-skeleton-text" style={{ width: "50%" }} />
+        </div>
+        <div style={{ marginTop: 14 }}>
+          <div className="bl-skeleton" style={{ height: 32, borderRadius: "var(--bl-radius)" }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProCard({ pro }: { pro: Professional }) {
+  const name = pro.name ?? pro.fullName ?? "Professional";
+  const title = pro.title ?? pro.profession ?? "";
+  const location = pro.location ?? "";
+  const rating = pro.rating ?? 0;
+  const reviews = pro.reviews ?? pro.reviewCount ?? 0;
+  const rate = pro.rate ?? (pro.dayRate ? `KES ${pro.dayRate.toLocaleString()}/day` : "");
+  const initials =
+    pro.initials ??
+    name
+      .split(" ")
+      .slice(0, 2)
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
+  const coverColor =
+    pro.coverColor ?? "linear-gradient(135deg, #011D47 0%, #1a3560 100%)";
+  const skills = pro.skills ?? [];
+  const available = pro.available !== false;
+
+  return (
+    <div className="bl-pro-card">
+      <div className="bl-pro-card-cover" style={{ background: coverColor }}>
         <div className="bl-pro-card-cover-overlay" />
-        {!pro.available && (
+        {!available && (
           <span
             style={{
               position: "absolute",
@@ -176,34 +221,40 @@ function ProCard({ pro }: { pro: Professional }) {
             Unavailable
           </span>
         )}
-        <div className="bl-pro-avatar">{pro.initials}</div>
+        <div className="bl-pro-avatar">{initials}</div>
       </div>
       <div className="bl-pro-card-body">
-        <div className="bl-pro-name">{pro.name}</div>
-        <div className="bl-pro-title">{pro.title}</div>
-        <div className="bl-pro-location">
-          <svg
-            width="11"
-            height="11"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            aria-hidden="true"
-          >
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-            <circle cx="12" cy="10" r="3" />
-          </svg>
-          {pro.location}
-        </div>
-        <StarRating rating={pro.rating} />
-        <span style={{ fontSize: 11, color: "var(--bl-muted)" }}>
-          ({pro.reviews} reviews)
-        </span>
+        <div className="bl-pro-name">{name}</div>
+        <div className="bl-pro-title">{title}</div>
+        {location && (
+          <div className="bl-pro-location">
+            <svg
+              width="11"
+              height="11"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            {location}
+          </div>
+        )}
+        {rating > 0 && <StarRating rating={rating} />}
+        {reviews > 0 && (
+          <span style={{ fontSize: 11, color: "var(--bl-muted)" }}>
+            ({reviews} reviews)
+          </span>
+        )}
 
-        <div style={{ marginTop: 10 }}>
-          <span className="bl-pro-rate">{pro.rate}</span>
-        </div>
+        {rate && (
+          <div style={{ marginTop: 10 }}>
+            <span className="bl-pro-rate">{rate}</span>
+          </div>
+        )}
 
         <div className="bl-trust-badges">
           {pro.verified && (
@@ -217,13 +268,15 @@ function ProCard({ pro }: { pro: Professional }) {
           )}
         </div>
 
-        <div className="bl-pro-skills">
-          {pro.skills.map((s) => (
-            <span key={s} className="bl-skill-tag">
-              {s}
-            </span>
-          ))}
-        </div>
+        {skills.length > 0 && (
+          <div className="bl-pro-skills">
+            {skills.map((s) => (
+              <span key={s} className="bl-skill-tag">
+                {s}
+              </span>
+            ))}
+          </div>
+        )}
 
         <div style={{ marginTop: 14, display: "flex", gap: 8 }}>
           <Link
@@ -258,27 +311,60 @@ function ProCard({ pro }: { pro: Professional }) {
 }
 
 export default function MarketplacePage() {
+  const [pros, setPros] = useState<Professional[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [trade, setTrade] = useState("All Trades");
   const [location, setLocation] = useState("");
   const [availableOnly, setAvailableOnly] = useState(false);
   const [verifiedOnly, setVerifiedOnly] = useState(false);
 
-  const filtered = ALL_PROS.filter((pro) => {
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    const params = new URLSearchParams({ limit: "50" });
+    if (trade !== "All Trades") params.set("trade", trade);
+    if (location) params.set("location", location);
+
+    fetch(`${API_URL}/marketplace/providers?${params.toString()}`, {
+      signal: AbortSignal.timeout(8000),
+    })
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then((data: unknown) => {
+        if (cancelled) return;
+        const list = Array.isArray(data)
+          ? data
+          : (data as { data?: Professional[] }).data ?? [];
+        setPros(list.length > 0 ? list : FALLBACK_PROS);
+        setLoading(false);
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setPros(FALLBACK_PROS);
+          setLoading(false);
+        }
+      });
+    return () => { cancelled = true; };
+  }, [trade, location]);
+
+  const filtered = pros.filter((pro) => {
+    const name = pro.name ?? pro.fullName ?? "";
+    const title = pro.title ?? pro.profession ?? "";
+    const skills = pro.skills ?? [];
+    const proLocation = pro.location ?? "";
+
     const matchSearch =
       !search ||
-      pro.name.toLowerCase().includes(search.toLowerCase()) ||
-      pro.title.toLowerCase().includes(search.toLowerCase()) ||
-      pro.skills.some((s) =>
-        s.toLowerCase().includes(search.toLowerCase())
-      );
+      name.toLowerCase().includes(search.toLowerCase()) ||
+      title.toLowerCase().includes(search.toLowerCase()) ||
+      skills.some((s) => s.toLowerCase().includes(search.toLowerCase()));
     const matchTrade =
       trade === "All Trades" ||
-      pro.title.toLowerCase().includes(trade.toLowerCase());
+      title.toLowerCase().includes(trade.toLowerCase());
     const matchLocation =
       !location ||
-      pro.location.toLowerCase().includes(location.toLowerCase());
-    const matchAvailable = !availableOnly || pro.available;
+      proLocation.toLowerCase().includes(location.toLowerCase());
+    const matchAvailable = !availableOnly || pro.available !== false;
     const matchVerified = !verifiedOnly || pro.verified;
     return (
       matchSearch &&
@@ -443,12 +529,16 @@ export default function MarketplacePage() {
                 marginBottom: 20,
               }}
             >
-              <span
-                style={{ fontSize: 13, color: "var(--bl-muted)" }}
-              >
-                {filtered.length} professional{filtered.length !== 1 ? "s" : ""} found
+              <span style={{ fontSize: 13, color: "var(--bl-muted)" }}>
+                {loading
+                  ? "Loading professionals…"
+                  : `${filtered.length} professional${filtered.length !== 1 ? "s" : ""} found`}
               </span>
-              <select className="bl-select" style={{ width: "auto", minWidth: 160 }} aria-label="Sort results">
+              <select
+                className="bl-select"
+                style={{ width: "auto", minWidth: 160 }}
+                aria-label="Sort results"
+              >
                 <option>Most relevant</option>
                 <option>Highest rated</option>
                 <option>Lowest rate</option>
@@ -456,7 +546,13 @@ export default function MarketplacePage() {
               </select>
             </div>
 
-            {filtered.length === 0 ? (
+            {loading ? (
+              <div className="bl-grid-3">
+                {[0, 1, 2, 3, 4, 5].map((i) => (
+                  <ProCardSkeleton key={i} />
+                ))}
+              </div>
+            ) : filtered.length === 0 ? (
               <div className="bl-empty">
                 <div className="bl-empty-icon">🔍</div>
                 <p>No professionals match your filters. Try broadening your search.</p>
@@ -483,7 +579,7 @@ export default function MarketplacePage() {
             )}
 
             {/* Pagination placeholder */}
-            {filtered.length > 0 && (
+            {!loading && filtered.length > 0 && (
               <div className="bl-pagination">
                 <button className="bl-page-btn" disabled aria-label="Previous page">←</button>
                 <button className="bl-page-btn active" aria-current="page">1</button>

@@ -1,4 +1,9 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
 const CATEGORIES = [
   "Architect",
@@ -21,23 +26,42 @@ const TICKER_ITEMS = [
   "Trusted across East Africa",
 ];
 
-type PlaceholderPro = {
-  id: number;
-  name: string;
-  title: string;
-  location: string;
-  rating: number;
-  reviews: number;
-  rate: string;
-  initials: string;
-  coverColor: string;
-  verified: boolean;
-  vetted: boolean;
-  insured: boolean;
-  skills: string[];
+type Pro = {
+  id: string | number;
+  name?: string;
+  fullName?: string;
+  title?: string;
+  profession?: string;
+  location?: string;
+  rating?: number;
+  reviews?: number;
+  reviewCount?: number;
+  rate?: string;
+  dayRate?: number;
+  initials?: string;
+  coverColor?: string;
+  verified?: boolean;
+  vetted?: boolean;
+  insured?: boolean;
+  skills?: string[];
 };
 
-const PLACEHOLDER_PROS: PlaceholderPro[] = [
+type FeaturedProject = {
+  id: string | number;
+  title?: string;
+  budget?: string;
+  budgetMax?: number;
+  location?: string;
+  category?: string;
+  trade?: string;
+  bids?: number;
+  bidCount?: number;
+  daysLeft?: number;
+  description?: string;
+};
+
+// Fallback data used when API is unavailable
+const FALLBACK_PROS: Pro[] = [
   {
     id: 1,
     name: "James Mwangi",
@@ -85,18 +109,7 @@ const PLACEHOLDER_PROS: PlaceholderPro[] = [
   },
 ];
 
-type PlaceholderProject = {
-  id: number;
-  title: string;
-  budget: string;
-  location: string;
-  category: string;
-  bids: number;
-  daysLeft: number;
-  description: string;
-};
-
-const PLACEHOLDER_PROJECTS: PlaceholderProject[] = [
+const FALLBACK_PROJECTS: FeaturedProject[] = [
   {
     id: 1,
     title: "3-bedroom house construction",
@@ -132,6 +145,62 @@ const PLACEHOLDER_PROJECTS: PlaceholderProject[] = [
   },
 ];
 
+function useFeaturedPros() {
+  const [pros, setPros] = useState<Pro[] | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`${API_URL}/marketplace/providers?featured=true&limit=3`, {
+      signal: AbortSignal.timeout(8000),
+    })
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then((data: unknown) => {
+        if (cancelled) return;
+        const list = Array.isArray(data) ? data : (data as { data?: Pro[] }).data ?? [];
+        setPros(list.length > 0 ? list : null);
+        setLoading(false);
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setPros(null);
+          setLoading(false);
+        }
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  return { pros, loading };
+}
+
+function useFeaturedProjects() {
+  const [projects, setProjects] = useState<FeaturedProject[] | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`${API_URL}/projects?status=open&limit=3`, {
+      signal: AbortSignal.timeout(8000),
+    })
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then((data: unknown) => {
+        if (cancelled) return;
+        const list = Array.isArray(data) ? data : (data as { data?: FeaturedProject[] }).data ?? [];
+        setProjects(list.length > 0 ? list : null);
+        setLoading(false);
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setProjects(null);
+          setLoading(false);
+        }
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  return { projects, loading };
+}
+
 function StarRating({ rating }: { rating: number }) {
   return (
     <div className="bl-pro-rating">
@@ -150,65 +219,98 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
-function ProCard({ pro }: { pro: PlaceholderPro }) {
+function ProCardSkeleton() {
   return (
     <div className="bl-pro-card">
-      <div className="bl-pro-card-cover" style={{ background: pro.coverColor }}>
+      <div className="bl-skeleton bl-skeleton-cover" style={{ height: 100 }} />
+      <div style={{ padding: "16px 16px 12px" }}>
+        <div className="bl-skeleton bl-skeleton-text lg" style={{ width: "60%" }} />
+        <div className="bl-skeleton bl-skeleton-text" style={{ width: "80%" }} />
+        <div className="bl-skeleton bl-skeleton-text sm" />
+      </div>
+    </div>
+  );
+}
+
+function ProCard({ pro }: { pro: Pro }) {
+  const name = pro.name ?? pro.fullName ?? "Professional";
+  const title = pro.title ?? pro.profession ?? "";
+  const location = pro.location ?? "";
+  const rating = pro.rating ?? 0;
+  const reviews = pro.reviews ?? pro.reviewCount ?? 0;
+  const rate = pro.rate ?? (pro.dayRate ? `KES ${pro.dayRate.toLocaleString()}/day` : "");
+  const initials =
+    pro.initials ??
+    name
+      .split(" ")
+      .slice(0, 2)
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
+  const coverColor =
+    pro.coverColor ?? "linear-gradient(135deg, #011D47 0%, #1a3560 100%)";
+  const skills = pro.skills ?? [];
+
+  return (
+    <div className="bl-pro-card">
+      <div className="bl-pro-card-cover" style={{ background: coverColor }}>
         <div className="bl-pro-card-cover-overlay" />
-        <div className="bl-pro-avatar">{pro.initials}</div>
+        <div className="bl-pro-avatar">{initials}</div>
       </div>
       <div className="bl-pro-card-body">
-        <div className="bl-pro-name">{pro.name}</div>
-        <div className="bl-pro-title">{pro.title}</div>
-        <div className="bl-pro-location">
-          <svg
-            width="11"
-            height="11"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            aria-hidden="true"
-          >
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-            <circle cx="12" cy="10" r="3" />
-          </svg>
-          {pro.location}
-        </div>
-        <StarRating rating={pro.rating} />
-        <span
-          style={{ fontSize: 11, color: "var(--bl-muted)", marginLeft: 2 }}
-        >
-          ({pro.reviews} reviews)
-        </span>
+        <div className="bl-pro-name">{name}</div>
+        <div className="bl-pro-title">{title}</div>
+        {location && (
+          <div className="bl-pro-location">
+            <svg
+              width="11"
+              height="11"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            {location}
+          </div>
+        )}
+        {rating > 0 && <StarRating rating={rating} />}
+        {reviews > 0 && (
+          <span style={{ fontSize: 11, color: "var(--bl-muted)", marginLeft: 2 }}>
+            ({reviews} reviews)
+          </span>
+        )}
 
-        <div style={{ marginTop: 10 }}>
-          <span className="bl-pro-rate">{pro.rate}</span>
-        </div>
+        {rate && (
+          <div style={{ marginTop: 10 }}>
+            <span className="bl-pro-rate">{rate}</span>
+          </div>
+        )}
 
         <div className="bl-trust-badges">
           {pro.verified && (
-            <span className="bl-trust-badge bl-trust-verified">
-              NCA Verified
-            </span>
+            <span className="bl-trust-badge bl-trust-verified">NCA Verified</span>
           )}
           {pro.vetted && (
-            <span className="bl-trust-badge bl-trust-vetted">
-              bildfie Vetted
-            </span>
+            <span className="bl-trust-badge bl-trust-vetted">bildfie Vetted</span>
           )}
           {pro.insured && (
             <span className="bl-trust-badge bl-trust-insured">Insured</span>
           )}
         </div>
 
-        <div className="bl-pro-skills">
-          {pro.skills.map((s) => (
-            <span key={s} className="bl-skill-tag">
-              {s}
-            </span>
-          ))}
-        </div>
+        {skills.length > 0 && (
+          <div className="bl-pro-skills">
+            {skills.map((s) => (
+              <span key={s} className="bl-skill-tag">
+                {s}
+              </span>
+            ))}
+          </div>
+        )}
 
         <div style={{ marginTop: 14 }}>
           <Link
@@ -224,7 +326,26 @@ function ProCard({ pro }: { pro: PlaceholderPro }) {
   );
 }
 
-function ProjectCard({ project }: { project: PlaceholderProject }) {
+function ProjectCardSkeleton() {
+  return (
+    <div className="bl-card">
+      <div className="bl-card-body">
+        <div className="bl-skeleton bl-skeleton-text lg" style={{ width: "70%", marginBottom: 10 }} />
+        <div className="bl-skeleton bl-skeleton-text" style={{ width: "100%" }} />
+        <div className="bl-skeleton bl-skeleton-text" style={{ width: "90%" }} />
+        <div className="bl-skeleton bl-skeleton-text sm" style={{ marginTop: 14 }} />
+      </div>
+    </div>
+  );
+}
+
+function ProjectCard({ project }: { project: FeaturedProject }) {
+  const budget =
+    project.budget ??
+    (project.budgetMax ? `KES ${project.budgetMax.toLocaleString()}` : "");
+  const category = project.category ?? project.trade ?? "";
+  const bids = project.bids ?? project.bidCount ?? 0;
+
   return (
     <div className="bl-card">
       <div className="bl-card-body">
@@ -253,16 +374,18 @@ function ProjectCard({ project }: { project: PlaceholderProject }) {
           </span>
         </div>
 
-        <p
-          style={{
-            fontSize: 13,
-            color: "var(--bl-muted)",
-            marginBottom: 14,
-            lineHeight: 1.6,
-          }}
-        >
-          {project.description}
-        </p>
+        {project.description && (
+          <p
+            style={{
+              fontSize: 13,
+              color: "var(--bl-muted)",
+              marginBottom: 14,
+              lineHeight: 1.6,
+            }}
+          >
+            {project.description}
+          </p>
+        )}
 
         <div
           style={{
@@ -274,51 +397,57 @@ function ProjectCard({ project }: { project: PlaceholderProject }) {
             marginBottom: 14,
           }}
         >
-          <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <svg
-              width="11"
-              height="11"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-              <circle cx="12" cy="10" r="3" />
-            </svg>
-            {project.location}
-          </span>
-          <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <svg
-              width="11"
-              height="11"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <rect x="2" y="3" width="20" height="14" rx="2" />
-              <path d="M8 21h8M12 17v4" />
-            </svg>
-            {project.category}
-          </span>
-          <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <svg
-              width="11"
-              height="11"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <path d="M12 6v6l4 2" />
-            </svg>
-            {project.daysLeft}d left
-          </span>
+          {project.location && (
+            <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden="true"
+              >
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              {project.location}
+            </span>
+          )}
+          {category && (
+            <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden="true"
+              >
+                <rect x="2" y="3" width="20" height="14" rx="2" />
+                <path d="M8 21h8M12 17v4" />
+              </svg>
+              {category}
+            </span>
+          )}
+          {project.daysLeft !== undefined && (
+            <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l4 2" />
+              </svg>
+              {project.daysLeft}d left
+            </span>
+          )}
         </div>
 
         <div
@@ -329,17 +458,19 @@ function ProjectCard({ project }: { project: PlaceholderProject }) {
           }}
         >
           <div>
-            <div
-              style={{
-                fontSize: 16,
-                fontWeight: 700,
-                color: "var(--bl-navy)",
-              }}
-            >
-              {project.budget}
-            </div>
+            {budget && (
+              <div
+                style={{
+                  fontSize: 16,
+                  fontWeight: 700,
+                  color: "var(--bl-navy)",
+                }}
+              >
+                {budget}
+              </div>
+            )}
             <div style={{ fontSize: 11, color: "var(--bl-muted)" }}>
-              {project.bids} bids
+              {bids} bids
             </div>
           </div>
           <Link href="/signup" className="bl-btn bl-btn-accent bl-btn-sm">
@@ -352,6 +483,13 @@ function ProjectCard({ project }: { project: PlaceholderProject }) {
 }
 
 export default function HomePage() {
+  const { pros, loading: prosLoading } = useFeaturedPros();
+  const { projects, loading: projectsLoading } = useFeaturedProjects();
+
+  // Resolve data: use API data, or fallback if null (error/empty)
+  const displayPros = pros ?? FALLBACK_PROS;
+  const displayProjects = projects ?? FALLBACK_PROJECTS;
+
   return (
     <>
       {/* ── Hero ──────────────────────────────────────────── */}
@@ -448,9 +586,11 @@ export default function HomePage() {
           </div>
 
           <div className="bl-grid-3">
-            {PLACEHOLDER_PROS.map((pro) => (
-              <ProCard key={pro.id} pro={pro} />
-            ))}
+            {prosLoading
+              ? [0, 1, 2].map((i) => <ProCardSkeleton key={i} />)
+              : displayPros.map((pro) => (
+                  <ProCard key={pro.id} pro={pro} />
+                ))}
           </div>
         </div>
       </section>
@@ -483,9 +623,11 @@ export default function HomePage() {
           </div>
 
           <div className="bl-grid-3">
-            {PLACEHOLDER_PROJECTS.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
+            {projectsLoading
+              ? [0, 1, 2].map((i) => <ProjectCardSkeleton key={i} />)
+              : displayProjects.map((project) => (
+                  <ProjectCard key={project.id} project={project} />
+                ))}
           </div>
         </div>
       </section>

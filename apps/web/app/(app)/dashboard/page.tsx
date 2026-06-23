@@ -38,6 +38,35 @@ function statusBadgeClass(status: string): string {
   return `bl-badge ${map[status] ?? "bl-badge-open"}`;
 }
 
+function MiniBarChart({ data }: { data: Array<{ month: string; value: number }> }) {
+  const max = Math.max(...data.map((d) => d.value), 1);
+  return (
+    <div style={{ display: "flex", alignItems: "flex-end", gap: 6, height: 80 }}>
+      {data.map((d, i) => (
+        <div
+          key={i}
+          style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}
+        >
+          <div
+            style={{
+              width: "100%",
+              height: `${Math.max(4, (d.value / max) * 72)}px`,
+              background: i === data.length - 1 ? "var(--bl-accent)" : "var(--bl-navy)",
+              borderRadius: "4px 4px 0 0",
+              opacity: i === data.length - 1 ? 1 : 0.4 + i * 0.1,
+              transition: "height 0.5s ease",
+            }}
+            title={`${d.month}: ${d.value}`}
+          />
+          <span style={{ fontSize: 10, color: "var(--bl-muted)", whiteSpace: "nowrap" }}>
+            {d.month}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function KpiCard({
   label,
   value,
@@ -357,6 +386,38 @@ export default function DashboardPage() {
               {action.label}
             </Link>
           ))}
+        </div>
+      </div>
+
+      {/* Revenue trend - will use real data once API is connected */}
+      <div className="bl-card" style={{ marginTop: 24 }}>
+        <div className="bl-card-body">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 16,
+            }}
+          >
+            <h2 style={{ fontFamily: "Sora,sans-serif", fontSize: 15, fontWeight: 600 }}>
+              Revenue Trend
+            </h2>
+            <span style={{ fontSize: 12, color: "var(--bl-muted)" }}>Last 6 months</span>
+          </div>
+          <MiniBarChart
+            data={[
+              { month: "Jan", value: 0 },
+              { month: "Feb", value: 0 },
+              { month: "Mar", value: 0 },
+              { month: "Apr", value: 0 },
+              { month: "May", value: 0 },
+              { month: "Jun", value: 0 },
+            ]}
+          />
+          <p style={{ fontSize: 12, color: "var(--bl-muted)", marginTop: 12, textAlign: "center" }}>
+            Revenue data will appear once transactions are recorded.
+          </p>
         </div>
       </div>
 

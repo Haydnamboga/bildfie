@@ -1547,3 +1547,58 @@ p { margin-bottom: 0; }
   .bl-search-bar .bl-btn { border-radius: 0 0 8px 8px; width: 100%; }
   .bl-nav-actions .bl-btn-outline { display: none; }
 }
+
+/* ── Skeleton loaders ──────────────────────────────────────── */
+@keyframes bl-shimmer {
+  0%   { background-position: -800px 0; }
+  100% { background-position: 800px 0; }
+}
+.bl-skeleton {
+  background: linear-gradient(90deg,
+    var(--bl-surface2) 25%,
+    var(--bl-rule) 50%,
+    var(--bl-surface2) 75%
+  );
+  background-size: 800px 100%;
+  animation: bl-shimmer 1.4s infinite linear;
+  border-radius: var(--bl-radius);
+}
+.bl-skeleton-text {
+  height: 14px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+}
+.bl-skeleton-text.lg { height: 20px; }
+.bl-skeleton-text.sm { height: 10px; width: 60%; }
+.bl-skeleton-avatar {
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.bl-skeleton-cover {
+  border-radius: var(--bl-radius) var(--bl-radius) 0 0;
+}
+
+/* ── Presence dot ──────────────────────────────────────────── */
+.bl-presence-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 2px solid var(--bl-surface);
+  flex-shrink: 0;
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+}
+.bl-presence-online  { background: #22c55e; }
+.bl-presence-away    { background: #f97316; }
+.bl-presence-offline { background: #94a3b8; }
+
+/* ── KPI icon colours ──────────────────────────────────────── */
+.bl-kpi-icon-navy   { background: #eaf0f6; color: #1e3a5f; }
+.bl-kpi-icon-accent { background: #fef0eb; color: #c43100; }
+.bl-kpi-icon-green  { background: #f0fdf4; color: #166534; }
+.bl-kpi-icon-gold   { background: #fdf6e3; color: #9a7d27; }
+
+/* ── Notification badge position helper ────────────────────── */
+.bl-nav-icon-wrap { position: relative; display: inline-flex; }

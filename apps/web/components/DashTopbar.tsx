@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { clearTokens, getCurrentUser, getRefreshToken } from "@/lib/auth";
 import { api } from "@/lib/api";
+import { useUnreadCounts } from "@/hooks/useUnreadCounts";
+import { usePresenceHeartbeat } from "@/hooks/usePresence";
 
 interface DashTopbarProps {
   title?: string;
@@ -16,6 +18,8 @@ export function DashTopbar({ title = "Dashboard", onMenuToggle }: DashTopbarProp
   const user = getCurrentUser();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const unread = useUnreadCounts();
+  usePresenceHeartbeat();
 
   const initials = user
     ? user.fullName
@@ -85,7 +89,7 @@ export function DashTopbar({ title = "Dashboard", onMenuToggle }: DashTopbarProp
       {/* Actions */}
       <div className="bl-topbar-actions">
         {/* Notifications */}
-        <button className="bl-nav-icon" aria-label="Notifications">
+        <button className="bl-nav-icon" aria-label="Notifications" style={{ position: "relative" }}>
           <svg
             width="18"
             height="18"
@@ -99,11 +103,33 @@ export function DashTopbar({ title = "Dashboard", onMenuToggle }: DashTopbarProp
           >
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9 M13.73 21a2 2 0 0 1-3.46 0" />
           </svg>
-          <span className="bl-nav-badge" aria-hidden="true" />
+          {unread.notifications > 0 && (
+            <span
+              className="bl-nav-badge"
+              style={{
+                position: "absolute",
+                top: 2,
+                right: 2,
+                background: "#c43100",
+                color: "#fff",
+                fontSize: 9,
+                fontWeight: 700,
+                borderRadius: "50%",
+                minWidth: 14,
+                height: 14,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "0 2px",
+              }}
+            >
+              {unread.notifications > 99 ? "99+" : unread.notifications}
+            </span>
+          )}
         </button>
 
         {/* Messages */}
-        <button className="bl-nav-icon" aria-label="Messages">
+        <button className="bl-nav-icon" aria-label="Messages" style={{ position: "relative" }}>
           <svg
             width="18"
             height="18"
@@ -117,6 +143,28 @@ export function DashTopbar({ title = "Dashboard", onMenuToggle }: DashTopbarProp
           >
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
+          {unread.messages > 0 && (
+            <span
+              style={{
+                position: "absolute",
+                top: 2,
+                right: 2,
+                background: "#c43100",
+                color: "#fff",
+                fontSize: 9,
+                fontWeight: 700,
+                borderRadius: "50%",
+                minWidth: 14,
+                height: 14,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "0 2px",
+              }}
+            >
+              {unread.messages > 99 ? "99+" : unread.messages}
+            </span>
+          )}
         </button>
 
         {/* Post a Project CTA */}
