@@ -86,22 +86,39 @@ function submitInvite() {
 }
 
 /* ── NEW PROJECT ────────────────────────────────────────────────────── */
-function submitNewProject() {
+async function submitNewProject() {
   const val = id => (document.getElementById(id)?.value || '').trim();
   const name = val('np-name') || val('new-proj-name');
   if (!name) { showToast('Please enter a project name', 'warning'); return; }
 
-  const type      = val('np-type')       || val('new-proj-type')     || 'Residential';
-  const location  = val('np-location')   || val('new-proj-location') || 'TBD';
-  const budgetMin = Number(val('np-budget-min') || val('new-proj-budget') || 0);
-  const budgetMax = Number(val('np-budget-max') || budgetMin);
-  const budgetStr = budgetMin ? `KES ${budgetMin.toLocaleString()}–${budgetMax.toLocaleString()}` : 'TBD';
+  const type        = val('np-type')       || val('new-proj-type')     || 'Residential';
+  const location    = val('np-location')   || val('new-proj-location') || 'TBD';
+  const description = val('np-desc');
+  const due_date    = val('np-due') || null;
+  const budgetMin   = Number(val('np-budget-min') || val('new-proj-budget') || 0);
+  const budgetMax   = Number(val('np-budget-max') || budgetMin);
+  const budgetStr   = budgetMin ? `KES ${budgetMin.toLocaleString()}–${budgetMax.toLocaleString()}` : 'TBD';
+
+  const btn = document.querySelector('#newProjectModal .btn-primary');
+  if (btn) { btn.disabled = true; btn.textContent = 'Creating…'; }
+
+  const result = await window.BLApi?.createProject({
+    name, type, description, location,
+    budget_min: budgetMin, budget_max: budgetMax, due_date,
+  });
+
+  if (btn) { btn.disabled = false; btn.textContent = 'Create Project'; }
+
+  if (!result) {
+    showToast('Could not create project — please log in and try again', 'error');
+    return;
+  }
 
   const newProj = {
-    id: Date.now(), name, type, status: 'planning', progress: 0,
+    id: result.id, name, type, status: 'planning', progress: 0,
     budget: budgetStr, spent: 'KES 0', contractor: 'Pending Award',
-    phase: 'Planning', location, due_date: 'TBD',
-    thumb_url: 'https://picsum.photos/seed/newproj/300/200'
+    phase: 'Planning', location, due_date: due_date || 'TBD',
+    thumb_url: `https://picsum.photos/seed/${result.id}/300/200`,
   };
 
   BL.userProjects.unshift(newProj);
@@ -109,9 +126,8 @@ function submitNewProject() {
   showToast(`Project "${name}" created!`);
   bootstrap.Modal.getInstance(document.getElementById('newProjectModal'))?.hide();
 
-  // Clear form
-  ['np-name', 'new-proj-name', 'np-location', 'new-proj-location',
-   'np-budget-min', 'np-budget-max', 'new-proj-budget'].forEach(id => {
+  ['np-name', 'new-proj-name', 'np-desc', 'np-location', 'new-proj-location',
+   'np-budget-min', 'np-budget-max', 'new-proj-budget', 'np-due'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
